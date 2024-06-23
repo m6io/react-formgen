@@ -1,0 +1,38 @@
+{
+  "name": "@m6oss/schema-form",
+  "private": false,
+  "version": "0.0.1-alpha.0",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@types/json-schema": "^7.0.15",
+    "ajv": "^8.16.0",
+    "ajv-formats": "^3.0.1",
+    "json-schema": "^0.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.8",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1"
+  },
+  "description": "A type-safe, customizable, and super simple React form generator."
+}

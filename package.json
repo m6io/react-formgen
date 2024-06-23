@@ -1,0 +1,11 @@
+{
+  "name": "@m6oss/schema-form-monorepo",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "pnpm run --filter website dev",
+    "build": "pnpm run --filter \"@m6oss/schema-form\" build"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}
