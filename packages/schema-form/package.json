@@ -1,7 +1,28 @@
 {
   "name": "@m6oss/schema-form",
+  "description": "A type-safe, customizable, and super simple React form generator.",
   "private": false,
   "version": "0.0.1-alpha.0",
+  "license": "MIT",
+  "author": "m6io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m6io/schema-form.git",
+    "directory": "packages/schema-form"
+  },
+  "keywords": [
+    "react",
+    "form",
+    "schema",
+    "json-schema",
+    "zustand",
+    "ajv",
+    "ajv-formats",
+    "form generator"
+  ],
+  "bugs": {
+    "url": "https://github.com/m6io/schema-form/issues"  
+  },
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
@@ -33,6 +54,5 @@
     "eslint-plugin-react-refresh": "^0.4.7",
     "typescript": "^5.5.2",
     "vite": "^5.3.1"
-  },
-  "description": "A type-safe, customizable, and super simple React form generator."
+  }
 }
