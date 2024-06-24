@@ -1,5 +1,7 @@
 import { JSONSchema7 } from "json-schema";
 
+type SchemaDefinitions = JSONSchema7["definitions"];
+
 // Types for string schema
 interface StringSchema extends JSONSchema7 {
   type: "string";
@@ -37,13 +39,13 @@ type CustomFields = {
   ObjectField?: React.FC<{
     schema: ObjectSchema;
     path: string[];
-    definitions: any;
+    definitions: SchemaDefinitions;
     customFields?: CustomFields;
   }>;
   ArrayField?: React.FC<{
     schema: ArraySchema;
     path: string[];
-    definitions: any;
+    definitions: SchemaDefinitions;
     customFields?: CustomFields;
   }>;
 };
@@ -55,4 +57,5 @@ export type {
   ObjectSchema,
   ArraySchema,
   CustomFields,
+  SchemaDefinitions,
 };

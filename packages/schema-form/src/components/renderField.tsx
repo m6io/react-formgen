@@ -7,6 +7,7 @@ import {
   ObjectSchema,
   ArraySchema,
   CustomFields,
+  SchemaDefinitions,
 } from "./types";
 import { resolveRef } from "../utils/resolveRef";
 import {
@@ -21,7 +22,7 @@ import {
 export const renderField = (
   schema: JSONSchema7,
   path: string[],
-  definitions: any,
+  definitions: SchemaDefinitions,
   customFields?: CustomFields
 ): React.ReactNode => {
   schema = resolveRef(schema, definitions);

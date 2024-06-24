@@ -4,6 +4,7 @@ export {
   ErrorMessage,
   Form,
   FormComponent,
+  AjvInstance,
   NumberField,
   ObjectField,
   renderField,
@@ -17,6 +18,7 @@ export type {
   ObjectSchema,
   ArraySchema,
   CustomFields,
+  SchemaDefinitions,
 } from "./components/types";
 
 export { FormContext, FormProvider, useFormContext } from "./context";
@@ -24,3 +26,5 @@ export { FormContext, FormProvider, useFormContext } from "./context";
 export type { FormState } from "./context";
 
 export type { JSONSchema7, ErrorObject } from "./types";
+
+export { getZeroState, resolveRef } from "./utils";

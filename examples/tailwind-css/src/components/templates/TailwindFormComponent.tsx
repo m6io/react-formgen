@@ -1,17 +1,19 @@
-import React from "react";
-import Ajv, { ErrorObject } from "ajv";
-import addFormats from "ajv-formats";
-import { JSONSchema7 } from "json-schema";
-import { useFormContext } from "../context/useFormContext";
-import { CustomFields } from "./types";
-import { renderField } from "./renderField";
+import { ErrorObject } from "@m6oss/schema-form";
+import { useFormContext, JSONSchema7, CustomFields } from "@m6oss/schema-form";
+import { renderField } from "@m6oss/schema-form";
+import { AjvInstance } from "@m6oss/schema-form";
 
-// Single shared Ajv instance with formats
-export const AjvInstance = new Ajv({ allErrors: true, verbose: true });
-addFormats(AjvInstance);
-
-// Form Component Template
-export const FormComponent: React.FC<{
+/**
+ * Form Component Template
+ * @param {Function} onSubmit - The function to call when the form is submitted.
+ * @param {Function} onError - The function to call when the form has errors.
+ * @param {CustomFields} customFields - The custom fields object.
+ * @returns {JSX.Element} - The form component.
+ * @example
+ * <TailwindFormComponent onSubmit={onSubmit} onError={onError} customFields={customFields} />
+ *
+ */
+export const TailwindFormComponent: React.FC<{
   onSubmit: (data: { [key: string]: unknown }) => void;
   onError: (errors: ErrorObject[]) => void;
   customFields?: CustomFields;
@@ -36,7 +38,7 @@ export const FormComponent: React.FC<{
   return (
     <form onSubmit={handleSubmit}>
       {Object.keys(schema.properties || {}).map((key) => (
-        <div key={key} style={{ marginBottom: "10px" }}>
+        <div key={key} className="mb-4">
           {renderField(
             schema.properties?.[key] as JSONSchema7,
             [key],
@@ -45,7 +47,12 @@ export const FormComponent: React.FC<{
           )}
         </div>
       ))}
-      <button type="submit">Submit</button>
+      <button
+        type="submit"
+        className="bg-blue-500 text-white py-2 px-4 rounded"
+      >
+        Submit
+      </button>
     </form>
   );
 };

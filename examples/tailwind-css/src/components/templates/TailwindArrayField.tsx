@@ -1,13 +1,24 @@
-import React from "react";
-import { JSONSchema7 } from "json-schema";
-import { useFormContext } from "../context/useFormContext";
-import { ArraySchema, CustomFields, SchemaDefinitions } from "./types";
-import { ErrorMessage } from "./index";
-import { getZeroState } from "../utils/getZeroState";
-import { renderField } from "./renderField";
+import { SchemaDefinitions, getZeroState } from "@m6oss/schema-form";
+import {
+  useFormContext,
+  JSONSchema7,
+  ArraySchema,
+  CustomFields,
+} from "@m6oss/schema-form";
+import { renderField } from "@m6oss/schema-form";
+import { TailwindErrorMessage } from "./TailwindErrorMessage";
 
-// Array Field Component Template
-export const ArrayField: React.FC<{
+/**
+ * Array Field Component Template
+ * @param {ArraySchema} schema - The schema for the array field.
+ * @param {string[]} path - The path to the array field in the form data.
+ * @param {SchemaDefinitions} definitions - The definitions object from the schema.
+ * @param {CustomFields} customFields - The custom fields object.
+ * @returns {JSX.Element} - The array field component.
+ * @example
+ * <TailwindArrayField schema={schema} path={path} definitions={definitions} customFields={customFields} />
+ */
+export const TailwindArrayField: React.FC<{
   schema: ArraySchema;
   path: string[];
   definitions: SchemaDefinitions;
@@ -18,27 +29,17 @@ export const ArrayField: React.FC<{
   const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? [];
 
   return (
-    <div
-      style={{
-        border: ".25rem dashed slategray",
-        padding: "10px",
-        margin: "10px 0",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {schema.title && <label>{schema.title}</label>}
-      {schema.description && <small>{schema.description}</small>}
+    <div className="border-dashed border-2 border-gray-400 p-4 my-4 flex flex-col">
+      {schema.title && <label className="font-semibold">{schema.title}</label>}
+      {schema.description && (
+        <small className="text-gray-500">{schema.description}</small>
+      )}
       <br />
       {schema.items &&
         Array.isArray(valueAtPath) &&
         valueAtPath.map((_, index: number) => (
           <div
-            style={{
-              border: ".5px dotted lime",
-              padding: "10px",
-              margin: "10px 0",
-            }}
+            className="border-dotted border-2 border-lime-500 p-4 my-2"
             key={index}
           >
             {renderField(
@@ -49,6 +50,7 @@ export const ArrayField: React.FC<{
             )}
             <button
               type="button"
+              className="mt-2 text-red-500"
               onClick={() => {
                 const newArray = [...valueAtPath];
                 newArray.splice(index, 1);
@@ -60,7 +62,7 @@ export const ArrayField: React.FC<{
           </div>
         ))}
       <button
-        style={{ margin: "20px 0" }}
+        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
         type="button"
         onClick={() => {
           setFormData(path, [
@@ -71,7 +73,7 @@ export const ArrayField: React.FC<{
       >
         Add Item
       </button>
-      <ErrorMessage path={path} />
+      <TailwindErrorMessage path={path} />
     </div>
   );
 };

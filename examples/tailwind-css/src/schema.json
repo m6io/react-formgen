@@ -1,0 +1,194 @@
+{
+  "$id": "http://example.com/example.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Example Schema",
+  "description": "A schema representing a complex object with various features.",
+  "type": "object",
+  "definitions": {
+    "address": {
+      "title": "Address",
+      "description": "An object representing an address.",
+      "type": "object",
+      "properties": {
+        "street_address": {
+          "title": "Street Address",
+          "description": "The street address.",
+          "type": "string"
+        },
+        "city": {
+          "title": "City",
+          "description": "The city.",
+          "type": "string"
+        },
+        "state": {
+          "title": "State",
+          "description": "The state.",
+          "type": "string"
+        }
+      },
+      "required": ["street_address", "city", "state"]
+    },
+    "friend": {
+      "title": "Friend",
+      "description": "An object representing a friend.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "description": "The friend's name.",
+          "type": "string"
+        },
+        "age": {
+          "title": "Age",
+          "description": "The friend's age.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 150
+        },
+        "address": {
+          "title": "Address",
+          "description": "The friend's address.",
+          "$ref": "#/definitions/address"
+        }
+      },
+      "required": ["name"]
+    }
+  },
+  "properties": {
+    "name": {
+      "title": "Name",
+      "description": "The person's name.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[A-Za-z]+$"
+    },
+    "age": {
+      "title": "Age",
+      "description": "The person's age.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 150
+    },
+    "email": {
+      "title": "Email",
+      "description": "The person's email address.",
+      "type": "string",
+      "format": "email"
+    },
+    "homepage": {
+      "title": "Homepage",
+      "description": "The person's homepage URL.",
+      "type": "string",
+      "format": "uri"
+    },
+    "birthday": {
+      "title": "Birthday",
+      "description": "The person's birthday.",
+      "type": "string",
+      "format": "date"
+    },
+    "is_active": {
+      "title": "Is Active",
+      "description": "Whether the person is active.",
+      "type": "boolean",
+      "default": true
+    },
+    "address": {
+      "title": "Address",
+      "description": "The person's address.",
+      "$ref": "#/definitions/address"
+    },
+    "friends": {
+      "title": "Friends",
+      "description": "A list of the person's friends.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/friend"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "employment": {
+      "title": "Employment",
+      "description": "The person's employment details.",
+      "type": "object",
+      "properties": {
+        "employer": {
+          "title": "Employer",
+          "description": "The person's employer.",
+          "type": "string"
+        },
+        "role": {
+          "title": "Role",
+          "description": "The person's role.",
+          "type": "string"
+        },
+        "start_date": {
+          "title": "Start Date",
+          "description": "The date the person started the role.",
+          "type": "string",
+          "format": "date"
+        },
+        "end_date": {
+          "title": "End Date",
+          "description": "The date the person ended the role.",
+          "type": "string",
+          "format": "date"
+        },
+        "address": {
+          "title": "Address",
+          "description": "The address of the employment location.",
+          "$ref": "#/definitions/address"
+        }
+      },
+      "required": ["employer", "role", "start_date"]
+    },
+    "projects": {
+      "title": "Projects",
+      "description": "A list of the person's projects.",
+      "type": "array",
+      "items": {
+        "title": "Project",
+        "description": "An object representing a project.",
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "description": "The name of the project.",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "description": "The description of the project.",
+            "type": "string"
+          },
+          "start_date": {
+            "title": "Start Date",
+            "description": "The date the project started.",
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "title": "End Date",
+            "description": "The date the project ended.",
+            "type": "string",
+            "format": "date"
+          },
+          "team": {
+            "title": "Team",
+            "description": "The team members involved in the project.",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/friend"
+            }
+          }
+        },
+        "required": ["name", "description", "start_date"]
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    }
+  },
+  "required": ["name", "email"]
+}
