@@ -24,7 +24,11 @@ export const TailwindNumberField: React.FC<{
 
   return (
     <div className="flex flex-col">
-      {schema.title && <label className="font-semibold">{schema.title}</label>}
+      {schema.title && (
+        <label className="font-semibold dark:text-zinc-200">
+          {schema.title}
+        </label>
+      )}
       <input
         type="number"
         value={valueAtPath ?? ""}
@@ -35,10 +39,12 @@ export const TailwindNumberField: React.FC<{
             ? `${path.join("-")}-datalist`
             : undefined
         }
-        className="w-24 p-2 border border-gray-300 rounded"
+        className="w-24 p-2 border border-zinc-300 rounded dark:border-zinc-600 text-zinc-900 dark:text-zinc-200 bg-white dark:bg-zinc-800"
       />
       {schema.description && (
-        <small className="text-gray-500">{schema.description}</small>
+        <small className="text-gray-500 dark:text-gray-400">
+          {schema.description}
+        </small>
       )}
       {Array.isArray(schema.examples) && (
         <datalist id={`${path.join("-")}-datalist`}>

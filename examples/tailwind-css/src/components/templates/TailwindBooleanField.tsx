@@ -24,14 +24,24 @@ export const TailwindBooleanField: React.FC<{
 
   return (
     <div className="flex flex-col">
-      <div className="flex gap-2">
-        <input type="checkbox" checked={valueAtPath} onChange={handleChange} />
+      <div className="flex">
+        <input
+          type="checkbox"
+          checked={valueAtPath}
+          onChange={handleChange}
+          className="shrink-0 mt-0.5 border-zinc-200 rounded   dark:bg-neutral-800 dark:border-neutral-700  dark:focus:ring-offset-zinc-800"
+        />
         {schema.title && (
-          <label className="font-semibold">{schema.title}</label>
+          <label className="text-sm text-zinc-500 ms-3 dark:text-neutral-400">
+            {" "}
+            {schema.title}
+          </label>
         )}
       </div>
       {schema.description && (
-        <small className="text-gray-500">{schema.description}</small>
+        <small className="text-zinc-500 dark:text-zinc-400">
+          {schema.description}
+        </small>
       )}
       <TailwindErrorMessage path={path} />
     </div>

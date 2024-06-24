@@ -21,10 +21,16 @@ export const TailwindObjectField: React.FC<{
   customFields?: CustomFields;
 }> = ({ schema, path, definitions, customFields = {} }) => {
   return (
-    <div className="border border-gray-300 p-4 my-4 flex flex-col">
-      {schema.title && <label className="font-semibold">{schema.title}</label>}
+    <div className="border border-gray-300 dark:border-gray-600 p-4 my-4 flex flex-col">
+      {schema.title && (
+        <label className="font-semibold dark:text-zinc-200">
+          {schema.title}
+        </label>
+      )}
       {schema.description && (
-        <small className="text-gray-500">{schema.description}</small>
+        <small className="text-gray-500 dark:text-gray-400">
+          {schema.description}
+        </small>
       )}
       <br />
       {schema.properties &&

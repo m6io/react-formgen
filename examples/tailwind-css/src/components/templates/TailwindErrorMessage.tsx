@@ -28,5 +28,5 @@ export const TailwindErrorMessage: React.FC<{
 
   if (!error) return null;
 
-  return <div className="text-red-500">{error.message}</div>;
+  return <div className="text-red-500 dark:text-red-400">{error.message}</div>;
 };
