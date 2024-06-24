@@ -1,5 +1,4 @@
 {
-  "$id": "http://example.com/example.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Example Schema",
   "description": "A schema representing a complex object with various features.",
@@ -92,7 +91,39 @@
       "title": "Is Active",
       "description": "Whether the person is active.",
       "type": "boolean",
-      "default": true
+      "uiSchema": "radio",
+      "oneOf": [
+        {
+          "title": "Yes",
+          "const": true
+        },
+        {
+          "title": "No",
+          "const": false
+        }
+      ]
+    },
+    "loves_cats": {
+      "title": "Loves Cats",
+      "description": "Whether the person loves cats.",
+      "type": "boolean"
+    },
+    "loves_pizza": {
+      "title": "Loves Pizza",
+      "description": "Whether the person loves pizza.",
+      "type": "boolean",
+      "uiSchema": "switch",
+      "default": true,
+      "oneOf": [
+        {
+          "title": "🍕",
+          "const": true
+        },
+        {
+          "title": "🙅‍♂️",
+          "const": false
+        }
+      ]
     },
     "address": {
       "title": "Address",
