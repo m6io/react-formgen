@@ -89,7 +89,7 @@
     },
     "is_active": {
       "title": "Is Active",
-      "description": "Whether the person is active.",
+      "description": "Whether the person is active. This field has a uiSchema of 'radio' and oneOf options, so it will render as a radio input.",
       "type": "boolean",
       "uiSchema": "radio",
       "oneOf": [
@@ -105,18 +105,39 @@
     },
     "loves_cats": {
       "title": "Loves Cats",
-      "description": "Whether the person loves cats.",
+      "description": "Whether the person loves cats. This field has no complex definition, so it will default to a checkbox input.",
       "type": "boolean"
+    },
+    "loves_dogs": {
+      "title": "Loves Dogs",
+      "description": "Whether the person loves dogs. This field has a uiSchema of 'switch' but no oneOf options, so it will default to a checkbox input.",
+      "type": "boolean",
+      "uiSchema": "switch"
     },
     "loves_pizza": {
       "title": "Loves Pizza",
-      "description": "Whether the person loves pizza.",
+      "description": "Whether the person loves pizza. This field has a uiSchema of 'switch' and oneOf options, so it will render as a switch input.",
       "type": "boolean",
       "uiSchema": "switch",
       "default": true,
       "oneOf": [
         {
           "title": "🍕",
+          "const": true
+        },
+        {
+          "title": "🙅‍♂️",
+          "const": false
+        }
+      ]
+    },
+    "loves_tacos": {
+      "title": "Loves Tacos",
+      "description": "Whether the person loves tacos. This field has oneOf options but no uiSchema defined, so it will default to the checkbox input.",
+      "type": "boolean",
+      "oneOf": [
+        {
+          "title": "🌮",
           "const": true
         },
         {

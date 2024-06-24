@@ -40,12 +40,60 @@ export const TailwindBooleanField: React.FC<{
   schema: NewBooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
+  // Early return if no oneOf options. This is the default boolean field.
+  if (!schema.oneOf) {
+    return <TailwindCheckboxBooleanField schema={schema} path={path} />;
+  }
+
+  // Return the appropriate boolean field based on the uiSchema.
+  switch (schema.uiSchema) {
+    case "radio":
+      return <TailwindRadioBooleanField schema={schema} path={path} />;
+    case "switch":
+      return <TailwindSwitchBooleanField schema={schema} path={path} />;
+    default: // in the case that the uiSchema does not match radio or switch
+      return <TailwindCheckboxBooleanField schema={schema} path={path} />;
+  }
+};
+
+/**
+ * Radio Boolean Field Component Template.
+ *
+ * For schemas defined like this:
+ * ```json
+ *    {
+ *      "type": "boolean",
+ *      "uiSchema": "radio",
+ *      "oneOf": [
+ *        {
+ *          "const": true,
+ *          "title": "Yes"
+ *        },
+ *        {
+ *          "const": false,
+ *          "title": "No"
+ *        }
+ *      ]
+ *    }
+ * ```
+ * @param {NewBooleanSchema} schema - The schema for the radio boolean field.
+ * @param {string[]} path - The path to the radio boolean field in the form data.
+ * @returns {JSX.Element} - The radio boolean field component.
+ * @example
+ * <TailwindRadioBooleanField schema={schema} path={path} />
+ *
+ */
+export const TailwindRadioBooleanField: React.FC<{
+  schema: NewBooleanSchema;
+  path: string[];
+}> = ({ schema, path }) => {
   const formData = useFormContext((state) => state.formData);
   const setFormData = useFormContext((state) => state.setFormData);
   const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? false;
 
-  // Possible variations depending on the schema definition
-  if (schema.uiSchema === "radio" && schema.oneOf) {
+  if (!schema.oneOf || schema.uiSchema !== "radio") {
+    return;
+  } else {
     return (
       <div className="flex flex-col">
         {schema.title && (
@@ -75,7 +123,47 @@ export const TailwindBooleanField: React.FC<{
         <TailwindErrorMessage path={path} />
       </div>
     );
-  } else if (schema.uiSchema === "switch" && schema.oneOf) {
+  }
+};
+
+/**
+ * Switch Boolean Field Component Template.
+ *
+ * For schemas defined like this:
+ * ```json
+ *    {
+ *      "type": "boolean",
+ *      "uiSchema": "switch",
+ *      "oneOf": [
+ *        {
+ *          "const": true,
+ *          "title": "On"
+ *        },
+ *        {
+ *          "const": false,
+ *          "title": "Off"
+ *        }
+ *      ]
+ *    }
+ * ```
+ * @param {NewBooleanSchema} schema - The schema for the switch boolean field.
+ * @param {string[]} path - The path to the switch boolean field in the form data.
+ * @returns {JSX.Element} - The switch boolean field component.
+ * @example
+ * <TailwindSwitchBooleanField schema={schema} path={path} />
+ *
+ */
+export const TailwindSwitchBooleanField: React.FC<{
+  schema: NewBooleanSchema;
+  path: string[];
+}> = ({ schema, path }) => {
+  const formData = useFormContext((state) => state.formData);
+  const setFormData = useFormContext((state) => state.setFormData);
+  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? false;
+
+  if (!schema.oneOf || schema.uiSchema !== "switch") {
+    return;
+  } else {
     return (
       <div className="flex flex-col">
         {schema.title && (
@@ -109,6 +197,31 @@ export const TailwindBooleanField: React.FC<{
       </div>
     );
   }
+};
+
+/**
+ * Checkbox Boolean Field Component Template.
+ *
+ * For schemas defined like this:
+ * ```json
+ *    {
+ *      "type": "boolean"
+ *    }
+ * ```
+ * @param {NewBooleanSchema} schema - The schema for the checkbox boolean field.
+ * @param {string[]} path - The path to the checkbox boolean field in the form data.
+ * @returns {JSX.Element} - The checkbox boolean field component.
+ * @example
+ * <TailwindCheckboxBooleanField schema={schema} path={path} />
+ *
+ */
+export const TailwindCheckboxBooleanField: React.FC<{
+  schema: NewBooleanSchema;
+  path: string[];
+}> = ({ schema, path }) => {
+  const formData = useFormContext((state) => state.formData);
+  const setFormData = useFormContext((state) => state.setFormData);
+  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? false;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(path, event.target.checked);
@@ -125,7 +238,6 @@ export const TailwindBooleanField: React.FC<{
         />
         {schema.title && (
           <label className="text-sm text-zinc-500 ms-3 dark:text-neutral-400">
-            {" "}
             {schema.title}
           </label>
         )}
