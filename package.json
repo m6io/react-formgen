@@ -7,5 +7,10 @@
   },
   "devDependencies": {
     "prettier": "^3.2.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "@m6oss/schema-form": "workspace:*"
+    }
   }
 }
