@@ -12,8 +12,12 @@ export {
 } from "./components";
 
 export type {
+  BaseStringSchema,
+  StringOneOf,
   StringSchema,
   NumberSchema,
+  BaseBooleanSchema,
+  BooleanOneOf,
   BooleanSchema,
   ObjectSchema,
   ArraySchema,

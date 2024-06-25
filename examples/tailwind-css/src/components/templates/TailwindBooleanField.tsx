@@ -3,33 +3,8 @@ import { useFormContext } from "@m6oss/schema-form";
 import { TailwindErrorMessage } from "./TailwindErrorMessage";
 
 /**
- * Custom OneOf type for boolean fields.
- * @typedef {Object} BooleanOneOf
- * @property {boolean} const - The value of the boolean field.
- * @property {string} title - The title of the boolean field.
- *
- */
-type BooleanOneOf = {
-  const: boolean;
-  title: string;
-};
-
-/**
- * Represents a new boolean schema with additional UI options.
- * @typedef {Object} NewBooleanSchema
- * @extends {BooleanSchema}
- * @property {"radio" | "switch"} uiSchema - The UI schema for the boolean field.
- * @property {BooleanOneOf[]} oneOf - The oneOf options for the boolean field.
- *
- */
-interface NewBooleanSchema extends BooleanSchema {
-  uiSchema: "radio" | "switch";
-  oneOf?: BooleanOneOf[];
-}
-
-/**
  * Boolean Field Component Template
- * @param {NewBooleanSchema} schema - The schema for the boolean field.
+ * @param {BooleanSchema} schema - The schema for the boolean field.
  * @param {string[]} path - The path to the boolean field in the form data.
  * @returns {JSX.Element} - The boolean field component.
  * @example
@@ -37,7 +12,7 @@ interface NewBooleanSchema extends BooleanSchema {
  *
  */
 export const TailwindBooleanField: React.FC<{
-  schema: NewBooleanSchema;
+  schema: BooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
   // Early return if no oneOf options. This is the default boolean field.
@@ -76,7 +51,7 @@ export const TailwindBooleanField: React.FC<{
  *      ]
  *    }
  * ```
- * @param {NewBooleanSchema} schema - The schema for the radio boolean field.
+ * @param {BooleanSchema} schema - The schema for the radio boolean field.
  * @param {string[]} path - The path to the radio boolean field in the form data.
  * @returns {JSX.Element} - The radio boolean field component.
  * @example
@@ -84,7 +59,7 @@ export const TailwindBooleanField: React.FC<{
  *
  */
 export const TailwindRadioBooleanField: React.FC<{
-  schema: NewBooleanSchema;
+  schema: BooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const formData = useFormContext((state) => state.formData);
@@ -146,7 +121,7 @@ export const TailwindRadioBooleanField: React.FC<{
  *      ]
  *    }
  * ```
- * @param {NewBooleanSchema} schema - The schema for the switch boolean field.
+ * @param {BooleanSchema} schema - The schema for the switch boolean field.
  * @param {string[]} path - The path to the switch boolean field in the form data.
  * @returns {JSX.Element} - The switch boolean field component.
  * @example
@@ -154,7 +129,7 @@ export const TailwindRadioBooleanField: React.FC<{
  *
  */
 export const TailwindSwitchBooleanField: React.FC<{
-  schema: NewBooleanSchema;
+  schema: BooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const formData = useFormContext((state) => state.formData);
@@ -208,7 +183,7 @@ export const TailwindSwitchBooleanField: React.FC<{
  *      "type": "boolean"
  *    }
  * ```
- * @param {NewBooleanSchema} schema - The schema for the checkbox boolean field.
+ * @param {BooleanSchema} schema - The schema for the checkbox boolean field.
  * @param {string[]} path - The path to the checkbox boolean field in the form data.
  * @returns {JSX.Element} - The checkbox boolean field component.
  * @example
@@ -216,7 +191,7 @@ export const TailwindSwitchBooleanField: React.FC<{
  *
  */
 export const TailwindCheckboxBooleanField: React.FC<{
-  schema: NewBooleanSchema;
+  schema: BooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const formData = useFormContext((state) => state.formData);

@@ -571,5 +571,5 @@
       "uniqueItems": true
     }
   },
-  "required": ["name", "email"]
+  "required": ["firstName", "lastName", "email"]
 }

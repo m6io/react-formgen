@@ -2,7 +2,7 @@
   "name": "@m6oss/schema-form",
   "description": "A type-safe, customizable, and super simple React form generator.",
   "private": false,
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "license": "MIT",
   "author": "m6io",
   "repository": {

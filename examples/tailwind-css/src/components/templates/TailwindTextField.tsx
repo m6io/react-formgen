@@ -1,32 +1,8 @@
 import { useFormContext, StringSchema } from "@m6oss/schema-form";
 import { TailwindErrorMessage } from "./TailwindErrorMessage";
 
-/**
- * Custom OneOf type for string fields.
- * @typedef {Object} StringOneOf
- * @property {string} const - The value of the string field.
- * @property {string} title - The title of the string field.
- *
- */
-type StringOneOf = {
-  const: string;
-  title: string;
-};
-
-/**
- * Represents a new string schema with additional UI options.
- * @typedef {Object} NewStringSchema
- * @extends {StringSchema}
- * @property {"textarea"} [uiSchema] - The UI schema for the string field.
- */
-interface NewStringSchema extends StringSchema {
-  uiSchema?: "textarea" | "tel";
-  oneOf?: StringOneOf[];
-  enum?: string[];
-}
-
 export const TailwindTextField: React.FC<{
-  schema: NewStringSchema;
+  schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
   // Early return if the schema has oneOf or enum options.
@@ -47,14 +23,14 @@ export const TailwindTextField: React.FC<{
 
 /**
  * Input Field Component Template
- * @param {NewStringSchema} schema - The schema for the input field.
+ * @param {StringSchema} schema - The schema for the input field.
  * @param {string[]} path - The path to the input field in the form data.
  * @returns {JSX.Element} - The input field component.
  * @example
  * <TailwindInputField schema={schema} path={path} />
  */
 const TailwindInputField: React.FC<{
-  schema: NewStringSchema;
+  schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const formData = useFormContext((state) => state.formData);
@@ -109,14 +85,14 @@ const TailwindInputField: React.FC<{
 
 /**
  * Textarea Field Component Template
- * @param {NewStringSchema} schema - The schema for the textarea field.
+ * @param {StringSchema} schema - The schema for the textarea field.
  * @param {string[]} path - The path to the textarea field in the form data.
  * @returns {JSX.Element} - The textarea field component.
  * @example
  * <TailwindTextareaField schema={schema} path={path} />
  */
 const TailwindTextareaField: React.FC<{
-  schema: NewStringSchema;
+  schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const formData = useFormContext((state) => state.formData);
@@ -151,14 +127,14 @@ const TailwindTextareaField: React.FC<{
 
 /**
  * Select Field Component Template
- * @param {NewStringSchema} schema - The schema for the select field.
+ * @param {StringSchema} schema - The schema for the select field.
  * @param {string[]} path - The path to the select field in the form data.
  * @returns {JSX.Element} - The select field component.
  * @example
  * <TailwindSelectField schema={schema} path={path} />
  */
 const TailwindSelectField: React.FC<{
-  schema: NewStringSchema;
+  schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const formData = useFormContext((state) => state.formData);
@@ -206,14 +182,14 @@ const TailwindSelectField: React.FC<{
 
 /**
  * Date Field Component Template
- * @param {NewStringSchema} schema - The schema for the date field.
+ * @param {StringSchema} schema - The schema for the date field.
  * @param {string[]} path - The path to the date field in the form data.
  * @returns {JSX.Element} - The date field component.
  * @example
  * <TailwindDateField schema={schema} path={path} />
  */
 const TailwindDateField: React.FC<{
-  schema: NewStringSchema;
+  schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const formData = useFormContext((state) => state.formData);
