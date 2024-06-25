@@ -1,0 +1,3 @@
+[submodule "examples/shadcn-ui"]
+	path = examples/shadcn-ui
+	url = https://github.com/m6io/schema-form-example-shadcn-ui.git
