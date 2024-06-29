@@ -15,6 +15,13 @@ export const ArrayField: React.FC<{
   const [valueAtPath, setValueAtPath] = useFieldData(path);
   const errorsAtPath = useFieldErrors(path);
 
+  const moveItem = (index: number, direction: "up" | "down") => {
+    const newArray = [...valueAtPath];
+    const [movedItem] = newArray.splice(index, 1);
+    newArray.splice(direction === "up" ? index - 1 : index + 1, 0, movedItem);
+    setValueAtPath(newArray);
+  };
+
   return (
     <div
       style={{
@@ -42,6 +49,8 @@ export const ArrayField: React.FC<{
               border: ".5px dotted lime",
               padding: "10px",
               margin: "10px 0",
+              display: "flex",
+              flexDirection: "column",
             }}
             key={index}
           >
@@ -51,16 +60,32 @@ export const ArrayField: React.FC<{
               definitions,
               customFields
             )}
-            <button
-              type="button"
-              onClick={() => {
-                const newArray = [...valueAtPath];
-                newArray.splice(index, 1);
-                setValueAtPath(newArray);
-              }}
-            >
-              Remove
-            </button>
+            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+              <button
+                type="button"
+                onClick={() => moveItem(index, "up")}
+                disabled={index === 0}
+              >
+                Move Up
+              </button>
+              <button
+                type="button"
+                onClick={() => moveItem(index, "down")}
+                disabled={index === valueAtPath.length - 1}
+              >
+                Move Down
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const newArray = [...valueAtPath];
+                  newArray.splice(index, 1);
+                  setValueAtPath(newArray);
+                }}
+              >
+                Remove
+              </button>
+            </div>
           </div>
         ))}
       <button

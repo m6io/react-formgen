@@ -16,7 +16,7 @@ addFormats(AjvInstance);
 // Form Component Template
 export const FormComponent: React.FC<{
   onSubmit: (data: { [key: string]: unknown }) => void;
-  onError: (errors: ErrorObject[]) => void;
+  onError: (errors: ErrorObject[], data?: { [key: string]: unknown }) => void;
   customFields?: CustomFields;
 }> = ({ onSubmit, onError, customFields = {} }) => {
   const schema = useFormContext((state) => state.schema);
@@ -32,7 +32,7 @@ export const FormComponent: React.FC<{
       onSubmit(formData);
     } else {
       setErrors(validate.errors ?? null);
-      onError(validate.errors ?? []);
+      onError(validate.errors ?? [], formData);
     }
   };
 
