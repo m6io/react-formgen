@@ -17,31 +17,32 @@ type StringOneOf = {
 /**
  * Represents a base string schema. This is used as a base for the StringSchema type, for instances where the constraints are not needed.
  * @typedef {Object} BaseStringSchema
- * @extends {JSONSchema7}
+ * @extends {Omit<JSONSchema7, "type">}
  * @property {"string"} type - The type of the schema.
  */
-interface BaseStringSchema extends JSONSchema7 {
+interface BaseStringSchema extends Omit<JSONSchema7, "type"> {
   type: "string";
 }
 
 /**
  * Represents the recommended string schema with additional UI options.
  * @typedef {Object} StringSchema
- * @extends {BaseStringSchema}
+ * @extends {Omit<JSONSchema7, "type" | "enum" | "oneOf">}
  * @property {"string"} type - The type of the schema.
  * @property {StringOneOf[]} [oneOf] - The oneOf options for the string field.
  * @property {StringOneOf[]} [enum] - The enum options for the string field.
  * @property {string} [uiSchema] - The UI schema for the string field.
  *
  */
-interface StringSchema extends BaseStringSchema {
+interface StringSchema extends Omit<JSONSchema7, "type" | "enum" | "oneOf"> {
+  type: "string";
   enum?: string[];
   oneOf?: StringOneOf[];
   uiSchema?: string;
 }
 
 // Types for number schema
-interface NumberSchema extends JSONSchema7 {
+interface NumberSchema extends Omit<JSONSchema7, "type"> {
   type: "number" | "integer";
 }
 
@@ -60,39 +61,36 @@ type BooleanOneOf = {
 /**
  * Represents a base boolean schema. This is used as a base for the BooleanSchema type, for instances where the constraints are not needed.
  * @typedef {Object} BaseBooleanSchema
- * @extends {JSONSchema7}
+ * @extends {Omit<JSONSchema7, "type">}
  * @property {"boolean"} type - The type of the schema.
  */
 
-interface BaseBooleanSchema extends JSONSchema7 {
+interface BaseBooleanSchema extends Omit<JSONSchema7, "type"> {
   type: "boolean";
 }
 
 /**
  * Represents the recommended boolean schema with additional UI options.
  * @typedef {Object} BooleanSchema
- * @extends {BaseBooleanSchema}
+ * @extends { Omit<JSONSchema7, "type" | "oneOf">}
  * @property {BooleanOneOf[]} oneOf - The oneOf options for the boolean field.
  * @property {string} [uiSchema] - The UI schema for the string field.
  *
  */
-interface BooleanSchema extends BaseBooleanSchema {
+interface BooleanSchema extends Omit<JSONSchema7, "type" | "oneOf"> {
+  type: "boolean";
   oneOf?: BooleanOneOf[];
   uiSchema?: string;
 }
 
 // Types for object schema
-interface ObjectSchema extends JSONSchema7 {
+interface ObjectSchema extends Omit<JSONSchema7, "type"> {
   type: "object";
-  properties: {
-    [key: string]: JSONSchema7;
-  };
 }
 
 // Types for array schema
-interface ArraySchema extends JSONSchema7 {
+interface ArraySchema extends Omit<JSONSchema7, "type"> {
   type: "array";
-  items: JSONSchema7;
 }
 
 // Custom Fields Type

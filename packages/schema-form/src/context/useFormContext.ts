@@ -3,6 +3,8 @@ import { useStore } from "zustand";
 import { FormState } from "./FormProvider";
 import { FormContext } from "./FormProvider";
 import { ErrorObject } from "ajv";
+import { getZeroState } from "../utils";
+import { JSONSchema7 } from "json-schema";
 
 // Custom hook to access form store
 export const useFormContext = <T>(selector: (state: FormState) => T): T => {
@@ -51,4 +53,42 @@ export const useFieldErrors = (path: string[]): ErrorObject[] | undefined => {
   };
 
   return getErrorsAtPath(path);
+};
+
+// Custom hook for array field manipulation
+export const useArrayField = (
+  path: string[],
+  schema: JSONSchema7,
+  definitions: any
+) => {
+  const [valueAtPath, setValueAtPath] = useFieldData(path);
+  const errorsAtPath = useFieldErrors(path);
+
+  const moveItem = (index: number, direction: "up" | "down") => {
+    const newArray = [...valueAtPath];
+    const [movedItem] = newArray.splice(index, 1);
+    newArray.splice(direction === "up" ? index - 1 : index + 1, 0, movedItem);
+    setValueAtPath(newArray);
+  };
+
+  const removeItem = (index: number) => {
+    const newArray = [...valueAtPath];
+    newArray.splice(index, 1);
+    setValueAtPath(newArray);
+  };
+
+  const addItem = () => {
+    setValueAtPath([
+      ...valueAtPath,
+      getZeroState(schema.items as JSONSchema7, definitions),
+    ]);
+  };
+
+  return {
+    valueAtPath,
+    errorsAtPath,
+    moveItem,
+    removeItem,
+    addItem,
+  };
 };
