@@ -141,7 +141,6 @@ import formSchemaAlt from './schema-alt.json';
 import {
   useFormContext,
   StringSchema,
-  ErrorMessage,
   Form,
   FormComponent,
   JSONSchema7,
@@ -159,8 +158,8 @@ const FormDataDisplay: React.FC = () => {
   );
 };
 
-// Example of a Custom Text Field Component
-const MyTextField: React.FC<{
+// Example of a Custom String Field Component
+const MyStringField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
@@ -180,7 +179,7 @@ const MyTextField: React.FC<{
     >
       {schema.title && <label>{schema.title}</label>}
       <input
-        type="text"
+        type='text'
         value={valueAtPath ?? ''}
         onChange={handleChange}
         placeholder={schema.title || ''}
@@ -206,7 +205,6 @@ const MyTextField: React.FC<{
           ))}
         </datalist>
       )}
-      <ErrorMessage path={path} />
     </div>
   );
 };
@@ -291,7 +289,7 @@ const App: React.FC = () => {
         initialData={initialData}
         onSubmit={(data) => console.log('Form submitted:', data)}
         onError={(errors) => console.error('Form errors:', errors)}
-        customFields={{ TextField: MyTextField }}
+        customFields={{ StringField: MyStringField }}
       />
       {/* Example of a form using FormProvider to wrap the form, display form data, and display a list of form errors. */}
       <div

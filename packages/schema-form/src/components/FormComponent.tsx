@@ -7,7 +7,10 @@ import { CustomFields } from "./types";
 import { renderField } from "./renderField";
 
 // Single shared Ajv instance with formats
-export const AjvInstance = new Ajv({ allErrors: true, verbose: true });
+export const AjvInstance = new Ajv({
+  allErrors: true,
+  verbose: true,
+}).addKeyword("uiSchema");
 addFormats(AjvInstance);
 
 // Form Component Template

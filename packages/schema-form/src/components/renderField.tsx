@@ -11,7 +11,7 @@ import {
 } from "./types";
 import { resolveRef } from "../utils/resolveRef";
 import {
-  TextField,
+  StringField,
   NumberField,
   BooleanField,
   ObjectField,
@@ -29,10 +29,10 @@ export const renderField = (
 
   switch (schema.type) {
     case "string":
-      return customFields?.TextField ? (
-        <customFields.TextField schema={schema as StringSchema} path={path} />
+      return customFields?.StringField ? (
+        <customFields.StringField schema={schema as StringSchema} path={path} />
       ) : (
-        <TextField schema={schema as StringSchema} path={path} />
+        <StringField schema={schema as StringSchema} path={path} />
       );
     case "integer":
     case "number":

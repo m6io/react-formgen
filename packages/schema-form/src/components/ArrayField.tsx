@@ -2,7 +2,7 @@ import React from "react";
 import { JSONSchema7 } from "json-schema";
 import { useFormContext } from "../context/useFormContext";
 import { ArraySchema, CustomFields, SchemaDefinitions } from "./types";
-import { ErrorMessage } from "./index";
+import { ErrorObject } from "ajv";
 import { getZeroState } from "../utils/getZeroState";
 import { renderField } from "./renderField";
 
@@ -15,7 +15,37 @@ export const ArrayField: React.FC<{
 }> = ({ schema, path, definitions, customFields = {} }) => {
   const formData = useFormContext((state) => state.formData);
   const setFormData = useFormContext((state) => state.setFormData);
+  const errors = useFormContext((state) => state.errors);
   const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? [];
+
+  const getErrorsAtPath = (path: string[]): ErrorObject[] | undefined => {
+    const errorMap: { [key: string]: ErrorObject[] } = {};
+
+    errors?.forEach((error) => {
+      const fullPath = `/${(error.instancePath || "")
+        .split("/")
+        .slice(1)
+        .join("/")}`;
+      const missingPath =
+        error.keyword === "required"
+          ? `${fullPath}/${error.params.missingProperty}`
+          : fullPath;
+      errorMap[missingPath] = errorMap[missingPath] || [];
+      errorMap[missingPath].push(error);
+    });
+
+    const fullPath = `/${path.join("/")}`;
+    const fieldErrors = errorMap[fullPath] || [];
+
+    return fieldErrors;
+  };
+  const [errorsAtPath, setErrorsAtPath] = React.useState<
+    ErrorObject[] | undefined
+  >(getErrorsAtPath(path));
+
+  React.useEffect(() => {
+    setErrorsAtPath(getErrorsAtPath(path));
+  }, [errors]);
 
   return (
     <div
@@ -29,6 +59,12 @@ export const ArrayField: React.FC<{
     >
       {schema.title && <label>{schema.title}</label>}
       {schema.description && <small>{schema.description}</small>}
+      {errorsAtPath &&
+        errorsAtPath.map((error, index) => (
+          <div key={index} style={{ color: "red" }}>
+            {error.message}
+          </div>
+        ))}
       <br />
       {schema.items &&
         Array.isArray(valueAtPath) &&
@@ -71,7 +107,6 @@ export const ArrayField: React.FC<{
       >
         Add Item
       </button>
-      <ErrorMessage path={path} />
     </div>
   );
 };

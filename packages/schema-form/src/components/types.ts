@@ -97,8 +97,8 @@ interface ArraySchema extends JSONSchema7 {
 
 // Custom Fields Type
 type CustomFields = {
-  TextField?: React.FC<{ schema: StringSchema; path: string[] }>;
-  BaseTextField?: React.FC<{ schema: BaseStringSchema; path: string[] }>;
+  StringField?: React.FC<{ schema: StringSchema; path: string[] }>;
+  BaseStringField?: React.FC<{ schema: BaseStringSchema; path: string[] }>;
   NumberField?: React.FC<{ schema: NumberSchema; path: string[] }>;
   BooleanField?: React.FC<{ schema: BooleanSchema; path: string[] }>;
   BaseBooleanField?: React.FC<{ schema: BaseBooleanSchema; path: string[] }>;

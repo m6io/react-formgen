@@ -1,14 +1,13 @@
 export {
   ArrayField,
   BooleanField,
-  ErrorMessage,
   Form,
   FormComponent,
   AjvInstance,
   NumberField,
   ObjectField,
   renderField,
-  TextField,
+  StringField,
 } from "./components";
 
 export type {
