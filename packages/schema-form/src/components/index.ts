@@ -1,20 +1,20 @@
-import { ArrayField } from "./ArrayField";
-import { BooleanField } from "./BooleanField";
 import { Form } from "./Form";
 import { FormComponent, AjvInstance } from "./FormComponent";
-import { NumberField } from "./NumberField";
-import { ObjectField } from "./ObjectField";
 import { renderField } from "./renderField";
-import { StringField } from "./StringField";
+import { ArrayField } from "./fields/ArrayField";
+import { BooleanField } from "./fields/BooleanField";
+import { NumberField } from "./fields/NumberField";
+import { ObjectField } from "./fields/ObjectField";
+import { StringField } from "./fields/StringField";
 
 export {
-  ArrayField,
-  BooleanField,
   Form,
   FormComponent,
   AjvInstance,
+  renderField,
+  ArrayField,
+  BooleanField,
   NumberField,
   ObjectField,
-  renderField,
   StringField,
 };
