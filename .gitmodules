@@ -4,3 +4,6 @@
 [submodule "examples/tailwindcss"]
 	path = examples/tailwindcss
 	url = https://github.com/m6io/schema-form-example-tailwindcss.git
+[submodule "examples/material-ui"]
+	path = examples/material-ui
+	url = https://github.com/m6io/schema-form-example-material-ui.git
