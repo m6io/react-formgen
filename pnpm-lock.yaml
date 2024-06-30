@@ -124,7 +124,7 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)
 
-  examples/tailwind-css:
+  examples/tailwindcss:
     dependencies:
       '@m6oss/schema-form':
         specifier: workspace:*

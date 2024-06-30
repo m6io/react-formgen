@@ -6,13 +6,11 @@ Here you'll find examples of how to use the `@m6oss/schema-form` package with va
 
 Done:
 
-- [x] **Tailwind CSS** - [See it here](./tailwind-css/src)
+- [x] **Tailwind CSS** - [See it here](./tailwindcss/src)
 
   - [Tailwind CSS Homepage](https://tailwindcss.com/) | [Tailwind CSS GitHub](https://github.com/tailwindlabs/tailwindcss)
 
-In Progress:
-
-- [ ] **ShadCN**
+- [x] **ShadCN**
 
   - [ShadCN Homepage](https://ui.shadcn.com/) | [ShadCN GitHub](https://github.com/shadcn-ui/ui)
 
