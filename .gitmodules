@@ -1,3 +1,6 @@
 [submodule "examples/shadcn-ui"]
 	path = examples/shadcn-ui
 	url = https://github.com/m6io/schema-form-example-shadcn-ui.git
+[submodule "examples/tailwindcss"]
+	path = examples/tailwindcss
+	url = https://github.com/m6io/schema-form-example-tailwindcss.git
