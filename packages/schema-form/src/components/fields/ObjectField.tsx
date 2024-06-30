@@ -1,12 +1,12 @@
 import React from "react";
 import { JSONSchema7 } from "json-schema";
-import { CustomFields, ObjectSchema, SchemaDefinitions } from "../types";
+import { CustomFields, BaseObjectSchema, SchemaDefinitions } from "../types";
 import { renderField } from "../renderField";
 import { useFieldErrors } from "../../context/useFormContext";
 
 // Object Field Component Template
 export const ObjectField: React.FC<{
-  schema: ObjectSchema;
+  schema: BaseObjectSchema;
   path: string[];
   definitions: SchemaDefinitions;
   customFields?: CustomFields;

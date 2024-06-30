@@ -1,10 +1,10 @@
 import React from "react";
-import { NumberSchema } from "../types";
+import { BaseNumberSchema } from "../types";
 import { useFieldData, useFieldErrors } from "../../context/useFormContext";
 
 // Number Field Component Template
 export const NumberField: React.FC<{
-  schema: NumberSchema;
+  schema: BaseNumberSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const [valueAtPath, setValueAtPath] = useFieldData(path);

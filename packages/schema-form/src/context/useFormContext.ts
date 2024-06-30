@@ -16,10 +16,14 @@ export const useFormContext = <T>(selector: (state: FormState) => T): T => {
 };
 
 // Custom hook to get form data at a specific path
-export const useFieldData = (path: string[]): [any, (value: any) => void] => {
+export const useFieldData = (
+  path: string[],
+  defaultOnNull: any = null
+): [any, (value: any) => void] => {
   const formData = useFormContext((state) => state.formData);
   const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? null;
+  const valueAtPath =
+    path.reduce((acc, key) => acc?.[key], formData) ?? defaultOnNull;
 
   const setValueAtPath = (value: any) => setFormData(path, value);
 
@@ -59,9 +63,10 @@ export const useFieldErrors = (path: string[]): ErrorObject[] | undefined => {
 export const useArrayField = (
   path: string[],
   schema: JSONSchema7,
-  definitions: any
+  definitions: any,
+  defaultOnNull: any = null
 ) => {
-  const [valueAtPath, setValueAtPath] = useFieldData(path);
+  const [valueAtPath, setValueAtPath] = useFieldData(path, defaultOnNull);
   const errorsAtPath = useFieldErrors(path);
 
   const moveItem = (index: number, direction: "up" | "down") => {

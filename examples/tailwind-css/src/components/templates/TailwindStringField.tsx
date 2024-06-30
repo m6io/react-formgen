@@ -1,7 +1,6 @@
-import { useFormContext, StringSchema } from "@m6oss/schema-form";
-import { TailwindErrorMessage } from "./TailwindErrorMessage";
+import { StringSchema, useFieldData, useFieldErrors } from "@m6oss/schema-form";
 
-export const TailwindTextField: React.FC<{
+export const TailwindStringField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
@@ -15,7 +14,7 @@ export const TailwindTextField: React.FC<{
   ) {
     return <TailwindDateField schema={schema} path={path} />;
   } // Check if the schema has a uiSchema of textarea. If so, return the TailwindTextareaField component.
-  else if (schema.uiSchema === "textarea") {
+  else if (schema.uiSchema?.component === "textarea") {
     return <TailwindTextareaField schema={schema} path={path} />;
   }
   return <TailwindInputField schema={schema} path={path} />;
@@ -33,17 +32,17 @@ const TailwindInputField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? null;
+  const [valueAtPath, setValueAtPath] = useFieldData(path);
+  const errorsAtPath = useFieldErrors(path);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(path, event.target.value);
+    setValueAtPath(event.target.value);
   };
 
   const inputType =
     schema.format && ["password", "email", "url"].includes(schema.format)
       ? schema.format
-      : schema.uiSchema === "tel"
+      : schema.uiSchema?.component === "tel"
         ? "tel"
         : "text";
 
@@ -78,7 +77,12 @@ const TailwindInputField: React.FC<{
           ))}
         </datalist>
       )}
-      <TailwindErrorMessage path={path} />
+      {errorsAtPath &&
+        errorsAtPath.map((error, index) => (
+          <div key={index} className="text-red-500 dark:text-red-400">
+            {error.message}
+          </div>
+        ))}
     </div>
   );
 };
@@ -95,11 +99,11 @@ const TailwindTextareaField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? null;
+  const [valueAtPath, setValueAtPath] = useFieldData(path);
+  const errorsAtPath = useFieldErrors(path);
+
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData(path, event.target.value);
+    setValueAtPath(event.target.value);
   };
 
   return (
@@ -120,7 +124,12 @@ const TailwindTextareaField: React.FC<{
           {schema.description}
         </small>
       )}
-      <TailwindErrorMessage path={path} />
+      {errorsAtPath &&
+        errorsAtPath.map((error, index) => (
+          <div key={index} className="text-red-500 dark:text-red-400">
+            {error.message}
+          </div>
+        ))}
     </div>
   );
 };
@@ -137,12 +146,11 @@ const TailwindSelectField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? "";
+  const [valueAtPath, setValueAtPath] = useFieldData(path, "");
+  const errorsAtPath = useFieldErrors(path);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData(path, event.target.value);
+    setValueAtPath(event.target.value);
   };
 
   return (
@@ -175,7 +183,12 @@ const TailwindSelectField: React.FC<{
           {schema.description}
         </small>
       )}
-      <TailwindErrorMessage path={path} />
+      {errorsAtPath &&
+        errorsAtPath.map((error, index) => (
+          <div key={index} className="text-red-500 dark:text-red-400">
+            {error.message}
+          </div>
+        ))}
     </div>
   );
 };
@@ -192,12 +205,11 @@ const TailwindDateField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? "";
+  const [valueAtPath, setValueAtPath] = useFieldData(path, "");
+  const errorsAtPath = useFieldErrors(path);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(path, event.target.value);
+    setValueAtPath(event.target.value);
   };
 
   const inputType =
@@ -222,7 +234,12 @@ const TailwindDateField: React.FC<{
           {schema.description}
         </small>
       )}
-      <TailwindErrorMessage path={path} />
+      {errorsAtPath &&
+        errorsAtPath.map((error, index) => (
+          <div key={index} className="text-red-500 dark:text-red-400">
+            {error.message}
+          </div>
+        ))}
     </div>
   );
 };

@@ -1,6 +1,4 @@
-import { NumberSchema } from "@m6oss/schema-form";
-import { useFormContext } from "@m6oss/schema-form";
-import { TailwindErrorMessage } from "./TailwindErrorMessage";
+import { NumberSchema, useFieldData, useFieldErrors } from "@m6oss/schema-form";
 
 /**
  * Number Field Component Template
@@ -15,11 +13,11 @@ export const TailwindNumberField: React.FC<{
   schema: NumberSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? null;
+  const [valueAtPath, setValueAtPath] = useFieldData(path);
+  const errorsAtPath = useFieldErrors(path);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(path, event.target.value ? Number(event.target.value) : null);
+    setValueAtPath(event.target.value ? Number(event.target.value) : null);
   };
 
   return (
@@ -53,7 +51,12 @@ export const TailwindNumberField: React.FC<{
           ))}
         </datalist>
       )}
-      <TailwindErrorMessage path={path} />
+      {errorsAtPath &&
+        errorsAtPath.map((error, index) => (
+          <div key={index} className="text-red-500 dark:text-red-400">
+            {error.message}
+          </div>
+        ))}
     </div>
   );
 };

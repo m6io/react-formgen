@@ -14,17 +14,27 @@ export type {
   BaseStringSchema,
   StringOneOf,
   StringSchema,
+  BaseNumberSchema,
+  NumberOneOf,
   NumberSchema,
   BaseBooleanSchema,
   BooleanOneOf,
   BooleanSchema,
-  ObjectSchema,
-  ArraySchema,
+  BaseObjectSchema,
+  BaseArraySchema,
   CustomFields,
   SchemaDefinitions,
+  UISchema,
 } from "./components/types";
 
-export { FormContext, FormProvider, useFormContext } from "./context";
+export {
+  FormContext,
+  FormProvider,
+  useFormContext,
+  useFieldData,
+  useFieldErrors,
+  useArrayField,
+} from "./context";
 
 export type { FormState } from "./context";
 

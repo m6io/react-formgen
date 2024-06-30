@@ -3,7 +3,7 @@ import { TailwindArrayField } from "./TailwindArrayField";
 import { TailwindBooleanField } from "./TailwindBooleanField";
 import { TailwindNumberField } from "./TailwindNumberField";
 import { TailwindObjectField } from "./TailwindObjectField";
-import { TailwindTextField } from "./TailwindTextField";
+import { TailwindStringField } from "./TailwindStringField";
 import { TailwindFormComponent } from "./TailwindFormComponent";
 
 /**
@@ -14,7 +14,7 @@ const tailwindCustomFields: CustomFields = {
   BooleanField: TailwindBooleanField,
   NumberField: TailwindNumberField,
   ObjectField: TailwindObjectField,
-  TextField: TailwindTextField,
+  StringField: TailwindStringField,
 };
 
 export { tailwindCustomFields, TailwindFormComponent };

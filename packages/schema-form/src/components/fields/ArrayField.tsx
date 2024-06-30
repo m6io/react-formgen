@@ -1,12 +1,12 @@
 import React from "react";
 import { JSONSchema7 } from "json-schema";
 import { useArrayField } from "../../context/useFormContext";
-import { ArraySchema, CustomFields, SchemaDefinitions } from "../types";
+import { BaseArraySchema, CustomFields, SchemaDefinitions } from "../types";
 import { renderField } from "../renderField";
 
 // Array Field Component Template
 export const ArrayField: React.FC<{
-  schema: ArraySchema;
+  schema: BaseArraySchema;
   path: string[];
   definitions: SchemaDefinitions;
   customFields?: CustomFields;
@@ -84,7 +84,7 @@ import { getZeroState } from "../../utils/getZeroState";
 import { useFieldData, useFieldErrors } from "../../context/useFormContext";
 // Array Field Component Template (This is a verbose example, not using the useArrayField hook)
 export const ArrayFieldVerbose: React.FC<{
-  schema: ArraySchema;
+  schema: BaseArraySchema;
   path: string[];
   definitions: SchemaDefinitions;
   customFields?: CustomFields;

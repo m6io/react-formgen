@@ -332,7 +332,7 @@
           "title": "Notes",
           "description": "Additional notes about the address. This field has a uiSchema of 'textarea', so it will render as a textarea input.",
           "type": "string",
-          "uiSchema": "textarea"
+          "uiSchema": { "component": "textarea" }
         }
       },
       "required": ["street_address", "city", "state"]
@@ -420,7 +420,7 @@
       "title": "Is Active",
       "description": "Whether the person is active. This field has a uiSchema of 'radio' and oneOf options, so it will render as a radio input.",
       "type": "boolean",
-      "uiSchema": "radio",
+      "uiSchema": { "component": "radio" },
       "oneOf": [
         {
           "title": "Yes",
@@ -441,13 +441,13 @@
       "title": "Loves Dogs",
       "description": "Whether the person loves dogs. This field has a uiSchema of 'switch' but no oneOf options, so it will default to a checkbox input.",
       "type": "boolean",
-      "uiSchema": "switch"
+      "uiSchema": { "component": "switch" }
     },
     "loves_pizza": {
       "title": "Loves Pizza",
       "description": "Whether the person loves pizza. This field has a uiSchema of 'switch' and oneOf options, so it will render as a switch input.",
       "type": "boolean",
-      "uiSchema": "switch",
+      "uiSchema": { "component": "switch" },
       "default": true,
       "oneOf": [
         {

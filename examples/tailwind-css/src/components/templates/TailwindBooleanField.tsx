@@ -1,6 +1,8 @@
-import { BooleanSchema } from "@m6oss/schema-form";
-import { useFormContext } from "@m6oss/schema-form";
-import { TailwindErrorMessage } from "./TailwindErrorMessage";
+import {
+  BooleanSchema,
+  useFieldData,
+  useFieldErrors,
+} from "@m6oss/schema-form";
 
 /**
  * Boolean Field Component Template
@@ -21,7 +23,7 @@ export const TailwindBooleanField: React.FC<{
   }
 
   // Return the appropriate boolean field based on the uiSchema.
-  switch (schema.uiSchema) {
+  switch (schema.uiSchema?.component) {
     case "radio":
       return <TailwindRadioBooleanField schema={schema} path={path} />;
     case "switch":
@@ -62,11 +64,10 @@ export const TailwindRadioBooleanField: React.FC<{
   schema: BooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? false;
+  const [valueAtPath, setValueAtPath] = useFieldData(path, false);
+  const errorsAtPath = useFieldErrors(path);
 
-  if (!schema.oneOf || schema.uiSchema !== "radio") {
+  if (!schema.oneOf || schema.uiSchema?.component !== "radio") {
     return;
   } else {
     return (
@@ -84,7 +85,7 @@ export const TailwindRadioBooleanField: React.FC<{
             <input
               type="radio"
               checked={valueAtPath === option.const}
-              onChange={() => setFormData(path, option.const)}
+              onChange={() => setValueAtPath(option.const)}
               className="form-radio h-4 w-4 text-zinc-600 dark:bg-neutral-800 dark:border-neutral-700 dark:focus:ring-offset-zinc-800 bg-white border-zinc-200 rounded dark:checked:bg-zinc-600 dark:checked:border-zinc-600 dark:checked:text-zinc-100"
             />
             <span>{option.title}</span>
@@ -95,7 +96,12 @@ export const TailwindRadioBooleanField: React.FC<{
             {schema.description}
           </small>
         )}
-        <TailwindErrorMessage path={path} />
+        {errorsAtPath &&
+          errorsAtPath.map((error, index) => (
+            <div key={index} className="text-red-500 dark:text-red-400">
+              {error.message}
+            </div>
+          ))}
       </div>
     );
   }
@@ -132,11 +138,10 @@ export const TailwindSwitchBooleanField: React.FC<{
   schema: BooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? false;
+  const [valueAtPath, setValueAtPath] = useFieldData(path, false);
+  const errorsAtPath = useFieldErrors(path);
 
-  if (!schema.oneOf || schema.uiSchema !== "switch") {
+  if (!schema.oneOf || schema.uiSchema?.component !== "switch") {
     return;
   } else {
     return (
@@ -154,7 +159,7 @@ export const TailwindSwitchBooleanField: React.FC<{
             <input
               type="checkbox"
               checked={valueAtPath}
-              onChange={(event) => setFormData(path, event.target.checked)}
+              onChange={(event) => setValueAtPath(event.target.checked)}
               className="relative w-[35px] h-[21px] bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-blue-600 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-blue-600 checked:border-blue-600 focus:checked:border-blue-600 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-600 before:inline-block before:size-4 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-neutral-400 dark:checked:before:bg-blue-200"
             />
             <label className="text-sm text-gray-500 ms-3 dark:text-neutral-400">
@@ -162,13 +167,17 @@ export const TailwindSwitchBooleanField: React.FC<{
             </label>
           </div>
         </div>
-
         {schema.description && (
           <small className="text-gray-500 dark:text-gray-400">
             {schema.description}
           </small>
         )}
-        <TailwindErrorMessage path={path} />
+        {errorsAtPath &&
+          errorsAtPath.map((error, index) => (
+            <div key={index} className="text-red-500 dark:text-red-400">
+              {error.message}
+            </div>
+          ))}{" "}
       </div>
     );
   }
@@ -194,12 +203,10 @@ export const TailwindCheckboxBooleanField: React.FC<{
   schema: BooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? false;
-
+  const [valueAtPath, setValueAtPath] = useFieldData(path, false);
+  const errorsAtPath = useFieldErrors(path);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(path, event.target.checked);
+    setValueAtPath(event.target.checked);
   };
 
   return (
@@ -222,7 +229,12 @@ export const TailwindCheckboxBooleanField: React.FC<{
           {schema.description}
         </small>
       )}
-      <TailwindErrorMessage path={path} />
+      {errorsAtPath &&
+        errorsAtPath.map((error, index) => (
+          <div key={index} className="text-red-500 dark:text-red-400">
+            {error.message}
+          </div>
+        ))}{" "}
     </div>
   );
 };

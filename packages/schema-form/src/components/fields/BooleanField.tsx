@@ -1,10 +1,10 @@
 import React from "react";
-import { BooleanSchema } from "../types";
+import { BaseBooleanSchema } from "../types";
 import { useFieldData, useFieldErrors } from "../../context/useFormContext";
 
 // Boolean Field Component Template
 export const BooleanField: React.FC<{
-  schema: BooleanSchema;
+  schema: BaseBooleanSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const [valueAtPath, setValueAtPath] = useFieldData(path);

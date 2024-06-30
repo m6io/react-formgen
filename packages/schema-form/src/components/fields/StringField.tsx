@@ -1,10 +1,10 @@
 import React from "react";
-import { StringSchema } from "../types";
+import { BaseStringSchema } from "../types";
 import { useFieldData, useFieldErrors } from "../../context/useFormContext";
 
 // String Field Component Template
 export const StringField: React.FC<{
-  schema: StringSchema;
+  schema: BaseStringSchema;
   path: string[];
 }> = ({ schema, path }) => {
   const [valueAtPath, setValueAtPath] = useFieldData(path);

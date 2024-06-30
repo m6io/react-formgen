@@ -4,10 +4,13 @@ import {
   StringSchema,
   NumberSchema,
   BooleanSchema,
-  ObjectSchema,
-  ArraySchema,
+  BaseObjectSchema,
+  BaseArraySchema,
   CustomFields,
   SchemaDefinitions,
+  BaseNumberSchema,
+  BaseBooleanSchema,
+  BaseStringSchema,
 } from "./types";
 import { resolveRef } from "../utils/resolveRef";
 import {
@@ -32,14 +35,14 @@ export const renderField = (
       return customFields?.StringField ? (
         <customFields.StringField schema={schema as StringSchema} path={path} />
       ) : (
-        <StringField schema={schema as StringSchema} path={path} />
+        <StringField schema={schema as BaseStringSchema} path={path} />
       );
     case "integer":
     case "number":
       return customFields?.NumberField ? (
         <customFields.NumberField schema={schema as NumberSchema} path={path} />
       ) : (
-        <NumberField schema={schema as NumberSchema} path={path} />
+        <NumberField schema={schema as BaseNumberSchema} path={path} />
       );
     case "boolean":
       return customFields?.BooleanField ? (
@@ -48,21 +51,21 @@ export const renderField = (
           path={path}
         />
       ) : (
-        <BooleanField schema={schema as BooleanSchema} path={path} />
+        <BooleanField schema={schema as BaseBooleanSchema} path={path} />
       );
     case "null":
       return <input type="text" value="null" disabled />;
     case "object":
       return customFields?.ObjectField ? (
         <customFields.ObjectField
-          schema={schema as ObjectSchema}
+          schema={schema as BaseObjectSchema}
           path={path}
           definitions={definitions}
           customFields={customFields}
         />
       ) : (
         <ObjectField
-          schema={schema as ObjectSchema}
+          schema={schema as BaseObjectSchema}
           path={path}
           definitions={definitions}
           customFields={customFields}
@@ -71,14 +74,14 @@ export const renderField = (
     case "array":
       return customFields?.ArrayField ? (
         <customFields.ArrayField
-          schema={schema as ArraySchema}
+          schema={schema as BaseArraySchema}
           path={path}
           definitions={definitions}
           customFields={customFields}
         />
       ) : (
         <ArrayField
-          schema={schema as ArraySchema}
+          schema={schema as BaseArraySchema}
           path={path}
           definitions={definitions}
           customFields={customFields}
