@@ -6,13 +6,19 @@ Here you'll find examples of how to use the `@m6oss/schema-form` package with va
 
 Done:
 
-- [x] **Tailwind CSS** - [See it here](./tailwindcss/src)
+- [x] **ShadCN** - [See it here](https://github.com/m6io/schema-form-example-shadcn-ui.git)
+
+  - [ShadCN Homepage](https://ui.shadcn.com/) | [ShadCN GitHub](https://github.com/shadcn-ui/ui)
+
+- [x] **Tailwind CSS** - [See it here](https://github.com/m6io/schema-form-example-tailwindcss.git)
 
   - [Tailwind CSS Homepage](https://tailwindcss.com/) | [Tailwind CSS GitHub](https://github.com/tailwindlabs/tailwindcss)
 
-- [x] **ShadCN**
+In Progress:
 
-  - [ShadCN Homepage](https://ui.shadcn.com/) | [ShadCN GitHub](https://github.com/shadcn-ui/ui)
+- [ ] **Material-UI (MUI)** - [See it here](https://github.com/m6io/schema-form-example-material-ui.git)
+
+  - [Material-UI Homepage](https://mui.com/) | [Material-UI GitHub](https://github.com/mui/material-ui)
 
 Planned:
 
@@ -35,10 +41,6 @@ Planned:
 - [ ] **Mantine**
 
   - [Mantine Homepage](https://mantine.dev/) | [Mantine GitHub](https://github.com/mantinedev/mantine)
-
-- [ ] **Material-UI (MUI)**
-
-  - [Material-UI Homepage](https://mui.com/) | [Material-UI GitHub](https://github.com/mui/material-ui)
 
 - [ ] **Semantic UI React**
 
