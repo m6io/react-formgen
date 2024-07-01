@@ -6,34 +6,32 @@ Here you'll find examples of how to use the `@m6oss/schema-form` package with va
 
 Done:
 
-- [x] **ShadCN** - [See it here](https://github.com/m6io/schema-form-example-shadcn-ui.git)
+- [x] **ShadCN** - [See it here](https://github.com/m6io/schema-form-example-shadcn-ui)
 
   - [See it live!](https://schema-form-example-shadcn-ui.vercel.app/)
   - [ShadCN Homepage](https://ui.shadcn.com/) | [ShadCN GitHub](https://github.com/shadcn-ui/ui)
 
-- [x] **Tailwind CSS** - [See it here](https://github.com/m6io/schema-form-example-tailwindcss.git)
+- [x] **Tailwind CSS** - [See it here](https://github.com/m6io/schema-form-example-tailwindcss)
   - [See it live!](https://schema-form-example-tailwindcss.vercel.app/)
   - [Tailwind CSS Homepage](https://tailwindcss.com/) | [Tailwind CSS GitHub](https://github.com/tailwindlabs/tailwindcss)
 
 In Progress:
 
-- [ ] **Bootstrap** - [See it here](https://github.com/m6io/schema-form-example-bootstrap.git)
+- [ ] **Ant Design** - [See it here](https://github.com/m6io/schema-form-example-antd)
+
+  - [See it live!](https://schema-form-example-antd.vercel.app/)
+  - [Ant Design Homepage](https://ant.design/) | [Ant Design GitHub](https://github.com/ant-design/ant-design)
+
+- [ ] **Bootstrap** - [See it here](https://github.com/m6io/schema-form-example-bootstrap)
+
   - [See it live!](https://schema-form-example-bootstrap.vercel.app/)
   - [Bootstrap Homepage](https://getbootstrap.com/) | [Bootstrap GitHub](https://github.com/twbs/bootstrap)
 
-- [ ] **Material-UI (MUI)** - [See it here](https://github.com/m6io/schema-form-example-material-ui.git)
+- [ ] **Material-UI (MUI)** - [See it here](https://github.com/m6io/schema-form-example-material-ui)
   - [See it live!](https://schema-form-example-material-ui.vercel.app/)
   - [Material-UI Homepage](https://mui.com/) | [Material-UI GitHub](https://github.com/mui/material-ui)
 
 Planned:
-
-- [ ] **Ant Design**
-
-  - [Ant Design Homepage](https://ant.design/) | [Ant Design GitHub](https://github.com/ant-design/ant-design)
-
-- [ ] **Bootstrap**
-
-  - [Bootstrap Homepage](https://getbootstrap.com/) | [Bootstrap GitHub](https://github.com/twbs/bootstrap)
 
 - [ ] **Blueprint**
 

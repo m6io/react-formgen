@@ -10,3 +10,6 @@
 [submodule "examples/bootstrap"]
 	path = examples/bootstrap
 	url = https://github.com/m6io/schema-form-example-bootstrap.git
+[submodule "examples/antd"]
+	path = examples/antd
+	url = https://github.com/m6io/schema-form-example-antd.git
