@@ -7,7 +7,7 @@
   "author": "m6io",
   "repository": {
     "type": "git",
-    "url": "https://github.com/m6io/schema-form.git",
+    "url": "https://github.com/m6io/react-formgen.git",
     "directory": "packages/schema-form"
   },
   "keywords": [
@@ -21,7 +21,7 @@
     "form generator"
   ],
   "bugs": {
-    "url": "https://github.com/m6io/schema-form/issues"
+    "url": "https://github.com/m6io/react-formgen/issues"
   },
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
