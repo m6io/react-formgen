@@ -1,6 +1,6 @@
 # Example Implementations
 
-Here you'll find examples of how to use the `@m6oss/schema-form` package with various React UI component libraries.
+Here you'll find examples of how to use the `@react-formgen/json-schema` package with various React UI component libraries.
 
 ## Roadmap
 

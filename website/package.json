@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@m6oss/schema-form": "workspace:*",
+    "@react-formgen/json-schema": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

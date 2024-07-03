@@ -1,16 +1,17 @@
 {
-  "name": "@m6oss/schema-form-monorepo",
+  "name": "@react-formgen/monorepo",
   "version": "0.0.0",
   "scripts": {
     "dev": "pnpm run --filter website dev",
-    "build": "pnpm run --filter \"@m6oss/schema-form\" build"
+    "build": "pnpm run --filter \"@react-formgen/json-schema\" build"
   },
   "devDependencies": {
     "prettier": "^3.2.5"
   },
   "pnpm": {
     "overrides": {
-      "@m6oss/schema-form": "workspace:*"
+      "@react-formgen/json-schema": "workspace:*"
     }
   }
 }
+

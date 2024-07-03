@@ -1,4 +1,4 @@
-import { Form, JSONSchema7 } from '@m6oss/schema-form';
+import { Form, JSONSchema7 } from '@react-formgen/json-schema';
 import schema from './schema.json';
 
 const App = () => {

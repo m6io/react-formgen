@@ -1,4 +1,4 @@
-# @m6oss/schema-form = A JSON Schema to React Form Generator
+# @react-formgen/json-schema = A JSON Schema to React Form Generator
 
 A type-safe, customizable, and super simple React form generator.
 
@@ -21,13 +21,13 @@ Use cases:
 Install with npm
 
 ```bash
-npm install @m6oss/schema-form
+npm install @react-formgen/json-schema
 ```
 
 or with Yarn
 
 ```bash
-yarn add @m6oss/schema-form
+yarn add @react-formgen/json-schema
 ```
 
 ## Usage
@@ -94,7 +94,7 @@ Open your new React app and paste this JSON Schema in a new file called `src/sch
 Then replace the contents of `src/App.tsx` with the following:
 
 ```tsx
-import { Form, JSONSchema7 } from '@m6oss/schema-form';
+import { Form, JSONSchema7 } from '@react-formgen/json-schema';
 import schema from './schema.json';
 
 const App = () => {
@@ -145,7 +145,7 @@ import {
   FormComponent,
   JSONSchema7,
   FormProvider,
-} from '@m6oss/schema-form';
+} from '@react-formgen/json-schema';
 
 // Example of a component that can be wrapped in FormProvider to display data from the form store
 const FormDataDisplay: React.FC = () => {

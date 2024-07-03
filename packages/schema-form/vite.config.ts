@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: '@m6oss/schema-form',
+      name: '@react-formgen/json-schema',
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {

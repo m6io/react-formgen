@@ -1,8 +1,8 @@
 {
-  "name": "@m6oss/schema-form",
+  "name": "@react-formgen/json-schema",
   "description": "A type-safe, customizable, and super simple React form generator.",
   "private": false,
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.0-alpha.0",
   "license": "MIT",
   "author": "m6io",
   "repository": {
