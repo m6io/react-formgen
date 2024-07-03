@@ -41,13 +41,13 @@ Create a new React app:
 with NPM
 
 ```bash
-npm create vite@latest schema-form-example --template react-ts
+npm create vite@latest react-formgen-example --template react-ts
 ```
 
 or with Yarn
 
 ```bash
-yarn create vite schema-form-example --template react-ts
+yarn create vite react-formgen-example --template react-ts
 ```
 
 Open your new React app and paste this JSON Schema in a new file called `src/schema.json`:
@@ -94,15 +94,15 @@ Open your new React app and paste this JSON Schema in a new file called `src/sch
 Then replace the contents of `src/App.tsx` with the following:
 
 ```tsx
-import { Form, JSONSchema7 } from '@react-formgen/json-schema';
-import schema from './schema.json';
+import { Form, JSONSchema7 } from "@react-formgen/json-schema";
+import schema from "./schema.json";
 
 const App = () => {
   const formSchema: JSONSchema7 = schema as JSONSchema7;
 
   return (
     <div>
-      <h1>{formSchema.title || 'Untitled Form'}</h1>
+      <h1>{formSchema.title || "Untitled Form"}</h1>
       <p>{formSchema.description || null}</p>
       <hr />
       <Form
@@ -136,8 +136,8 @@ You should see a form with the fields defined in the JSON Schema. The form will 
 This example should give you an idea of how to customize your form's components and access the FormProvider's store to display form data and form errors.
 
 ```tsx
-import formSchema from './schema.json';
-import formSchemaAlt from './schema-alt.json';
+import formSchema from "./schema.json";
+import formSchemaAlt from "./schema-alt.json";
 import {
   useFormContext,
   StringSchema,
@@ -145,7 +145,7 @@ import {
   FormComponent,
   JSONSchema7,
   FormProvider,
-} from '@react-formgen/json-schema';
+} from "@react-formgen/json-schema";
 
 // Example of a component that can be wrapped in FormProvider to display data from the form store
 const FormDataDisplay: React.FC = () => {
@@ -173,33 +173,33 @@ const MyStringField: React.FC<{
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       {schema.title && <label>{schema.title}</label>}
       <input
-        type='text'
-        value={valueAtPath ?? ''}
+        type="text"
+        value={valueAtPath ?? ""}
         onChange={handleChange}
-        placeholder={schema.title || ''}
+        placeholder={schema.title || ""}
         list={
           Array.isArray(schema.examples)
-            ? `${path.join('-')}-datalist`
+            ? `${path.join("-")}-datalist`
             : undefined
         }
         style={{
-          width: '200px',
-          border: '1px solid mediumslateblue',
-          padding: '5px',
-          borderRadius: '5px',
-          marginBottom: '5px',
+          width: "200px",
+          border: "1px solid mediumslateblue",
+          padding: "5px",
+          borderRadius: "5px",
+          marginBottom: "5px",
         }}
       />
 
       {schema.description && <small>{schema.description}</small>}
       {Array.isArray(schema.examples) && (
-        <datalist id={`${path.join('-')}-datalist`}>
+        <datalist id={`${path.join("-")}-datalist`}>
           {schema.examples.map((example, index) => (
             <option key={index} value={example as string} />
           ))}
@@ -230,7 +230,7 @@ const FormErrors: React.FC = () => {
 
   // Errors that occur due to missing required fields will have an empty instancePath, so we need to parse the error params and add the missing property to the instancePath.
   const renderedErrors = errors.map((error) => {
-    if (error.keyword === 'required' && error.params.missingProperty) {
+    if (error.keyword === "required" && error.params.missingProperty) {
       return {
         ...error,
         instancePath: `${error.instancePath}/${error.params.missingProperty}`,
@@ -242,18 +242,18 @@ const FormErrors: React.FC = () => {
   return (
     <div
       style={{
-        maxHeight: '100px',
-        overflowY: 'auto',
-        border: '1px solid red',
-        padding: '10px',
-        margin: '10px 0',
+        maxHeight: "100px",
+        overflowY: "auto",
+        border: "1px solid red",
+        padding: "10px",
+        margin: "10px 0",
       }}
     >
       <h3>Form Errors</h3>
       {renderedErrors.map((error, index) => (
-        <div key={index} style={{ color: 'red' }}>
+        <div key={index} style={{ color: "red" }}>
           {/* Parse the instancePath of the errors as a breadcrumb of the keys to the error, as well as the error message */}
-          {error.instancePath.split('/').filter(Boolean).join(' > ')}:{' '}
+          {error.instancePath.split("/").filter(Boolean).join(" > ")}:{" "}
           {error.message}
         </div>
       ))}
@@ -267,16 +267,16 @@ const App: React.FC = () => {
   const schemaAlt: JSONSchema7 = formSchemaAlt as JSONSchema7;
 
   const initialData = {
-    name: 'John Doe',
+    name: "John Doe",
     age: 30,
-    email: 'john.doe@example.com',
-    homepage: 'https://example.com',
-    birthday: '1990-01-01',
+    email: "john.doe@example.com",
+    homepage: "https://example.com",
+    birthday: "1990-01-01",
     is_active: true,
     address: {
-      street_address: '123 Main St',
-      city: 'Somewhere',
-      state: 'CA',
+      street_address: "123 Main St",
+      city: "Somewhere",
+      state: "CA",
     },
   };
   const initialDataAlt = {};
@@ -287,30 +287,30 @@ const App: React.FC = () => {
       <Form
         schema={schema}
         initialData={initialData}
-        onSubmit={(data) => console.log('Form submitted:', data)}
-        onError={(errors) => console.error('Form errors:', errors)}
+        onSubmit={(data) => console.log("Form submitted:", data)}
+        onError={(errors) => console.error("Form errors:", errors)}
         customFields={{ StringField: MyStringField }}
       />
       {/* Example of a form using FormProvider to wrap the form, display form data, and display a list of form errors. */}
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          padding: '20px',
-          width: 'calc(100vw - 60px)',
-          gap: '20px',
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "20px",
+          width: "calc(100vw - 60px)",
+          gap: "20px",
         }}
       >
         <FormProvider schema={schema} initialData={initialData}>
-          <div style={{ width: '50%' }}>
+          <div style={{ width: "50%" }}>
             <h1>JSON Schema Form</h1>
             <FormErrors />
             <FormComponent
-              onSubmit={(data) => console.log('Form submitted:', data)}
-              onError={(errors) => console.error('Form errors:', errors)}
+              onSubmit={(data) => console.log("Form submitted:", data)}
+              onError={(errors) => console.error("Form errors:", errors)}
             />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ width: "25%" }}>
             <h1>Form Data</h1>
             <FormDataDisplay />
           </div>
@@ -322,21 +322,21 @@ const App: React.FC = () => {
         <FormErrors />
         <div
           style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: '20px',
-            width: 'calc(100vw - 60px)',
-            gap: '20px',
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "20px",
+            width: "calc(100vw - 60px)",
+            gap: "20px",
           }}
         >
-          <div style={{ width: '50%' }}>
+          <div style={{ width: "50%" }}>
             <h3>JSON Schema Form Alt</h3>
             <FormComponent
-              onSubmit={(data) => console.log('Form Alt submitted:', data)}
-              onError={(errors) => console.error('Form Alt errors:', errors)}
+              onSubmit={(data) => console.log("Form Alt submitted:", data)}
+              onError={(errors) => console.error("Form Alt errors:", errors)}
             />
           </div>
-          <div style={{ width: '25%' }}>
+          <div style={{ width: "25%" }}>
             <h3>Form Data Alt</h3>
             <FormDataDisplay />
           </div>

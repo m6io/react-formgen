@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@m6oss/schema-form': workspace:*
+  '@react-formgen/json-schema': workspace:*
 
 importers:
 
@@ -20,9 +20,9 @@ importers:
       '@ant-design/icons':
         specifier: ^5.3.7
         version: 5.3.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@m6oss/schema-form':
+      '@react-formgen/json-schema':
         specifier: workspace:*
-        version: 0.0.1-alpha.3(@types/react@18.3.3)
+        version: link:../../packages/json-schema
       antd:
         specifier: ^5.19.0
         version: 5.19.0(date-fns@3.6.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -72,9 +72,9 @@ importers:
 
   examples/bootstrap:
     dependencies:
-      '@m6oss/schema-form':
+      '@react-formgen/json-schema':
         specifier: workspace:*
-        version: link:../../packages/schema-form
+        version: link:../../packages/json-schema
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -127,9 +127,6 @@ importers:
       '@emotion/styled':
         specifier: ^11.11.5
         version: 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
-      '@m6oss/schema-form':
-        specifier: workspace:*
-        version: link:../../packages/schema-form
       '@mui/icons-material':
         specifier: ^5.15.21
         version: 5.15.21(@mui/material@5.15.21(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(react@18.3.1)
@@ -139,6 +136,9 @@ importers:
       '@mui/x-date-pickers':
         specifier: ^7.8.0
         version: 7.8.0(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@mui/material@5.15.21(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.3)(date-fns@3.6.0)(dayjs@1.11.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@react-formgen/json-schema':
+        specifier: workspace:*
+        version: link:../../packages/json-schema
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
@@ -188,9 +188,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.6.0
         version: 3.6.0(react-hook-form@7.52.0(react@18.3.1))
-      '@m6oss/schema-form':
-        specifier: workspace:*
-        version: link:../../packages/schema-form
       '@radix-ui/react-checkbox':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -212,6 +209,9 @@ importers:
       '@radix-ui/react-switch':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@react-formgen/json-schema':
+        specifier: workspace:*
+        version: link:../../packages/json-schema
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -294,9 +294,9 @@ importers:
 
   examples/tailwindcss:
     dependencies:
-      '@m6oss/schema-form':
+      '@react-formgen/json-schema':
         specifier: workspace:*
-        version: link:../../packages/schema-form
+        version: link:../../packages/json-schema
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -353,7 +353,7 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)
 
-  packages/schema-form:
+  packages/json-schema:
     dependencies:
       ajv:
         specifier: ^8.16.0
@@ -410,9 +410,9 @@ importers:
 
   website:
     dependencies:
-      '@m6oss/schema-form':
+      '@react-formgen/json-schema':
         specifier: workspace:*
-        version: link:../packages/schema-form
+        version: link:../packages/json-schema
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -866,9 +866,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
-
-  '@m6oss/schema-form@0.0.1-alpha.3':
-    resolution: {integrity: sha512-xjO6gZNMSFhXuwOev2noK1gpBG00REmi7TjwpiBMXn3laKW5OIeJEVghb7Zq6H6JaJ/fHVEw6s/Ltdkvt8TB6g==}
 
   '@mui/base@5.0.0-beta.40':
     resolution: {integrity: sha512-I/lGHztkCzvwlXpjD2+SNmvNQvB4227xBXhISPjEaJUXGImOQ9f3D2Yj/T3KasSI/h0MLWy74X0J6clhPmsRbQ==}
@@ -3401,17 +3398,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
-
-  '@m6oss/schema-form@0.0.1-alpha.3(@types/react@18.3.3)':
-    dependencies:
-      ajv: 8.16.0
-      ajv-formats: 3.0.1(ajv@8.16.0)
-      json-schema: 0.4.0
-      react: 18.3.1
-      zustand: 4.5.2(@types/react@18.3.3)(react@18.3.1)
-    transitivePeerDependencies:
-      - '@types/react'
-      - immer
 
   '@mui/base@5.0.0-beta.40(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
