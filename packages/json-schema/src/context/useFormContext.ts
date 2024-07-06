@@ -38,13 +38,12 @@ export const useFieldErrors = (path: string[]): ErrorObject[] | undefined => {
     const errorMap: { [key: string]: ErrorObject[] } = {};
 
     errors?.forEach((error) => {
-      const fullPath = `/${(error.instancePath || "")
-        .split("/")
-        .slice(1)
-        .join("/")}`;
+      const fullPath = error.instancePath
+        ? `/${(error.instancePath || "").split("/").slice(1).join("/")}`
+        : "/";
       const missingPath =
         error.keyword === "required"
-          ? `${fullPath}/${error.params.missingProperty}`
+          ? `${fullPath === "/" ? "" : fullPath}/${error.params.missingProperty}`
           : fullPath;
       errorMap[missingPath] = errorMap[missingPath] || [];
       errorMap[missingPath].push(error);
