@@ -1,27 +1,44 @@
-import { Form, JSONSchema7, ErrorObject } from "@react-formgen/json-schema";
-import formSchema from "./schema.json";
+import {
+  FormProvider,
+  BaseFormTemplate,
+  BaseDisplayTemplate,
+  BaseFieldTemplates,
+} from "@react-formgen/json-schema";
 import { schema as formSchemaAsTs } from "./schema.ts";
 
 const App = () => {
   return (
     <div>
-      <h1>{formSchema.title || "Untitled Form"}</h1>
-      <p>{formSchema.description || null}</p>
-      <hr />
-      <Form
-        schema={formSchema as JSONSchema7}
-        onSubmit={(data: { [key: string]: unknown }) => console.log(data)}
-        onError={(errors: ErrorObject[]) => console.error(errors)}
-      />
-      <hr />
-      <h1>{formSchemaAsTs.title || "Untitled Form 2"}</h1>
+      <h1>{formSchemaAsTs.title || "Untitled Form"}</h1>
       <p>{formSchemaAsTs.description || null}</p>
       <hr />
-      <Form
-        schema={formSchemaAsTs}
-        onSubmit={(data: { [key: string]: unknown }) => console.log(data)}
-        onError={(errors: ErrorObject[]) => console.error(errors)}
-      />
+      <div
+        style={{
+          display: "flex",
+          gap: "1rem",
+          padding: "1rem",
+          margin: "1rem",
+          border: "1px solid black",
+          borderRadius: "1rem",
+        }}
+      >
+        <FormProvider
+          schema={formSchemaAsTs}
+          initialData={{
+            firstName: "John Doe",
+            lastName: "Doe John",
+            age: 69,
+            email: "johndoe@joedohn.com",
+          }}
+        >
+          <BaseFormTemplate
+            fieldTemplates={BaseFieldTemplates}
+            onSubmit={(data) => console.log(data)}
+            onError={(errors) => console.error(errors)}
+          />
+          <BaseDisplayTemplate fieldTemplates={BaseFieldTemplates} />
+        </FormProvider>
+      </div>
     </div>
   );
 };

@@ -1,15 +1,17 @@
 import React from "react";
 import { JSONSchema7 } from "json-schema";
-import { useArrayFieldset } from "@/hooks/useArrayFieldset";
+import {
+  useArrayFieldset,
+  useFormDataAtPath,
+  useErrorsAtPath,
+} from "../../../hooks";
 import {
   BaseArraySchema,
   FieldTemplates,
   SchemaDefinitions,
-} from "@/components/types";
-import { RenderTemplate } from "@/components/RenderTemplate";
-import { useFormDataAtPath } from "@/hooks/useFormDataAtPath";
-import { useErrorsAtPath } from "@/hooks/useErrorsAtPath";
-import { getZeroState } from "@/utils/getZeroState";
+} from "../../types";
+import { RenderTemplate } from "../../RenderTemplate";
+import { getZeroState } from "../../../utils";
 
 // Array Fieldset Component Template
 export const ArrayFieldset: React.FC<{
@@ -93,6 +95,48 @@ export const ArrayFieldset: React.FC<{
         <button type="button" onClick={addItem}>
           Add Item
         </button>
+      </div>
+    </div>
+  );
+};
+
+// Array Display Component Template
+export const ArrayDisplay: React.FC<{
+  schema: BaseArraySchema;
+  path: string[];
+  definitions: SchemaDefinitions;
+  fieldTemplates: FieldTemplates;
+}> = ({ schema, path, definitions, fieldTemplates }) => {
+  const [valueAtPath] = useFormDataAtPath(path);
+
+  return (
+    <div
+      style={{
+        marginBottom: "1rem",
+        paddingLeft: "1rem",
+        borderLeft: "2px solid #ccc",
+      }}
+    >
+      {schema.title && <strong>{schema.title}</strong>}
+      {schema.description && (
+        <p style={{ fontSize: "small", color: "#666" }}>{schema.description}</p>
+      )}
+      <div style={{ marginTop: "0.5rem" }}>
+        {Array.isArray(valueAtPath) && valueAtPath.length > 0 ? (
+          valueAtPath.map((_, index: number) => (
+            <div key={index} style={{ marginBottom: "0.5rem" }}>
+              <RenderTemplate
+                schema={schema.items as JSONSchema7}
+                path={[...path, index.toString()]}
+                definitions={definitions}
+                fieldTemplates={fieldTemplates}
+                readOnly={true}
+              />
+            </div>
+          ))
+        ) : (
+          <div style={{ color: "#888" }}>No items available</div>
+        )}
       </div>
     </div>
   );

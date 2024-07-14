@@ -1,16 +1,21 @@
-import { FieldTemplates } from "@/components/types";
-import { ArrayFieldset } from "./fieldsetTypeArray";
-import { ObjectFieldset } from "./fieldsetTypeObject";
-import { BooleanField } from "./fieldTypeBoolean";
-import { NumberField } from "./fieldTypeNumber";
-import { StringField } from "./fieldTypeString";
+import { FieldTemplates } from "../types";
+import { ArrayDisplay, ArrayFieldset } from "./fieldsetTypeArray";
+import { ObjectDisplay, ObjectFieldset } from "./fieldsetTypeObject";
+import { BooleanDisplay, BooleanField } from "./fieldTypeBoolean";
+import { NumberDisplay, NumberField } from "./fieldTypeNumber";
+import { StringDisplay, StringField } from "./fieldTypeString";
 
 export const BaseFieldTemplates: FieldTemplates = {
-  ArrayFieldset: ArrayFieldset,
-  ObjectFieldset: ObjectFieldset,
-  BooleanField: BooleanField,
-  NumberField: NumberField,
   StringField: StringField,
+  NumberField: NumberField,
+  BooleanField: BooleanField,
+  ObjectFieldset: ObjectFieldset,
+  ArrayFieldset: ArrayFieldset,
+  StringDisplay: StringDisplay,
+  NumberDisplay: NumberDisplay,
+  BooleanDisplay: BooleanDisplay,
+  ObjectDisplay: ObjectDisplay,
+  ArrayDisplay: ArrayDisplay,
 };
 
 export * from "./fieldsetTypeArray";

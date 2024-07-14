@@ -1,27 +1,36 @@
 import React from "react";
-import { JSONSchema7 } from "json-schema";
 import {
   BaseArraySchema,
   BaseObjectSchema,
   BooleanSchema,
-  FieldTemplates,
   NumberSchema,
-  SchemaDefinitions,
+  RenderTemplateProps,
   StringSchema,
-} from "@/components/types";
-import { resolveRef } from "../utils/resolveRef";
+} from "./types";
+import { resolveRef } from "../utils";
 
-export const RenderTemplate: React.FC<{
-  schema: JSONSchema7;
-  path: string[];
-  definitions: SchemaDefinitions;
-  fieldTemplates: FieldTemplates;
-}> = ({ schema, path, definitions, fieldTemplates }) => {
+/**
+ * Render a template based on the schema type.
+ * @param {RenderTemplateProps} props - The props for the RenderTemplate.
+ * @returns {JSX.Element} The template component.
+ */
+export const RenderTemplate: React.FC<RenderTemplateProps> = ({
+  schema,
+  path,
+  definitions,
+  fieldTemplates,
+  readOnly = false,
+}) => {
   schema = resolveRef(schema, definitions);
 
   switch (schema.type) {
     case "string":
-      return (
+      return readOnly ? (
+        <fieldTemplates.StringDisplay
+          schema={schema as StringSchema}
+          path={path}
+        />
+      ) : (
         <fieldTemplates.StringField
           schema={schema as StringSchema}
           path={path}
@@ -29,14 +38,24 @@ export const RenderTemplate: React.FC<{
       );
     case "integer":
     case "number":
-      return (
+      return readOnly ? (
+        <fieldTemplates.NumberDisplay
+          schema={schema as NumberSchema}
+          path={path}
+        />
+      ) : (
         <fieldTemplates.NumberField
           schema={schema as NumberSchema}
           path={path}
         />
       );
     case "boolean":
-      return (
+      return readOnly ? (
+        <fieldTemplates.BooleanDisplay
+          schema={schema as BooleanSchema}
+          path={path}
+        />
+      ) : (
         <fieldTemplates.BooleanField
           schema={schema as BooleanSchema}
           path={path}
@@ -45,7 +64,14 @@ export const RenderTemplate: React.FC<{
     case "null":
       return <input type="text" value="null" disabled />;
     case "object":
-      return (
+      return readOnly ? (
+        <fieldTemplates.ObjectDisplay
+          schema={schema as BaseObjectSchema}
+          path={path}
+          definitions={definitions}
+          fieldTemplates={fieldTemplates}
+        />
+      ) : (
         <fieldTemplates.ObjectFieldset
           schema={schema as BaseObjectSchema}
           path={path}
@@ -54,7 +80,14 @@ export const RenderTemplate: React.FC<{
         />
       );
     case "array":
-      return (
+      return readOnly ? (
+        <fieldTemplates.ArrayDisplay
+          schema={schema as BaseArraySchema}
+          path={path}
+          definitions={definitions}
+          fieldTemplates={fieldTemplates}
+        />
+      ) : (
         <fieldTemplates.ArrayFieldset
           schema={schema as BaseArraySchema}
           path={path}

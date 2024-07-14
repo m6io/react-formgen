@@ -1,5 +1,5 @@
 import React from "react";
-import { FormProps } from "@/components/types";
+import { FormProps } from "./types";
 import { FormProvider } from "./FormProvider";
 import { BaseFormTemplate, BaseFieldTemplates } from "./templates";
 

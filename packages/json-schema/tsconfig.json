@@ -28,12 +28,7 @@
 
     /* Interop */
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

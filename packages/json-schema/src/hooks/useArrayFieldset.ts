@@ -1,5 +1,5 @@
 import { JSONSchema7 } from "json-schema";
-import { getZeroState } from "@/utils/getZeroState";
+import { getZeroState } from "../utils/getZeroState";
 import { useErrorsAtPath } from "./useErrorsAtPath";
 import { useFormDataAtPath } from "./useFormDataAtPath";
 

@@ -1,7 +1,6 @@
 import React from "react";
-import { BaseNumberSchema } from "@/components/types";
-import { useFormDataAtPath } from "@/hooks/useFormDataAtPath";
-import { useErrorsAtPath } from "@/hooks/useErrorsAtPath";
+import { BaseNumberSchema } from "../../types";
+import { useFormDataAtPath, useErrorsAtPath } from "../../../hooks";
 
 // Number Field Component Template
 export const NumberField: React.FC<{
@@ -48,6 +47,24 @@ export const NumberField: React.FC<{
             {error.message}
           </div>
         ))}
+    </div>
+  );
+};
+
+// Number Display Component Template
+export const NumberDisplay: React.FC<{
+  schema: BaseNumberSchema;
+  path: string[];
+}> = ({ schema, path }) => {
+  const [valueAtPath] = useFormDataAtPath(path);
+
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      {schema.title && <strong>{schema.title}: </strong>}
+      <span>{valueAtPath ?? "N/A"}</span>
+      {schema.description && (
+        <p style={{ fontSize: "small", color: "#666" }}>{schema.description}</p>
+      )}
     </div>
   );
 };

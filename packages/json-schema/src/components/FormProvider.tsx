@@ -2,7 +2,7 @@ import React, { createContext, useRef } from "react";
 import { createStore } from "zustand";
 import { JSONSchema7 } from "json-schema";
 import { ErrorObject } from "ajv";
-import { generateInitialData } from "@/utils/generateInitialData";
+import { generateInitialData } from "../utils";
 
 // Zustand store for form data and errors.
 export interface FormState {

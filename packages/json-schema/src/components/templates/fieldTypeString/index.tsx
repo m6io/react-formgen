@@ -1,7 +1,6 @@
 import React from "react";
-import { BaseStringSchema } from "@/components/types";
-import { useFormDataAtPath } from "@/hooks/useFormDataAtPath";
-import { useErrorsAtPath } from "@/hooks/useErrorsAtPath";
+import { BaseStringSchema } from "../../types";
+import { useFormDataAtPath, useErrorsAtPath } from "../../../hooks";
 
 // String Field Component Template
 export const StringField: React.FC<{
@@ -48,6 +47,24 @@ export const StringField: React.FC<{
             {error.message}
           </div>
         ))}
+    </div>
+  );
+};
+
+// String Display Component Template
+export const StringDisplay: React.FC<{
+  schema: BaseStringSchema;
+  path: string[];
+}> = ({ schema, path }) => {
+  const [valueAtPath] = useFormDataAtPath(path);
+
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      {schema.title && <strong>{schema.title}: </strong>}
+      <span>{valueAtPath ?? "N/A"}</span>
+      {schema.description && (
+        <p style={{ fontSize: "small", color: "#666" }}>{schema.description}</p>
+      )}
     </div>
   );
 };

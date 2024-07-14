@@ -1,8 +1,11 @@
-# @react-formgen/json-schema = A JSON Schema to React Form Generator
+# @react-formgen/json-schema
 
-A type-safe, customizable, and super simple React form generator.
+A headless, type-safe, customizable, and super simple React form and data view generator from JSON Schema.
 
-[See it in action!](https://stackblitz.com/~/github.com/m6io/js-to-form-example?file=src/App.tsx)
+[![npm version](https://badge.fury.io/js/@react-formgen%2Fjson-schema.svg)](https://badge.fury.io/js/@react-formgen%2Fjson-schema)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+[Docs are boring, take me to the examples!](https://github.com/m6io/react-formgen/tree/main/examples)
 
 Takes a JSON Schema, some initial data (if you have any), and a few callbacks (onSubmit and onError), and returns a form with input validation and error handling.
 
@@ -106,7 +109,7 @@ const App = () => {
       <p>{formSchema.description || null}</p>
       <hr />
       <Form
-        schema={formSchema as JSONSchema7}
+        schema={formSchema}
         onSubmit={(data) => console.log(data)}
         onError={(errors) => console.error(errors)}
       />
@@ -140,11 +143,14 @@ import formSchema from "./schema.json";
 import formSchemaAlt from "./schema-alt.json";
 import {
   useFormContext,
+  useFormDataAtPath,
+  useErrorsAtPath,
   StringSchema,
   Form,
-  FormComponent,
+  BaseFormTemplate,
   JSONSchema7,
   FormProvider,
+  BaseFieldTemplates,
 } from "@react-formgen/json-schema";
 
 // Example of a component that can be wrapped in FormProvider to display data from the form store
@@ -163,20 +169,15 @@ const MyStringField: React.FC<{
   schema: StringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
-  const valueAtPath = path.reduce((acc, key) => acc?.[key], formData) ?? null;
+  const [valueAtPath, setValueAtPath] = useFormDataAtPath(path);
+  const errorsAtPath = useErrorsAtPath(path);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(path, event.target.value);
+    setValueAtPath(event.target.value);
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column" }}>
       {schema.title && <label>{schema.title}</label>}
       <input
         type="text"
@@ -196,7 +197,6 @@ const MyStringField: React.FC<{
           marginBottom: "5px",
         }}
       />
-
       {schema.description && <small>{schema.description}</small>}
       {Array.isArray(schema.examples) && (
         <datalist id={`${path.join("-")}-datalist`}>
@@ -204,6 +204,13 @@ const MyStringField: React.FC<{
             <option key={index} value={example as string} />
           ))}
         </datalist>
+      )}
+      {errorsAtPath && (
+        <div style={{ color: "red" }}>
+          {errorsAtPath.map((error, index) => (
+            <div key={index}>{error.message}</div>
+          ))}
+        </div>
       )}
     </div>
   );
@@ -222,7 +229,7 @@ const FormHeader: React.FC = () => {
   );
 };
 
-// Examle of a component that can be used to display a scrollable, fixed max-height list of errors, if any.
+// Example of a component that can be used to display a scrollable, fixed max-height list of errors, if any.
 const FormErrors: React.FC = () => {
   const errors = useFormContext((state) => state.errors);
 
@@ -289,7 +296,7 @@ const App: React.FC = () => {
         initialData={initialData}
         onSubmit={(data) => console.log("Form submitted:", data)}
         onError={(errors) => console.error("Form errors:", errors)}
-        customFields={{ StringField: MyStringField }}
+        fieldTemplates={{ ...BaseFieldTemplates, StringField: MyStringField }}
       />
       {/* Example of a form using FormProvider to wrap the form, display form data, and display a list of form errors. */}
       <div
@@ -305,7 +312,7 @@ const App: React.FC = () => {
           <div style={{ width: "50%" }}>
             <h1>JSON Schema Form</h1>
             <FormErrors />
-            <FormComponent
+            <BaseFormTemplate
               onSubmit={(data) => console.log("Form submitted:", data)}
               onError={(errors) => console.error("Form errors:", errors)}
             />
@@ -331,7 +338,7 @@ const App: React.FC = () => {
         >
           <div style={{ width: "50%" }}>
             <h3>JSON Schema Form Alt</h3>
-            <FormComponent
+            <BaseFormTemplate
               onSubmit={(data) => console.log("Form Alt submitted:", data)}
               onError={(errors) => console.error("Form Alt errors:", errors)}
             />

@@ -1,7 +1,6 @@
 import React from "react";
-import { BaseBooleanSchema } from "@/components/types";
-import { useFormDataAtPath } from "@/hooks/useFormDataAtPath";
-import { useErrorsAtPath } from "@/hooks/useErrorsAtPath";
+import { BaseBooleanSchema } from "../../types";
+import { useFormDataAtPath, useErrorsAtPath } from "../../../hooks";
 
 // Boolean Field Component Template
 export const BooleanField: React.FC<{
@@ -32,6 +31,24 @@ export const BooleanField: React.FC<{
             {error.message}
           </div>
         ))}
+    </div>
+  );
+};
+
+// Boolean Display Component Template
+export const BooleanDisplay: React.FC<{
+  schema: BaseBooleanSchema;
+  path: string[];
+}> = ({ schema, path }) => {
+  const [valueAtPath] = useFormDataAtPath(path);
+
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      {schema.title && <strong>{schema.title}: </strong>}
+      <span>{valueAtPath ? "True" : "False"}</span>
+      {schema.description && (
+        <p style={{ fontSize: "small", color: "#666" }}>{schema.description}</p>
+      )}
     </div>
   );
 };
