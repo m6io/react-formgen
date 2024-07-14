@@ -1,18 +1,26 @@
-import { Form, JSONSchema7 } from '@react-formgen/json-schema';
-import schema from './schema.json';
+import { Form, JSONSchema7, ErrorObject } from "@react-formgen/json-schema";
+import formSchema from "./schema.json";
+import { schema as formSchemaAsTs } from "./schema.ts";
 
 const App = () => {
-  const formSchema: JSONSchema7 = schema as JSONSchema7;
-
   return (
     <div>
-      <h1>{formSchema.title || 'Untitled Form'}</h1>
+      <h1>{formSchema.title || "Untitled Form"}</h1>
       <p>{formSchema.description || null}</p>
       <hr />
       <Form
         schema={formSchema as JSONSchema7}
-        onSubmit={(data) => console.log(data)}
-        onError={(errors) => console.error(errors)}
+        onSubmit={(data: { [key: string]: unknown }) => console.log(data)}
+        onError={(errors: ErrorObject[]) => console.error(errors)}
+      />
+      <hr />
+      <h1>{formSchemaAsTs.title || "Untitled Form 2"}</h1>
+      <p>{formSchemaAsTs.description || null}</p>
+      <hr />
+      <Form
+        schema={formSchemaAsTs}
+        onSubmit={(data: { [key: string]: unknown }) => console.log(data)}
+        onError={(errors: ErrorObject[]) => console.error(errors)}
       />
     </div>
   );

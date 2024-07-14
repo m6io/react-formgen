@@ -1,17 +1,51 @@
+import { ErrorObject } from "ajv";
 import { JSONSchema7 } from "json-schema";
 
-type SchemaDefinitions = JSONSchema7["definitions"];
+/**
+ * Represents the props for the Form.
+ * @typedef {Object} FormProps
+ * @property {JSONSchema7} schema - The schema for the form.
+ * @property {{ [key: string]: unknown }} [initialData] - The initial data for the form.
+ * @property {(data: { [key: string]: unknown }) => void} onSubmit - The function to call when the form is submitted.
+ * @property {(errors: ErrorObject[]) => void} onError - The function to call when there are errors in the form.
+ * @property {FieldTemplates} [fieldTemplates] - The custom fields to use for the form.
+ * @property {React.FC<FormTemplateProps>} [formTemplate] - The custom form component to use for the form.
+ *
+ */
+export type FormProps = {
+  schema: JSONSchema7;
+  initialData?: { [key: string]: unknown };
+  onSubmit: (data: { [key: string]: unknown }) => void;
+  onError: (errors: ErrorObject[]) => void;
+  fieldTemplates?: FieldTemplates;
+  formTemplate?: React.FC<FormTemplateProps>;
+};
+
+/**
+ * Represents the props for the FormTemplate.
+ * @typedef {Object} FormTemplateProps
+ * @property {(data: { [key: string]: unknown }) => void} onSubmit - The function to call when the form is submitted.
+ * @property {(errors: ErrorObject[], data?: { [key: string]: unknown }) => void} onError - The function to call when there are errors in the form.
+ * @property {FieldTemplates} [fieldTemplates] - The custom fields to use for the form.
+ *
+ */
+export type FormTemplateProps = {
+  onSubmit: (data: { [key: string]: unknown }) => void;
+  onError: (errors: ErrorObject[], data?: { [key: string]: unknown }) => void;
+  fieldTemplates: FieldTemplates;
+};
+
+export type SchemaDefinitions = JSONSchema7["definitions"];
 
 /**
  * Represents the UI schema for a field.
  * @typedef {Object} UISchema
  * @property {string} component - The component to use for the field.
- * @property {Object.<string, unknown>} props - The props to pass to the component.
- *
+ * @property {Object.<string, unknown>} [props] - The props to pass to the component.
  */
-type UISchema = {
+export type UISchema = {
   component: string;
-  props: {
+  props?: {
     [key: string]: unknown;
   };
 };
@@ -24,7 +58,7 @@ type UISchema = {
  * @property {string} [description] - The description of the string field.
  *
  */
-type StringOneOf = {
+export type StringOneOf = {
   const: string;
   title?: string;
   description?: string;
@@ -37,7 +71,7 @@ type StringOneOf = {
  * @property {"string"} type - The type of the schema.
  *
  */
-interface BaseStringSchema extends Omit<JSONSchema7, "type"> {
+export interface BaseStringSchema extends Omit<JSONSchema7, "type"> {
   type: "string";
 }
 
@@ -51,7 +85,8 @@ interface BaseStringSchema extends Omit<JSONSchema7, "type"> {
  * @property {uiSchema} [UISchema] - The UI schema for the string field.
  *
  */
-interface StringSchema extends Omit<JSONSchema7, "type" | "enum" | "oneOf"> {
+export interface StringSchema
+  extends Omit<JSONSchema7, "type" | "enum" | "oneOf"> {
   type: "string";
   enum?: string[];
   oneOf?: StringOneOf[];
@@ -66,7 +101,7 @@ interface StringSchema extends Omit<JSONSchema7, "type" | "enum" | "oneOf"> {
  * @property {string} [description] - The description of the number field.
  *
  */
-type NumberOneOf = {
+export type NumberOneOf = {
   const: number;
   title?: string;
   description?: string;
@@ -79,7 +114,7 @@ type NumberOneOf = {
  * @property {"number" | "integer"} type - The type of the schema.
  *
  */
-interface BaseNumberSchema extends Omit<JSONSchema7, "type"> {
+export interface BaseNumberSchema extends Omit<JSONSchema7, "type"> {
   type: "number" | "integer";
 }
 
@@ -91,7 +126,8 @@ interface BaseNumberSchema extends Omit<JSONSchema7, "type"> {
  * @property {uiSchema} [UISchema] - The UI schema for the number field.
  *
  */
-interface NumberSchema extends Omit<JSONSchema7, "type" | "enum" | "oneOf"> {
+export interface NumberSchema
+  extends Omit<JSONSchema7, "type" | "enum" | "oneOf"> {
   type: "number" | "integer";
   enum?: number[];
   oneOf?: NumberOneOf[];
@@ -105,7 +141,7 @@ interface NumberSchema extends Omit<JSONSchema7, "type" | "enum" | "oneOf"> {
  * @property {string} title - The title of the boolean field.
  *
  */
-type BooleanOneOf = {
+export type BooleanOneOf = {
   const: boolean;
   title?: string;
 };
@@ -117,7 +153,7 @@ type BooleanOneOf = {
  * @property {"boolean"} type - The type of the schema.
  */
 
-interface BaseBooleanSchema extends Omit<JSONSchema7, "type"> {
+export interface BaseBooleanSchema extends Omit<JSONSchema7, "type"> {
   type: "boolean";
 }
 
@@ -129,7 +165,7 @@ interface BaseBooleanSchema extends Omit<JSONSchema7, "type"> {
  * @property {uiSchema} [UISchema] - The UI schema for the string field.
  *
  */
-interface BooleanSchema extends Omit<JSONSchema7, "type" | "oneOf"> {
+export interface BooleanSchema extends Omit<JSONSchema7, "type" | "oneOf"> {
   type: "boolean";
   oneOf?: BooleanOneOf[];
   uiSchema?: UISchema;
@@ -142,7 +178,7 @@ interface BooleanSchema extends Omit<JSONSchema7, "type" | "oneOf"> {
  * @property {"object"} type - The type of the schema.
  *
  */
-interface BaseObjectSchema extends Omit<JSONSchema7, "type"> {
+export interface BaseObjectSchema extends Omit<JSONSchema7, "type"> {
   type: "object";
 }
 
@@ -152,45 +188,31 @@ interface BaseObjectSchema extends Omit<JSONSchema7, "type"> {
  * @extends {Omit<JSONSchema7, "type">}
  * @property {"array"} type - The type of the schema.
  */
-interface BaseArraySchema extends Omit<JSONSchema7, "type"> {
+export interface BaseArraySchema extends Omit<JSONSchema7, "type"> {
   type: "array";
 }
 
 // Custom Fields Type
-type CustomFields = {
-  BaseStringField?: React.FC<{ schema: BaseStringSchema; path: string[] }>;
-  StringField?: React.FC<{ schema: StringSchema; path: string[] }>;
-  BaseNumberSchema?: React.FC<{ schema: BaseNumberSchema; path: string[] }>;
-  NumberField?: React.FC<{ schema: NumberSchema; path: string[] }>;
-  BaseBooleanField?: React.FC<{ schema: BaseBooleanSchema; path: string[] }>;
-  BooleanField?: React.FC<{ schema: BooleanSchema; path: string[] }>;
-  ObjectField?: React.FC<{
+export type FieldTemplates = {
+  StringField:
+    | React.FC<{ schema: StringSchema; path: string[] }>
+    | React.FC<{ schema: BaseStringSchema; path: string[] }>;
+  NumberField:
+    | React.FC<{ schema: NumberSchema; path: string[] }>
+    | React.FC<{ schema: BaseNumberSchema; path: string[] }>;
+  BooleanField:
+    | React.FC<{ schema: BooleanSchema; path: string[] }>
+    | React.FC<{ schema: BaseBooleanSchema; path: string[] }>;
+  ObjectFieldset: React.FC<{
     schema: BaseObjectSchema;
     path: string[];
     definitions: SchemaDefinitions;
-    customFields?: CustomFields;
+    fieldTemplates: FieldTemplates;
   }>;
-  ArrayField?: React.FC<{
+  ArrayFieldset: React.FC<{
     schema: BaseArraySchema;
     path: string[];
     definitions: SchemaDefinitions;
-    customFields?: CustomFields;
+    fieldTemplates: FieldTemplates;
   }>;
-};
-
-export type {
-  BaseStringSchema,
-  StringOneOf,
-  StringSchema,
-  BaseNumberSchema,
-  NumberOneOf,
-  NumberSchema,
-  BaseBooleanSchema,
-  BooleanOneOf,
-  BooleanSchema,
-  BaseObjectSchema,
-  BaseArraySchema,
-  CustomFields,
-  SchemaDefinitions,
-  UISchema,
 };

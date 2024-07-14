@@ -1,14 +1,15 @@
 import React from "react";
-import { BaseNumberSchema } from "../types";
-import { useFieldData, useFieldErrors } from "../../context/useFormContext";
+import { BaseNumberSchema } from "@/components/types";
+import { useFormDataAtPath } from "@/hooks/useFormDataAtPath";
+import { useErrorsAtPath } from "@/hooks/useErrorsAtPath";
 
 // Number Field Component Template
 export const NumberField: React.FC<{
   schema: BaseNumberSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const [valueAtPath, setValueAtPath] = useFieldData(path);
-  const errorsAtPath = useFieldErrors(path);
+  const [valueAtPath, setValueAtPath] = useFormDataAtPath(path);
+  const errorsAtPath = useErrorsAtPath(path);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueAtPath(event.target.value ? Number(event.target.value) : null);
@@ -32,7 +33,6 @@ export const NumberField: React.FC<{
             ? `${path.join("-")}-datalist`
             : undefined
         }
-        style={{ width: "100px" }}
       />
       {schema.description && <small>{schema.description}</small>}
       {Array.isArray(schema.examples) && (

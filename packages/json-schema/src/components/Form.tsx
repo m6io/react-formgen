@@ -1,24 +1,28 @@
 import React from "react";
-import { ErrorObject } from "ajv";
-import { JSONSchema7 } from "json-schema";
-import { CustomFields } from "./types";
-import { FormProvider } from "../context/FormProvider";
-import { FormComponent } from "./FormComponent";
+import { FormProps } from "@/components/types";
+import { FormProvider } from "./FormProvider";
+import { BaseFormTemplate, BaseFieldTemplates } from "./templates";
 
-// Form component with provider
-export const Form: React.FC<{
-  schema: JSONSchema7;
-  initialData?: any;
-  onSubmit: (data: any) => void;
-  onError: (errors: ErrorObject[]) => void;
-  customFields?: CustomFields;
-}> = ({ schema, initialData = {}, onSubmit, onError, customFields }) => {
+/**
+ * Form component that renders the form based on the schema.
+ * @param {FormProps} props - The props for the Form.
+ * @returns {JSX.Element} The form component.
+ *
+ */
+export const Form: React.FC<FormProps> = ({
+  schema,
+  initialData = {},
+  onSubmit,
+  onError,
+  fieldTemplates = BaseFieldTemplates,
+  formTemplate: FormTemplate = BaseFormTemplate,
+}) => {
   return (
     <FormProvider schema={schema} initialData={initialData}>
-      <FormComponent
+      <FormTemplate
         onSubmit={onSubmit}
         onError={onError}
-        customFields={customFields}
+        fieldTemplates={fieldTemplates}
       />
     </FormProvider>
   );

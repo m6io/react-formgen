@@ -1,14 +1,15 @@
 import React from "react";
-import { BaseStringSchema } from "../types";
-import { useFieldData, useFieldErrors } from "../../context/useFormContext";
+import { BaseStringSchema } from "@/components/types";
+import { useFormDataAtPath } from "@/hooks/useFormDataAtPath";
+import { useErrorsAtPath } from "@/hooks/useErrorsAtPath";
 
 // String Field Component Template
 export const StringField: React.FC<{
   schema: BaseStringSchema;
   path: string[];
 }> = ({ schema, path }) => {
-  const [valueAtPath, setValueAtPath] = useFieldData(path);
-  const errorsAtPath = useFieldErrors(path);
+  const [valueAtPath, setValueAtPath] = useFormDataAtPath(path);
+  const errorsAtPath = useErrorsAtPath(path);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueAtPath(event.target.value);
@@ -32,7 +33,6 @@ export const StringField: React.FC<{
             ? `${path.join("-")}-datalist`
             : undefined
         }
-        style={{ width: "200px" }}
       />
       {schema.description && <small>{schema.description}</small>}
       {Array.isArray(schema.examples) && (
