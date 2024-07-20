@@ -1,0 +1,55 @@
+{
+  "name": "@react-formgen/zod",
+  "description": "A headless, type-safe, customizable, and super simple React form generator.",
+  "private": false,
+  "version": "0.0.0-alpha.0",
+  "license": "MIT",
+  "author": "m6io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m6io/react-formgen.git",
+    "directory": "packages/zod"
+  },
+  "keywords": [
+    "react",
+    "form",
+    "schema",
+    "zod",
+    "zustand",
+    "form generator"
+  ],
+  "bugs": {
+    "url": "https://github.com/m6io/react-formgen/issues"
+  },
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc",
+    "prepublishOnly": "npm run build",
+    "analyze": "vite build --mode analyze"
+  },
+  "dependencies": {
+    "zod": "^3.23.8",
+    "zustand": "^4.5.2"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.8",
+    "@types/react": "^18.3.3",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1"
+  }
+}

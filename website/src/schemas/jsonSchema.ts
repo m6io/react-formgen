@@ -1,6 +1,6 @@
 import { FormgenJSONSchema7 } from "@react-formgen/json-schema";
 
-export const schema: FormgenJSONSchema7 = {
+export const jsonSchema: FormgenJSONSchema7 = {
   $schema: "http://json-schema.org/draft-07/schema#",
   title: "Example Schema",
   description: "A schema representing a complex object with various features.",

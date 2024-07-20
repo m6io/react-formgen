@@ -468,17 +468,69 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)
 
+  packages/zod:
+    dependencies:
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+      zustand:
+        specifier: ^4.5.2
+        version: 4.5.2(@types/react@18.3.3)(react@18.3.1)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.14.8
+        version: 20.14.8
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.3
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^7.13.1
+        version: 7.13.1(@typescript-eslint/parser@7.13.1(eslint@8.57.0)(typescript@5.5.2))(eslint@8.57.0)(typescript@5.5.2)
+      '@typescript-eslint/parser':
+        specifier: ^7.13.1
+        version: 7.13.1(eslint@8.57.0)(typescript@5.5.2)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.1
+        version: 4.3.1(vite@5.3.1(@types/node@20.14.8))
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      eslint-plugin-react-hooks:
+        specifier: ^4.6.2
+        version: 4.6.2(eslint@8.57.0)
+      eslint-plugin-react-refresh:
+        specifier: ^0.4.7
+        version: 0.4.7(eslint@8.57.0)
+      rollup-plugin-visualizer:
+        specifier: ^5.12.0
+        version: 5.12.0(rollup@4.18.0)
+      typescript:
+        specifier: ^5.5.2
+        version: 5.5.2
+      vite:
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.14.8)
+
   website:
     dependencies:
       '@react-formgen/json-schema':
         specifier: workspace:*
         version: link:../packages/json-schema
+      '@react-formgen/zod':
+        specifier: workspace:*
+        version: link:../packages/zod
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@types/react':
         specifier: ^18.3.3

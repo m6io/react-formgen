@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "pnpm run --filter website dev",
-    "build": "pnpm run --filter \"@react-formgen/json-schema\" build"
+    "build": "pnpm run build:js && pnpm run build:zod",
+    "build:js": "pnpm run --filter \"@react-formgen/json-schema\" build",
+    "build:zod": "pnpm run --filter \"@react-formgen/zod\" build"
   },
   "devDependencies": {
     "prettier": "^3.2.5"
@@ -14,4 +16,3 @@
     }
   }
 }
-
