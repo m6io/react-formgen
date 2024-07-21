@@ -22,13 +22,19 @@ Use cases:
 Install with npm
 
 ```bash
-npm install @react-formgen/zod
+npm install @react-formgen/zod zod
 ```
 
-or with Yarn
+with Yarn
 
 ```bash
-yarn add @react-formgen/zod
+yarn add @react-formgen/zod zod
+```
+
+or with pnpm
+
+```bash
+pnpm install @react-formgen/zod zod
 ```
 
 Note: this package is an attempt to replicate the form-generating functionality introduced by [@react-formgen/json-schema](https://www.npmjs.com/package/@react-formgen/json-schema) but with Zod schemas instead of JSON schemas and Zod validation instead of Ajv validation.

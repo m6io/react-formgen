@@ -1,10 +1,10 @@
 import { JSONSchema7 } from "json-schema";
-import { resolveRef } from "./resolveRef";
+import { resolveSchema } from "./resolveSchema";
 
 // Utility function to get zero state based on schema type
 export const getZeroState = (schema: JSONSchema7, definitions?: any): any => {
   if (schema.$ref && definitions) {
-    schema = resolveRef(schema, definitions);
+    schema = resolveSchema(schema, definitions);
   }
 
   switch (schema.type) {

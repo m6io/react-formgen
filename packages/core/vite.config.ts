@@ -7,17 +7,14 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
-      name: "@react-formgen/json-schema",
+      name: "@react-formgen/core",
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
-      external: ["react", "ajv", "ajv-formats", "json-schema"],
+      external: ["react"],
       output: {
         globals: {
           react: "React",
-          ajv: "Ajv",
-          "ajv-formats": "AjvFormats",
-          "json-schema": "JsonSchema",
         },
       },
     },

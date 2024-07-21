@@ -24,13 +24,19 @@ Use cases:
 Install with npm
 
 ```bash
-npm install @react-formgen/json-schema
+npm install @react-formgen/json-schema ajv ajv-formats json-schema
 ```
 
-or with Yarn
+with Yarn
 
 ```bash
-yarn add @react-formgen/json-schema
+yarn add @react-formgen/json-schema ajv ajv-formats json-schema
+```
+
+with pnpm
+
+```bash
+pnpm install @react-formgen/json-schema ajv ajv-formats json-schema
 ```
 
 ## Usage

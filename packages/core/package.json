@@ -1,24 +1,27 @@
 {
-  "name": "@react-formgen/json-schema",
+  "name": "@react-formgen/core",
   "description": "A headless, type-safe, customizable, and super simple React form generator.",
   "private": false,
-  "version": "0.0.0-alpha.7",
+  "version": "0.0.0-alpha.0",
   "license": "MIT",
   "author": "m6io",
   "repository": {
     "type": "git",
     "url": "https://github.com/m6io/react-formgen.git",
-    "directory": "packages/json-schema"
+    "directory": "packages/core"
   },
   "keywords": [
     "react",
     "form",
+    "forms",
+    "generator",
+    "hooks",
     "schema",
-    "json-schema",
-    "zustand",
+    "zod",
     "ajv",
-    "ajv-formats",
-    "form generator"
+    "json-schema",
+    "typescript",
+    "zustand"
   ],
   "bugs": {
     "url": "https://github.com/m6io/react-formgen/issues"
@@ -35,12 +38,9 @@
     "analyze": "vite build --mode analyze"
   },
   "dependencies": {
-    "@react-formgen/core": "0.0.0-alpha.0"
+    "zustand": "^4.5.2"
   },
   "peerDependencies": {
-    "ajv": "^8.16.0",
-    "ajv-formats": "^3.0.1",
-    "json-schema": "^0.4.0",
     "react": "^18.3.1"
   },
   "devDependencies": {

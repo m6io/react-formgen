@@ -5,7 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  '@react-formgen/core': workspace:*
   '@react-formgen/json-schema': workspace:*
+  '@react-formgen/zod': workspace:*
 
 importers:
 
@@ -413,17 +415,8 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2(rollup@4.18.0)(vite@5.3.1(@types/node@20.14.8))
 
-  packages/json-schema:
+  packages/core:
     dependencies:
-      ajv:
-        specifier: ^8.16.0
-        version: 8.16.0
-      ajv-formats:
-        specifier: ^3.0.1
-        version: 3.0.1(ajv@8.16.0)
-      json-schema:
-        specifier: ^0.4.0
-        version: 0.4.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -468,17 +461,72 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)
 
+  packages/json-schema:
+    dependencies:
+      '@react-formgen/core':
+        specifier: workspace:*
+        version: link:../core
+      ajv:
+        specifier: ^8.16.0
+        version: 8.16.0
+      ajv-formats:
+        specifier: ^3.0.1
+        version: 3.0.1(ajv@8.16.0)
+      json-schema:
+        specifier: ^0.4.0
+        version: 0.4.0
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@types/json-schema':
+        specifier: ^7.0.15
+        version: 7.0.15
+      '@types/node':
+        specifier: ^20.14.8
+        version: 20.14.8
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.3
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^7.13.1
+        version: 7.13.1(@typescript-eslint/parser@7.13.1(eslint@8.57.0)(typescript@5.5.2))(eslint@8.57.0)(typescript@5.5.2)
+      '@typescript-eslint/parser':
+        specifier: ^7.13.1
+        version: 7.13.1(eslint@8.57.0)(typescript@5.5.2)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.1
+        version: 4.3.1(vite@5.3.1(@types/node@20.14.8))
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      eslint-plugin-react-hooks:
+        specifier: ^4.6.2
+        version: 4.6.2(eslint@8.57.0)
+      eslint-plugin-react-refresh:
+        specifier: ^0.4.7
+        version: 0.4.7(eslint@8.57.0)
+      rollup-plugin-visualizer:
+        specifier: ^5.12.0
+        version: 5.12.0(rollup@4.18.0)
+      typescript:
+        specifier: ^5.5.2
+        version: 5.5.2
+      vite:
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.14.8)
+
   packages/zod:
     dependencies:
+      '@react-formgen/core':
+        specifier: workspace:*
+        version: link:../core
       react:
         specifier: ^18.3.1
         version: 18.3.1
       zod:
         specifier: ^3.23.8
         version: 3.23.8
-      zustand:
-        specifier: ^4.5.2
-        version: 4.5.2(@types/react@18.3.3)(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.14.8

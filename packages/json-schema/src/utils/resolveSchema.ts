@@ -1,7 +1,7 @@
 import { JSONSchema7 } from "json-schema";
 
 // Utility function to resolve $ref in JSON Schema
-export const resolveRef = (
+export const resolveSchema = (
   schema: JSONSchema7,
   definitions: any
 ): JSONSchema7 => {

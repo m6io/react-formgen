@@ -7,7 +7,7 @@ import {
   RenderTemplateProps,
   StringSchema,
 } from "./types";
-import { resolveRef } from "../utils";
+import { resolveSchema } from "../utils";
 
 /**
  * Render a template based on the schema type.
@@ -21,7 +21,7 @@ export const RenderTemplate: React.FC<RenderTemplateProps> = ({
   fieldTemplates,
   readOnly = false,
 }) => {
-  schema = resolveRef(schema, definitions);
+  schema = resolveSchema(schema, definitions);
 
   switch (schema.type) {
     case "string":

@@ -1,12 +1,12 @@
 import { JSONSchema7 } from "json-schema";
-import { resolveRef } from "./resolveRef";
+import { resolveSchema } from "./resolveSchema";
 
 // Utility function to resolve $ref in JSON Schema
 export const generateInitialData = (
   schema: JSONSchema7,
   definitions?: any
 ): any => {
-  schema = resolveRef(schema, definitions);
+  schema = resolveSchema(schema, definitions);
 
   switch (schema.type) {
     case "object": {

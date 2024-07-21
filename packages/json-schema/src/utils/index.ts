@@ -1,5 +1,5 @@
 import { generateInitialData } from "./generateInitialData";
 import { getZeroState } from "./getZeroState";
-import { resolveRef } from "./resolveRef";
+import { resolveSchema } from "./resolveSchema";
 
-export { generateInitialData, getZeroState, resolveRef };
+export { generateInitialData, getZeroState, resolveSchema };
