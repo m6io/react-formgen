@@ -10,7 +10,8 @@ import { useFormContext as coreUseFormContext } from "./hooks/useFormContext";
 import { useFormDataAtPath as coreUseFormDataAtPath } from "./hooks/useFormDataAtPath";
 
 export const createFormProviderAndHooks = <S, E>(
-  generateInitialData: (schema: S) => any
+  generateInitialData: (schema: S) => any,
+  getErrorsAtPath: (errors: E[], path: string[]) => E[] | undefined
 ) => {
   const FormProvider: React.FC<
     Omit<FormProviderProps<S>, "createInitialData">
@@ -42,5 +43,10 @@ export const createFormProviderAndHooks = <S, E>(
     return coreUseFormDataAtPath<S, E>(path, defaultOnNull);
   };
 
-  return { FormProvider, useFormContext, useFormDataAtPath };
+  const useErrorsAtPath = (path: string[]): E[] | undefined => {
+    const errors = useFormContext((state) => state.errors);
+    return getErrorsAtPath(errors ?? [], path);
+  };
+
+  return { FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath };
 };

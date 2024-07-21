@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { getZeroState } from "../utils/getZeroState";
-import { useErrorsAtPath } from "./useErrorsAtPath";
-import { useFormDataAtPath } from "..";
+import { useFormDataAtPath, useErrorsAtPath } from "..";
 
 export const useArrayFieldset = (
   path: string[],
