@@ -1,12 +1,16 @@
 import { useFormContext } from "./useFormContext";
 
 // Custom hook to get form data at a specific path
-export const useFormDataAtPath = (
+export const useFormDataAtPath = <S, E>(
   path: string[],
   defaultOnNull: unknown = null
 ): [any, (value: any) => void] => {
-  const formData = useFormContext((state) => state.formData);
-  const setFormData = useFormContext((state) => state.setFormData);
+  const formData = useFormContext<S, E, any>((state) => state.formData);
+  const setFormData = useFormContext<
+    S,
+    E,
+    (path: string[], value: any) => void
+  >((state) => state.setFormData);
   const valueAtPath =
     path.reduce((acc, key) => acc?.[key], formData) ?? defaultOnNull;
 

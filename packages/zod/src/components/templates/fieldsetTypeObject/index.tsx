@@ -2,7 +2,7 @@ import React from "react";
 import { z } from "zod";
 import { FieldTemplates } from "../../types";
 import { RenderTemplate } from "../../RenderTemplate";
-import { useErrorsAtPath } from "../../../hooks";
+import { useErrorsAtPath } from "../../..";
 
 export const ObjectFieldset: React.FC<{
   schema: z.ZodObject<any>;

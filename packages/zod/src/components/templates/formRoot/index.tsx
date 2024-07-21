@@ -1,9 +1,8 @@
 import React from "react";
 import { z } from "zod";
-import { useFormContext } from "../../../hooks/useFormContext";
+import { FormState, useFormContext } from "../../..";
 import { DisplayTemplateProps, FormTemplateProps } from "../../types";
 import { RenderTemplate } from "../../RenderTemplate";
-import { FormState } from "../../FormProvider";
 
 export const BaseFormTemplate: React.FC<FormTemplateProps> = ({
   onSubmit,

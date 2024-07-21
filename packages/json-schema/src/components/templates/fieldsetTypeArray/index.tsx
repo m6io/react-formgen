@@ -1,10 +1,6 @@
 import React from "react";
 import { JSONSchema7 } from "json-schema";
-import {
-  useArrayFieldset,
-  useFormDataAtPath,
-  useErrorsAtPath,
-} from "../../../hooks";
+import { useArrayFieldset, useFormDataAtPath, useErrorsAtPath } from "../../..";
 import {
   BaseArraySchema,
   FieldTemplates,

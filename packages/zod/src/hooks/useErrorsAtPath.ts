@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { useFormContext } from "./useFormContext";
+import { useFormContext } from "..";
 
 // Custom hook to get form errors at a specific path
 export const useErrorsAtPath = (path: string[]): z.ZodIssue[] | undefined => {

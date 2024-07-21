@@ -2,10 +2,9 @@ import React from "react";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import { JSONSchema7 } from "json-schema";
-import { useFormContext } from "../../../hooks/useFormContext";
 import { DisplayTemplateProps, FormTemplateProps } from "../../types";
 import { RenderTemplate } from "../../RenderTemplate";
-import { FormState } from "../../FormProvider";
+import { FormState, useFormContext } from "../../..";
 
 // Single shared Ajv instance with formats
 export const AjvInstance = new Ajv({

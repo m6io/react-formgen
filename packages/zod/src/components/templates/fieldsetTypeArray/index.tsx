@@ -1,6 +1,6 @@
 import React from "react";
 import { z } from "zod";
-import { useArrayFieldset, useFormDataAtPath } from "../../../hooks";
+import { useArrayFieldset, useFormDataAtPath } from "../../..";
 import { FieldTemplates } from "../../types";
 import { RenderTemplate } from "../../RenderTemplate";
 

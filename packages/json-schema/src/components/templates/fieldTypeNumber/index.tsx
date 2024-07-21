@@ -1,6 +1,6 @@
 import React from "react";
 import { BaseNumberSchema } from "../../types";
-import { useFormDataAtPath, useErrorsAtPath } from "../../../hooks";
+import { useFormDataAtPath, useErrorsAtPath } from "../../..";
 
 // Number Field Component Template
 export const NumberField: React.FC<{

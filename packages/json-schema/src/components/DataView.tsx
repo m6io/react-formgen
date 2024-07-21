@@ -1,7 +1,7 @@
 import React from "react";
-import { FormProvider } from "./FormProvider";
 import { DataDisplayProps } from "./types";
 import { BaseDisplayTemplate, BaseFieldTemplates } from "./templates";
+import { FormProvider } from "..";
 
 /**
  * DataDisplay component that renders the data based on the schema.

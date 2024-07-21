@@ -1,6 +1,6 @@
 import React from "react";
 import { BaseStringSchema } from "../../types";
-import { useFormDataAtPath, useErrorsAtPath } from "../../../hooks";
+import { useFormDataAtPath, useErrorsAtPath } from "../../..";
 
 // String Field Component Template
 export const StringField: React.FC<{

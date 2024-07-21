@@ -1,7 +1,7 @@
 import React from "react";
 import { FormProps } from "./types";
-import { FormProvider } from "./FormProvider";
 import { BaseFormTemplate, BaseFieldTemplates } from "./templates";
+import { FormProvider } from "..";
 
 export const Form: React.FC<FormProps> = ({
   schema,

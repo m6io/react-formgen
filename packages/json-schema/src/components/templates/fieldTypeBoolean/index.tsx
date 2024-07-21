@@ -1,6 +1,6 @@
 import React from "react";
 import { BaseBooleanSchema } from "../../types";
-import { useFormDataAtPath, useErrorsAtPath } from "../../../hooks";
+import { useFormDataAtPath, useErrorsAtPath } from "../../..";
 
 // Boolean Field Component Template
 export const BooleanField: React.FC<{

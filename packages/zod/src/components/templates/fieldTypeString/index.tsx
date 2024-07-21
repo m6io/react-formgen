@@ -1,6 +1,6 @@
 import React from "react";
 import { z } from "zod";
-import { useFormDataAtPath, useErrorsAtPath } from "../../../hooks";
+import { useFormDataAtPath, useErrorsAtPath } from "../../..";
 
 export const StringField: React.FC<{
   schema: z.ZodString;

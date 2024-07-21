@@ -1,7 +1,7 @@
 import React from "react";
 import { FormProps } from "./types";
-import { FormProvider } from "./FormProvider";
 import { BaseFormTemplate, BaseFieldTemplates } from "./templates";
+import { FormProvider } from "..";
 
 /**
  * Form component that renders the form based on the schema.

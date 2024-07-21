@@ -6,7 +6,7 @@ import {
   SchemaDefinitions,
 } from "../../types";
 import { RenderTemplate } from "../../RenderTemplate";
-import { useErrorsAtPath } from "../../../hooks";
+import { useErrorsAtPath } from "../../..";
 
 // Object Fieldset Component Template
 export const ObjectFieldset: React.FC<{
