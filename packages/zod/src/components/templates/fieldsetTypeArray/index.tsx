@@ -1,6 +1,6 @@
 import React from "react";
 import { z } from "zod";
-import { useArrayFieldset, useFormDataAtPath } from "../../..";
+import { getZeroState, useArrayFieldset, useFormDataAtPath } from "../../..";
 import { FieldTemplates } from "../../types";
 import { RenderTemplate } from "../../RenderTemplate";
 
@@ -10,7 +10,7 @@ export const ArrayFieldset: React.FC<{
   fieldTemplates: FieldTemplates;
 }> = ({ schema, path, fieldTemplates }) => {
   const { valueAtPath, errorsAtPath, moveItem, removeItem, addItem } =
-    useArrayFieldset(path, schema);
+    useArrayFieldset(path, () => getZeroState(schema.element));
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>

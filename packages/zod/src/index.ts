@@ -24,16 +24,26 @@ const getErrorsAtPath = (
   return errorMap[fullPath] || [];
 };
 
-const { FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath } =
-  createFormProviderAndHooks<z.ZodType<any>, z.ZodIssue>(
-    createInitialData,
-    getErrorsAtPath
-  );
+const {
+  FormProvider,
+  useFormContext,
+  useFormDataAtPath,
+  useErrorsAtPath,
+  useArrayFieldset,
+} = createFormProviderAndHooks<z.ZodType<any>, z.ZodIssue>(
+  createInitialData,
+  getErrorsAtPath
+);
 
 export type FormState = CoreFormState<z.ZodType<any>, z.ZodIssue>;
 
-export { FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath };
+export {
+  FormProvider,
+  useFormContext,
+  useFormDataAtPath,
+  useErrorsAtPath,
+  useArrayFieldset,
+};
 
 export * from "./components";
-export * from "./hooks";
 export * from "./utils";

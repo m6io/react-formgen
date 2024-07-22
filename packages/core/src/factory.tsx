@@ -48,5 +48,48 @@ export const createFormProviderAndHooks = <S, E>(
     return getErrorsAtPath(errors ?? [], path);
   };
 
-  return { FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath };
+  const useArrayFieldset = (
+    path: string[],
+    zeroState: () => any,
+    defaultOnNull: any = null
+  ) => {
+    const [valueAtPath, setValueAtPath] = useFormDataAtPath(
+      path,
+      defaultOnNull
+    );
+    const errorsAtPath = useErrorsAtPath(path);
+
+    const moveItem = (index: number, direction: "up" | "down") => {
+      const newArray = [...valueAtPath];
+      const [movedItem] = newArray.splice(index, 1);
+      newArray.splice(direction === "up" ? index - 1 : index + 1, 0, movedItem);
+      setValueAtPath(newArray);
+    };
+
+    const removeItem = (index: number) => {
+      const newArray = [...valueAtPath];
+      newArray.splice(index, 1);
+      setValueAtPath(newArray);
+    };
+
+    const addItem = () => {
+      setValueAtPath([...valueAtPath, zeroState()]);
+    };
+
+    return {
+      valueAtPath,
+      errorsAtPath,
+      moveItem,
+      removeItem,
+      addItem,
+    };
+  };
+
+  return {
+    FormProvider,
+    useFormContext,
+    useFormDataAtPath,
+    useErrorsAtPath,
+    useArrayFieldset,
+  };
 };

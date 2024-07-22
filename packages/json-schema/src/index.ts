@@ -31,17 +31,27 @@ const getErrorsAtPath = (
   return errorMap[fullPath] || [];
 };
 
-const { FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath } =
-  createFormProviderAndHooks<JSONSchema7, ErrorObject>(
-    createInitialData,
-    getErrorsAtPath
-  );
+const {
+  FormProvider,
+  useFormContext,
+  useFormDataAtPath,
+  useErrorsAtPath,
+  useArrayFieldset,
+} = createFormProviderAndHooks<JSONSchema7, ErrorObject>(
+  createInitialData,
+  getErrorsAtPath
+);
 
 export type FormState = CoreFormState<JSONSchema7, ErrorObject>;
 
-export { FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath };
+export {
+  FormProvider,
+  useFormContext,
+  useFormDataAtPath,
+  useErrorsAtPath,
+  useArrayFieldset,
+};
 
 export * from "./types";
 export * from "./components";
-export * from "./hooks";
 export * from "./utils";

@@ -17,7 +17,9 @@ export const ArrayFieldset: React.FC<{
   fieldTemplates: FieldTemplates;
 }> = ({ schema, path, definitions, fieldTemplates }) => {
   const { valueAtPath, errorsAtPath, moveItem, removeItem, addItem } =
-    useArrayFieldset(path, schema, definitions);
+    useArrayFieldset(path, () =>
+      getZeroState(schema.items as JSONSchema7, definitions)
+    );
 
   return (
     <div
