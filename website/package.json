@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-formgen/json-schema": "workspace:*",
-    "@react-formgen/zod": "workspace:*",
+    "@react-formgen/json-schema": "0.0.0-alpha.9",
+    "@react-formgen/yup": "0.0.0-alpha.0",
+    "@react-formgen/zod": "0.0.0-alpha.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "yup": "^1.4.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

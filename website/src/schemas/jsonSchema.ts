@@ -126,8 +126,8 @@ export const jsonSchema: FormgenJSONSchema7 = {
   },
   properties: {
     firstName: {
-      title: "Name",
-      description: "The person's name.",
+      title: "First Name",
+      description: "The person's first name.",
       type: "string",
       minLength: 1,
       maxLength: 100,

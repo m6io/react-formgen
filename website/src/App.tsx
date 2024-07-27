@@ -1,3 +1,4 @@
+import * as Yup from "yup";
 import { z } from "zod";
 import {
   Form as JsonSchemaForm,
@@ -9,6 +10,14 @@ import {
 } from "@react-formgen/json-schema";
 
 import {
+  Form as YupForm,
+  FormProvider as YupFormProvider,
+  BaseFormTemplate as YupBaseFormTemplate,
+  BaseDisplayTemplate as YupBaseDisplayTemplate,
+  BaseFieldTemplates as YupBaseFieldTemplates,
+} from "@react-formgen/yup";
+
+import {
   Form as ZodForm,
   FormProvider as ZodFormProvider,
   BaseFormTemplate as ZodBaseFormTemplate,
@@ -17,6 +26,7 @@ import {
 } from "@react-formgen/zod";
 
 import { jsonSchema } from "./schemas/jsonSchema.ts";
+import { yupSchema } from "./schemas/yupSchema.ts";
 import { zodSchema } from "./schemas/zodSchema.ts";
 
 export const jsonSchemaBasic: FormgenJSONSchema7 = {
@@ -24,13 +34,61 @@ export const jsonSchemaBasic: FormgenJSONSchema7 = {
   description: "A simple user form",
   type: "object",
   properties: {
-    firstName: { type: "string", title: "First Name" },
-    lastName: { type: "string", title: "Last Name" },
-    age: { type: "integer", title: "Age" },
-    email: { type: "string", format: "email", title: "Email Address" },
+    firstName: {
+      type: "string",
+      title: "First Name",
+      minLength: 1,
+      maxLength: 100,
+      pattern: "^[A-Za-z]+$",
+      description: "The person's first name.",
+    },
+    lastName: {
+      type: "string",
+      title: "Last Name",
+      minLength: 1,
+      maxLength: 100,
+      pattern: "^[A-Za-z]+$",
+      description: "The person's last name.",
+    },
+    age: {
+      type: "integer",
+      title: "Age",
+      minimum: 0,
+      maximum: 150,
+      description: "The person's age.",
+    },
+    email: {
+      type: "string",
+      format: "email",
+      title: "Email Address",
+      description: "The person's email address.",
+    },
   },
   required: ["firstName", "lastName", "email"],
 };
+
+export const yupSchemaBasic = Yup.object({
+  firstName: Yup.string()
+    .min(1)
+    .max(100)
+    .matches(/^[A-Za-z]+$/, "Invalid name")
+    .required("Required")
+    .meta({ title: "First Name", description: "The person's first name." }),
+  lastName: Yup.string()
+    .min(1)
+    .max(100)
+    .matches(/^[A-Za-z]+$/, "Invalid last name")
+    .required("Required")
+    .meta({ title: "Last Name", description: "The person's last name." }),
+  age: Yup.number().integer().min(0).max(150).meta({
+    title: "Age",
+    description: "The person's age.",
+  }),
+  email: Yup.string().email().required("Required").meta({
+    title: "Email",
+    description: "The person's email address.",
+  }),
+});
 
 export const zodSchemaBasic = z.object({
   firstName: z
@@ -89,6 +147,18 @@ const App = () => {
           ></JsonSchemaForm>
         </div>
         <div style={formWrapperStyle}>
+          <h2>Yup Schema Form</h2>
+
+          <YupForm
+            schema={yupSchemaBasic}
+            initialData={initialFormData}
+            fieldTemplates={YupBaseFieldTemplates}
+            formTemplate={YupBaseFormTemplate}
+            onSubmit={(data) => console.log("Yup:", data)}
+            onError={(errors) => console.error("Yup:", errors)}
+          ></YupForm>
+        </div>
+        <div style={formWrapperStyle}>
           <h2>Zod Schema Form</h2>
 
           <ZodForm
@@ -121,6 +191,18 @@ const App = () => {
           </JsonSchemaFormProvider>
         </div>
 
+        <div style={formWrapperStyle}>
+          <h2>Yup Schema Form</h2>
+
+          <YupFormProvider schema={yupSchema} initialData={initialFormData}>
+            <YupBaseFormTemplate
+              fieldTemplates={YupBaseFieldTemplates}
+              onSubmit={(data) => console.log("Yup:", data)}
+              onError={(errors) => console.error("Yup:", errors)}
+            />
+            <YupBaseDisplayTemplate fieldTemplates={YupBaseFieldTemplates} />
+          </YupFormProvider>
+        </div>
         <div style={formWrapperStyle}>
           <h2>Zod Schema Form</h2>
 

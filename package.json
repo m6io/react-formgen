@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "pnpm run --filter website dev",
-    "build": "pnpm run build:core && pnpm run build:js && pnpm run build:zod",
+    "build": "pnpm run build:core && pnpm run build:js && pnpm run build:yup && pnpm run build:zod",
     "build:core": "pnpm run --filter \"@react-formgen/core\" build",
     "build:js": "pnpm run --filter \"@react-formgen/json-schema\" build",
+    "build:yup": "pnpm run --filter \"@react-formgen/yup\" build",
     "build:zod": "pnpm run --filter \"@react-formgen/zod\" build"
   },
   "devDependencies": {
@@ -15,6 +16,7 @@
     "overrides": {
       "@react-formgen/core": "workspace:*",
       "@react-formgen/json-schema": "workspace:*",
+      "@react-formgen/yup": "workspace:*",
       "@react-formgen/zod": "workspace:*"
     }
   }
