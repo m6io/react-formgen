@@ -1,6 +1,11 @@
-import React, { createContext, useRef } from "react";
+import React, { createContext } from "react";
 import { createStore } from "zustand";
 
+/**
+ * Represents the state of the form.
+ * @template S - Schema type.
+ * @template E - Error type.
+ */
 export interface FormState<S, E> {
   schema: S;
   formData: any;
@@ -9,6 +14,10 @@ export interface FormState<S, E> {
   setErrors: (errors: E[] | null) => void;
 }
 
+/**
+ * Props for the FormProvider component.
+ * @template S - Schema type.
+ */
 export interface FormProviderProps<S> {
   initialData?: any;
   schema: S;
@@ -16,6 +25,15 @@ export interface FormProviderProps<S> {
   createInitialData: (schema: S) => any;
 }
 
+/**
+ * Creates a store for the form state.
+ * @template S - Schema type.
+ * @template E - Error type.
+ * @param {any} initialData - Initial form data.
+ * @param {S} schema - Form schema.
+ * @param {(schema: S) => any} createInitialData - Function to create initial data from schema.
+ * @returns {ReturnType<typeof createStore<FormState<S, E>>>} A Zustand store for the form state.
+ */
 export const createFormStore = <S, E>(
   initialData: any,
   schema: S,
@@ -50,24 +68,14 @@ export const createFormStore = <S, E>(
   }));
 };
 
+/**
+ * Store for the form state.
+ * @template S - Schema type.
+ * @template E - Error type.
+ */
 export type FormStore<S, E> = ReturnType<typeof createFormStore<S, E>>;
 
+/**
+ * Context to provide the form store.
+ */
 export const FormContext = createContext<FormStore<any, any> | null>(null);
-
-export const FormProvider = <S,>({
-  initialData = {},
-  schema,
-  children,
-  createInitialData,
-}: FormProviderProps<S>) => {
-  const storeRef = useRef<FormStore<S, any>>();
-  if (!storeRef.current) {
-    storeRef.current = createFormStore(initialData, schema, createInitialData);
-  }
-
-  return (
-    <FormContext.Provider value={storeRef.current}>
-      {children}
-    </FormContext.Provider>
-  );
-};
