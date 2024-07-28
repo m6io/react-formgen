@@ -8,6 +8,8 @@ import {
 } from "./components/FormProvider";
 import { useFormContext as coreUseFormContext } from "./hooks/useFormContext";
 import { useFormDataAtPath as coreUseFormDataAtPath } from "./hooks/useFormDataAtPath";
+import { useErrorsAtPath as coreUseErrorsAtPath } from "./hooks/useErrorsAtPath";
+import { useArrayFieldset as coreUseArrayFieldset } from "./hooks/useArrayFieldset";
 
 /**
  * Factory function to create schema-specific form provider and hooks.
@@ -96,8 +98,7 @@ export const createFormProviderAndHooks = <S, E>(
    * ```
    */
   const useErrorsAtPath = (path: string[]): E[] | undefined => {
-    const errors = useFormContext((state) => state.errors);
-    return getErrorsAtPath(errors ?? [], path);
+    return coreUseErrorsAtPath<S, E>(path, getErrorsAtPath);
   };
 
   /**
@@ -116,36 +117,12 @@ export const createFormProviderAndHooks = <S, E>(
     zeroState: () => any,
     defaultOnNull: any = null
   ) => {
-    const [valueAtPath, setValueAtPath] = useFormDataAtPath(
+    return coreUseArrayFieldset<S, E>(
       path,
-      defaultOnNull
+      zeroState,
+      defaultOnNull,
+      getErrorsAtPath
     );
-    const errorsAtPath = useErrorsAtPath(path);
-
-    const moveItem = (index: number, direction: "up" | "down") => {
-      const newArray = [...valueAtPath];
-      const [movedItem] = newArray.splice(index, 1);
-      newArray.splice(direction === "up" ? index - 1 : index + 1, 0, movedItem);
-      setValueAtPath(newArray);
-    };
-
-    const removeItem = (index: number) => {
-      const newArray = [...valueAtPath];
-      newArray.splice(index, 1);
-      setValueAtPath(newArray);
-    };
-
-    const addItem = () => {
-      setValueAtPath([...valueAtPath, zeroState()]);
-    };
-
-    return {
-      valueAtPath,
-      errorsAtPath,
-      moveItem,
-      removeItem,
-      addItem,
-    };
   };
 
   return {
