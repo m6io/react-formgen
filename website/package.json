@@ -12,7 +12,7 @@
   "dependencies": {
     "@react-formgen/json-schema": "0.0.0-alpha.10",
     "@react-formgen/yup": "0.0.0-alpha.1",
-    "@react-formgen/zod": "0.0.0-alpha.3",
+    "@react-formgen/zod": "0.0.0-alpha.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "yup": "^1.4.0",
