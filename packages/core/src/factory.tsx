@@ -1,10 +1,8 @@
 import React from "react";
 import {
-  createFormStore,
+  FormProvider as CoreFormProvider,
   FormState,
   FormProviderProps,
-  FormStore,
-  FormContext,
 } from "./components/FormProvider";
 import { useFormContext as coreUseFormContext } from "./hooks/useFormContext";
 import { useFormDataAtPath as coreUseFormDataAtPath } from "./hooks/useFormDataAtPath";
@@ -41,19 +39,14 @@ export const createFormProviderAndHooks = <S, E>(
   const FormProvider: React.FC<
     Omit<FormProviderProps<S>, "createInitialData">
   > = ({ initialData = {}, schema, children }) => {
-    const storeRef = React.useRef<FormStore<S, E>>();
-    if (!storeRef.current) {
-      storeRef.current = createFormStore(
-        initialData,
-        schema,
-        generateInitialData
-      );
-    }
-
     return (
-      <FormContext.Provider value={storeRef.current}>
+      <CoreFormProvider<S, E>
+        initialData={initialData}
+        schema={schema}
+        generateInitialData={generateInitialData}
+      >
         {children}
-      </FormContext.Provider>
+      </CoreFormProvider>
     );
   };
 

@@ -79,3 +79,39 @@ export type FormStore<S, E> = ReturnType<typeof createFormStore<S, E>>;
  * Context to provide the form store.
  */
 export const FormContext = createContext<FormStore<any, any> | null>(null);
+
+/**
+ * Schema-specific FormProvider component.
+ * @param {Omit<FormProviderProps<S>, "createInitialData">} props - Props for the FormProvider.
+ * @returns {JSX.Element} A React component that provides the form state context.
+ * @example
+ * ```
+ * const { FormProvider } = createFormProviderAndHooks(myGenerateInitialData, myGetErrorsAtPath);
+ * <FormProvider schema={mySchema} initialData={myInitialData}>
+ *   <MyFormComponent />
+ * </FormProvider>
+ * ```
+ */
+export const FormProvider = <S, E>({
+  initialData = {},
+  schema,
+  children,
+  generateInitialData,
+}: Omit<FormProviderProps<S>, "createInitialData"> & {
+  generateInitialData: (schema: S) => any;
+}): JSX.Element => {
+  const storeRef = React.useRef<FormStore<S, E>>();
+  if (!storeRef.current) {
+    storeRef.current = createFormStore<S, E>(
+      initialData,
+      schema,
+      generateInitialData
+    );
+  }
+
+  return (
+    <FormContext.Provider value={storeRef.current}>
+      {children}
+    </FormContext.Provider>
+  );
+};
