@@ -2,11 +2,12 @@ import { useFormDataAtPath } from "./useFormDataAtPath";
 import { useErrorsAtPath } from "./useErrorsAtPath";
 
 /**
- * Schema-specific hook for array manipulation.
- * @template S - Schema type.
- * @template E - Error type.
- * @param {string[]} path - Path to the array data.
- * @param {() => any} zeroState - Function to get the zero state for the array items.
+ * Custom hook to manage array fields within the form state.
+ *
+ * @template S - The schema type used to define the structure of the form.
+ * @template E - The type used for form validation errors.
+ * @param {string[]} path - Path to the array data in the form state.
+ * @param {() => any} zeroState - Function to get the initial state for a new array item.
  * @param {any} defaultOnNull - Default value if the data at the path is null.
  * @param {(errors: E[], path: string[]) => E[] | undefined} getErrorsAtPath - Function to get errors at a specific path.
  * @returns {Object} An object containing the array data, errors at the path, and functions to manipulate the array.

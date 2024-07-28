@@ -3,8 +3,9 @@ import { createStore } from "zustand";
 
 /**
  * Represents the state of the form.
- * @template S - Schema type.
- * @template E - Error type.
+ *
+ * @template S - The schema type used to define the structure of the form.
+ * @template E - The type used for form validation errors.
  */
 export interface FormState<S, E> {
   schema: S;
@@ -16,7 +17,8 @@ export interface FormState<S, E> {
 
 /**
  * Props for the FormProvider component.
- * @template S - Schema type.
+ *
+ * @template S - The schema type used to define the structure of the form.
  */
 export interface FormProviderProps<S> {
   initialData?: any;
@@ -26,12 +28,13 @@ export interface FormProviderProps<S> {
 }
 
 /**
- * Creates a store for the form state.
- * @template S - Schema type.
- * @template E - Error type.
+ * Creates a store for the form state. This is used internally to initialize and manage the form's state using Zustand.
+ *
+ * @template S - The schema type used to define the structure of the form.
+ * @template E - The type used for form validation errors.
  * @param {any} initialData - Initial form data.
  * @param {S} schema - Form schema.
- * @param {(schema: S) => any} createInitialData - Function to create initial data from schema.
+ * @param {(schema: S) => any} createInitialData - Function to create initial data from the schema.
  * @returns {ReturnType<typeof createStore<FormState<S, E>>>} A Zustand store for the form state.
  */
 export const createFormStore = <S, E>(
@@ -69,20 +72,24 @@ export const createFormStore = <S, E>(
 };
 
 /**
- * Store for the form state.
- * @template S - Schema type.
- * @template E - Error type.
+ * Type representing the store for the form state. Used internally to define the form state management structure.
+ *
+ * @template S - The schema type used to define the structure of the form.
+ * @template E - The type used for form validation errors.
  */
 export type FormStore<S, E> = ReturnType<typeof createFormStore<S, E>>;
 
 /**
- * Context to provide the form store.
+ * Context to provide the form store. Used internally to make the form state accessible throughout the component tree.
  */
 export const FormContext = createContext<FormStore<any, any> | null>(null);
 
 /**
- * Schema-specific FormProvider component.
- * @param {Omit<FormProviderProps<S>, "createInitialData">} props - Props for the FormProvider.
+ * FormProvider component to wrap form components and provide them with form state and schema.
+ *
+ * @template S - The schema type used to define the structure of the form.
+ * @template E - The type used for form validation errors.
+ * @param {Omit<FormProviderProps<S>, "createInitialData">} props - Props for the FormProvider component.
  * @returns {JSX.Element} A React component that provides the form state context.
  * @example
  * ```

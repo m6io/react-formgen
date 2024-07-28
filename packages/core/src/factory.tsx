@@ -11,9 +11,10 @@ import { useArrayFieldset as coreUseArrayFieldset } from "./hooks/useArrayFields
 
 /**
  * Factory function to create schema-specific form provider and hooks.
- * @template S - Schema type.
- * @template E - Error type.
- * @param {(schema: S) => any} generateInitialData - Function to generate initial data from schema.
+ *
+ * @template S - The schema type used to define the structure of the form.
+ * @template E - The type used for form validation errors.
+ * @param {(schema: S) => any} generateInitialData - Function to generate initial data from the schema.
  * @param {(errors: E[], path: string[]) => E[] | undefined} getErrorsAtPath - Function to get errors at a specific path.
  * @returns {Object} An object containing schema-specific FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath, and useArrayFieldset hooks.
  * @example
@@ -26,7 +27,8 @@ export const createFormProviderAndHooks = <S, E>(
 ) => {
   /**
    * Schema-specific FormProvider component.
-   * @param {Omit<FormProviderProps<S>, "createInitialData">} props - Props for the FormProvider.
+   *
+   * @param {Omit<FormProviderProps<S>, "createInitialData">} props - Props for the FormProvider component.
    * @returns {JSX.Element} A React component that provides the form state context.
    * @example
    * ```
@@ -51,9 +53,10 @@ export const createFormProviderAndHooks = <S, E>(
   };
 
   /**
-   * Schema-specific hook to access form context.
-   * @template T - Return type of the selector function.
-   * @param {(state: FormState<S, E>) => T} selector - Selector function to select a part of the form state.
+   * Custom hook to access the form state from the context.
+   *
+   * @template T - The type of the selected part of the form state.
+   * @param {(state: FormState<S, E>) => T} selector - Selector function to pick a part of the form state.
    * @returns {T} The selected part of the form state.
    * @example
    * ```
@@ -65,7 +68,8 @@ export const createFormProviderAndHooks = <S, E>(
   };
 
   /**
-   * Schema-specific hook to get form data at a specific path.
+   * Custom hook to get and set form data at a specific path in the form state.
+   *
    * @param {string[]} path - Path to the form data.
    * @param {unknown} defaultOnNull - Default value if the data at the path is null.
    * @returns {[any, (value: any) => void]} A tuple containing the data at the path and a function to set the data at the path.
@@ -82,9 +86,10 @@ export const createFormProviderAndHooks = <S, E>(
   };
 
   /**
-   * Schema-specific hook to get errors at a specific path.
-   * @param {string[]} path - Path to the errors.
-   * @returns {E[] | undefined} The errors at the path.
+   * Custom hook to retrieve validation errors at a specific path in the form state.
+   *
+   * @param {string[]} path - Path to the errors in the form state.
+   * @returns {E[] | undefined} The errors at the specified path, if any.
    * @example
    * ```
    * const errors = useErrorsAtPath(["field1", "field2"]);
@@ -95,9 +100,10 @@ export const createFormProviderAndHooks = <S, E>(
   };
 
   /**
-   * Schema-specific hook for array manipulation.
-   * @param {string[]} path - Path to the array data.
-   * @param {() => any} zeroState - Function to get the zero state for the array items.
+   * Custom hook to manage array fields within the form state.
+   *
+   * @param {string[]} path - Path to the array data in the form state.
+   * @param {() => any} zeroState - Function to get the initial state for a new array item.
    * @param {any} defaultOnNull - Default value if the data at the path is null.
    * @returns {Object} An object containing the array data, errors at the path, and functions to manipulate the array.
    * @example

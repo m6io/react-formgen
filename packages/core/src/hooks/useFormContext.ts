@@ -3,11 +3,12 @@ import { useStore } from "zustand";
 import { FormContext, FormState } from "../components/FormProvider";
 
 /**
- * Hook to access the form context.
- * @template S - Schema type.
- * @template E - Error type.
- * @template T - Return type of the selector function.
- * @param {(state: FormState<S, E>) => T} selector - Selector function to select a part of the form state.
+ * Custom hook to access the form state from the context.
+ *
+ * @template S - The schema type used to define the structure of the form.
+ * @template E - The type used for form validation errors.
+ * @template T - The type of the selected part of the form state.
+ * @param {(state: FormState<S, E>) => T} selector - Selector function to pick a part of the form state.
  * @returns {T} The selected part of the form state.
  * @throws {Error} If the hook is used outside of a FormProvider.
  * @example
