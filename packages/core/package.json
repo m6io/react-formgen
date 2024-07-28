@@ -2,7 +2,7 @@
   "name": "@react-formgen/core",
   "description": "A headless, type-safe, customizable, and super simple React form generator.",
   "private": false,
-  "version": "0.0.0-alpha.2",
+  "version": "0.0.0-alpha.3",
   "license": "MIT",
   "author": "m6io",
   "repository": {
@@ -35,7 +35,9 @@
   "scripts": {
     "build": "vite build && tsc",
     "prepublishOnly": "npm run build",
-    "analyze": "vite build --mode analyze"
+    "analyze": "vite build --mode analyze",
+    "test": "vitest",
+    "coverage": "vitest --coverage"
   },
   "dependencies": {
     "zustand": "^4.5.2"
@@ -44,16 +46,21 @@
     "react": "^18.3.1"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
     "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^2.0.4",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "jsdom": "^24.1.1",
     "rollup-plugin-visualizer": "^5.12.0",
     "typescript": "^5.5.2",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "vitest": "^2.0.4"
   }
 }
