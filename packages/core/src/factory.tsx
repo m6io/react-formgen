@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useStore } from "zustand";
 import {
-  FormProvider as CoreFormProvider,
+  FormContext,
   FormState,
+  FormStore,
+  createFormStore,
   FormProviderProps,
 } from "./components/FormProvider";
-import { useFormContext as coreUseFormContext } from "./hooks/useFormContext";
-import { useFormDataAtPath as coreUseFormDataAtPath } from "./hooks/useFormDataAtPath";
-import { useErrorsAtPath as coreUseErrorsAtPath } from "./hooks/useErrorsAtPath";
-import { useArrayFieldset as coreUseArrayFieldset } from "./hooks/useArrayFieldset";
 
 /**
  * Factory function to create schema-specific form provider and hooks.
@@ -41,14 +40,19 @@ export const createFormProviderAndHooks = <S, E>(
   const FormProvider: React.FC<
     Omit<FormProviderProps<S>, "createInitialData">
   > = ({ initialData = {}, schema, children }) => {
+    const storeRef = React.useRef<FormStore<S, E>>();
+    if (!storeRef.current) {
+      storeRef.current = createFormStore<S, E>(
+        initialData,
+        schema,
+        generateInitialData
+      );
+    }
+
     return (
-      <CoreFormProvider<S, E>
-        initialData={initialData}
-        schema={schema}
-        generateInitialData={generateInitialData}
-      >
+      <FormContext.Provider value={storeRef.current}>
         {children}
-      </CoreFormProvider>
+      </FormContext.Provider>
     );
   };
 
@@ -64,7 +68,11 @@ export const createFormProviderAndHooks = <S, E>(
    * ```
    */
   const useFormContext = <T,>(selector: (state: FormState<S, E>) => T): T => {
-    return coreUseFormContext<S, E, T>(selector);
+    const store = useContext(FormContext);
+    if (!store) {
+      throw new Error("useFormContext must be used within a FormProvider");
+    }
+    return useStore(store, selector);
   };
 
   /**
@@ -82,7 +90,16 @@ export const createFormProviderAndHooks = <S, E>(
     path: string[],
     defaultOnNull: unknown = null
   ): [any, (value: any) => void] => {
-    return coreUseFormDataAtPath<S, E>(path, defaultOnNull);
+    const formData = useFormContext((state: FormState<S, E>) => state.formData);
+    const setFormData = useFormContext(
+      (state: FormState<S, E>) => state.setFormData
+    );
+    const valueAtPath =
+      path.reduce((acc, key) => acc?.[key], formData) ?? defaultOnNull;
+
+    const setValueAtPath = (value: any) => setFormData(path, value);
+
+    return [valueAtPath, setValueAtPath];
   };
 
   /**
@@ -96,7 +113,8 @@ export const createFormProviderAndHooks = <S, E>(
    * ```
    */
   const useErrorsAtPath = (path: string[]): E[] | undefined => {
-    return coreUseErrorsAtPath<S, E>(path, getErrorsAtPath);
+    const errors = useFormContext((state: FormState<S, E>) => state.errors);
+    return getErrorsAtPath(errors ?? [], path);
   };
 
   /**
@@ -116,12 +134,36 @@ export const createFormProviderAndHooks = <S, E>(
     zeroState: () => any,
     defaultOnNull: any = null
   ) => {
-    return coreUseArrayFieldset<S, E>(
+    const [valueAtPath, setValueAtPath] = useFormDataAtPath(
       path,
-      zeroState,
-      defaultOnNull,
-      getErrorsAtPath
+      defaultOnNull
     );
+    const errorsAtPath = useErrorsAtPath(path);
+
+    const moveItem = (index: number, direction: "up" | "down") => {
+      const newArray = [...valueAtPath];
+      const [movedItem] = newArray.splice(index, 1);
+      newArray.splice(direction === "up" ? index - 1 : index + 1, 0, movedItem);
+      setValueAtPath(newArray);
+    };
+
+    const removeItem = (index: number) => {
+      const newArray = [...valueAtPath];
+      newArray.splice(index, 1);
+      setValueAtPath(newArray);
+    };
+
+    const addItem = () => {
+      setValueAtPath([...valueAtPath, zeroState()]);
+    };
+
+    return {
+      valueAtPath,
+      errorsAtPath,
+      moveItem,
+      removeItem,
+      addItem,
+    };
   };
 
   return {
