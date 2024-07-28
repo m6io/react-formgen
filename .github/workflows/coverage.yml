@@ -27,8 +27,12 @@ jobs:
         run: npm run coverage
         working-directory: packages/${{ matrix.package }}
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: List coverage directory
+        run: ls -R packages/${{ matrix.package }}/coverage
+        working-directory: packages/${{ matrix.package }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
         with:
           files: packages/${{ matrix.package }}/coverage/lcov.info
           token: ${{ secrets.CODECOV_TOKEN }}
