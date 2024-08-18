@@ -3,26 +3,29 @@ import { z } from "zod";
 import {
   Form as JsonSchemaForm,
   FormProvider as JsonSchemaFormProvider,
-  BaseFormTemplate as JsonSchemaBaseFormTemplate,
-  BaseDisplayTemplate as JsonSchemaBaseDisplayTemplate,
-  BaseFieldTemplates as JsonSchemaBaseFieldTemplates,
+  BaseFormRoot as JsonSchemaBaseFormRoot,
+  BaseTemplates as JsonSchemaBaseTemplates,
   FormgenJSONSchema7,
+  useFormContext as useJsonSchemaFormContext,
+  FormState as JsonSchemaFormState,
 } from "@react-formgen/json-schema";
 
 import {
   Form as YupForm,
   FormProvider as YupFormProvider,
-  BaseFormTemplate as YupBaseFormTemplate,
-  BaseDisplayTemplate as YupBaseDisplayTemplate,
-  BaseFieldTemplates as YupBaseFieldTemplates,
+  BaseFormRoot as YupBaseFormRoot,
+  BaseTemplates as YupBaseTemplates,
+  useFormContext as useYupFormContext,
+  FormState as YupFormState,
 } from "@react-formgen/yup";
 
 import {
   Form as ZodForm,
   FormProvider as ZodFormProvider,
-  BaseFormTemplate as ZodBaseFormTemplate,
-  BaseDisplayTemplate as ZodBaseDisplayTemplate,
-  BaseFieldTemplates as ZodBaseFieldTemplates,
+  BaseFormRoot as ZodBaseFormRoot,
+  BaseTemplates as ZodBaseTemplates,
+  useFormContext as useZodFormContext,
+  FormState as ZodFormState,
 } from "@react-formgen/zod";
 
 import { jsonSchema } from "./schemas/jsonSchema.ts";
@@ -128,6 +131,39 @@ const formWrapperStyle = {
   borderRadius: "1rem",
 };
 
+// Generic hook that returns the readonly state and setter based on the context hook provided
+function useFormReadonly<
+  T extends JsonSchemaFormState | YupFormState | ZodFormState,
+>(contextHook: <U>(selector: (state: T) => U) => U) {
+  const readonly = contextHook((state) => state.readonly);
+  const setReadonly = contextHook((state) => state.setReadonly);
+  return { readonly, setReadonly };
+}
+
+// Generic SwitchToReadonly component that accepts a context hook and uses it to access the form state
+const SwitchToReadonly = <
+  T extends JsonSchemaFormState | YupFormState | ZodFormState,
+>({
+  contextHook,
+}: {
+  contextHook: <U>(selector: (state: T) => U) => U;
+}) => {
+  const { readonly, setReadonly } = useFormReadonly(contextHook);
+
+  return (
+    <div>
+      <label>
+        Readonly
+        <input
+          type="checkbox"
+          checked={readonly}
+          onChange={(e) => setReadonly(e.target.checked)}
+        />
+      </label>
+    </div>
+  );
+};
+
 const App = () => {
   return (
     <div>
@@ -140,34 +176,59 @@ const App = () => {
           <JsonSchemaForm
             schema={jsonSchemaBasic}
             initialData={initialFormData}
-            fieldTemplates={JsonSchemaBaseFieldTemplates}
-            formTemplate={JsonSchemaBaseFormTemplate}
+            templates={JsonSchemaBaseTemplates}
+            formRoot={JsonSchemaBaseFormRoot}
             onSubmit={(data) => console.log("JSON Schema:", data)}
             onError={(errors) => console.error("JSON Schema:", errors)}
           ></JsonSchemaForm>
+
+          <h2>JSON Schema Form (Readonly)</h2>
+          <JsonSchemaForm
+            schema={jsonSchemaBasic}
+            initialData={initialFormData}
+            readonly
+          ></JsonSchemaForm>
         </div>
+
         <div style={formWrapperStyle}>
           <h2>Yup Schema Form</h2>
 
           <YupForm
             schema={yupSchemaBasic}
             initialData={initialFormData}
-            fieldTemplates={YupBaseFieldTemplates}
-            formTemplate={YupBaseFormTemplate}
+            templates={YupBaseTemplates}
+            formRoot={YupBaseFormRoot}
             onSubmit={(data) => console.log("Yup:", data)}
             onError={(errors) => console.error("Yup:", errors)}
           ></YupForm>
+
+          <h2>Yup Schema Form (Readonly)</h2>
+
+          <YupForm
+            schema={yupSchemaBasic}
+            initialData={initialFormData}
+            readonly
+          ></YupForm>
         </div>
+
         <div style={formWrapperStyle}>
           <h2>Zod Schema Form</h2>
 
           <ZodForm
             schema={zodSchemaBasic}
             initialData={initialFormData}
-            fieldTemplates={ZodBaseFieldTemplates}
-            formTemplate={ZodBaseFormTemplate}
+            templates={ZodBaseTemplates}
+            formRoot={ZodBaseFormRoot}
             onSubmit={(data) => console.log("Zod:", data)}
             onError={(errors) => console.error("Zod:", errors)}
+          ></ZodForm>
+
+          <h2>Zod Schema Form (Readonly)</h2>
+
+          <ZodForm
+            schema={zodSchemaBasic}
+            initialData={initialFormData}
+            readonly
           ></ZodForm>
         </div>
       </div>
@@ -179,40 +240,43 @@ const App = () => {
           <JsonSchemaFormProvider
             schema={jsonSchema}
             initialData={initialFormData}
+            templates={JsonSchemaBaseTemplates}
           >
-            <JsonSchemaBaseFormTemplate
-              fieldTemplates={JsonSchemaBaseFieldTemplates}
+            <SwitchToReadonly contextHook={useJsonSchemaFormContext} />
+            <JsonSchemaBaseFormRoot
               onSubmit={(data) => console.log("JSON Schema:", data)}
               onError={(errors) => console.error("JSON Schema:", errors)}
-            />
-            <JsonSchemaBaseDisplayTemplate
-              fieldTemplates={JsonSchemaBaseFieldTemplates}
             />
           </JsonSchemaFormProvider>
         </div>
 
         <div style={formWrapperStyle}>
           <h2>Yup Schema Form</h2>
-
-          <YupFormProvider schema={yupSchema} initialData={initialFormData}>
-            <YupBaseFormTemplate
-              fieldTemplates={YupBaseFieldTemplates}
+          <YupFormProvider
+            schema={yupSchema}
+            initialData={initialFormData}
+            templates={YupBaseTemplates}
+          >
+            <SwitchToReadonly contextHook={useYupFormContext} />
+            <YupBaseFormRoot
               onSubmit={(data) => console.log("Yup:", data)}
               onError={(errors) => console.error("Yup:", errors)}
             />
-            <YupBaseDisplayTemplate fieldTemplates={YupBaseFieldTemplates} />
           </YupFormProvider>
         </div>
+
         <div style={formWrapperStyle}>
           <h2>Zod Schema Form</h2>
-
-          <ZodFormProvider schema={zodSchema} initialData={initialFormData}>
-            <ZodBaseFormTemplate
-              fieldTemplates={ZodBaseFieldTemplates}
+          <ZodFormProvider
+            schema={zodSchema}
+            initialData={initialFormData}
+            templates={ZodBaseTemplates}
+          >
+            <SwitchToReadonly contextHook={useZodFormContext} />
+            <ZodBaseFormRoot
               onSubmit={(data) => console.log("Zod:", data)}
               onError={(errors) => console.error("Zod:", errors)}
             />
-            <ZodBaseDisplayTemplate fieldTemplates={ZodBaseFieldTemplates} />
           </ZodFormProvider>
         </div>
       </div>

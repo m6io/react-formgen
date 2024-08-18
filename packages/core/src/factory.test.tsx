@@ -1,23 +1,153 @@
-import React from "react";
+import React, { useContext } from "react";
 import { render, screen, act } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { createFormProviderAndHooks } from "../src/factory";
-import { FormState } from "../src/components/FormProvider";
+import "@testing-library/jest-dom";
+
+import {
+  createFormProviderAndHooks,
+  createFormStore,
+  FormContext,
+  TemplatesContext,
+  FormProviderProps,
+  FormState,
+  FormStore,
+} from "./factory";
+import { useStore, StoreApi } from "zustand";
+
+const testSchema = {
+  property1: "string",
+  property2: "number",
+  nested: { property3: "string" },
+};
+
+describe("createFormStore", () => {
+  const createInitialData = (schema: typeof testSchema) => {
+    void schema;
+    return {
+      property1: "",
+      property2: 0,
+      nested: { property3: "" },
+    };
+  };
+
+  const FormProvider: React.FC<
+    Omit<FormProviderProps<typeof testSchema>, "createInitialData">
+  > = ({
+    initialData = {},
+    schema,
+    children,
+    readonly = false,
+    templates = {},
+  }) => {
+    const storeRef = React.useRef<FormStore<typeof testSchema, any> | null>(
+      null
+    );
+    if (!storeRef.current) {
+      storeRef.current = createFormStore(
+        initialData,
+        schema,
+        createInitialData,
+        readonly
+      );
+    }
+
+    return (
+      <FormContext.Provider value={storeRef.current}>
+        <TemplatesContext.Provider value={templates}>
+          {children}
+        </TemplatesContext.Provider>
+      </FormContext.Provider>
+    );
+  };
+
+  const TestComponent = () => {
+    const store = useContext(FormContext);
+    if (!store) {
+      throw new Error("Store is not available");
+    }
+    const formData = useStore(
+      store as StoreApi<FormState<typeof testSchema, any>>,
+      (state) => state.formData
+    );
+    const setFormData = useStore(
+      store as StoreApi<FormState<typeof testSchema, any>>,
+      (state) => state.setFormData
+    );
+    const readonly = useStore(
+      store as StoreApi<FormState<typeof testSchema, any>>,
+      (state) => state.readonly
+    );
+
+    return (
+      <div>
+        <div data-testid="formData">{JSON.stringify(formData)}</div>
+        <div data-testid="readonlyState">{String(readonly)}</div>
+        <button
+          onClick={() =>
+            setFormData(
+              ["nested", "nestedLevel1", "nestedLevel2", "property"],
+              "newNestedValue"
+            )
+          }
+        >
+          Set Deeply Nested Value
+        </button>
+      </div>
+    );
+  };
+
+  it("initializes nested object correctly, sets deeply nested value, and respects readonly state", () => {
+    render(
+      <FormProvider schema={testSchema} readonly={true}>
+        <TestComponent />
+      </FormProvider>
+    );
+
+    expect(screen.getByTestId("formData").textContent).toBe(
+      JSON.stringify(createInitialData(testSchema))
+    );
+    expect(screen.getByTestId("readonlyState").textContent).toBe("true");
+
+    act(() => {
+      screen.getByText("Set Deeply Nested Value").click();
+    });
+
+    expect(screen.getByTestId("formData").textContent).toBe(
+      JSON.stringify({
+        ...createInitialData(testSchema),
+        nested: {
+          ...createInitialData(testSchema).nested,
+          nestedLevel1: {
+            nestedLevel2: {
+              property: "newNestedValue",
+            },
+          },
+        },
+      })
+    );
+  });
+});
 
 const generateInitialData = (schema: any) => {
   void schema;
   return {
-    field1: "",
-    field2: 0,
-    arrayField: [],
+    property1: "",
+    property2: 0,
+    arrayProperty: [],
   };
 };
 const getErrorsAtPath = (errors: any[], path: string[]) =>
   errors.filter((error) => error.path === path.join("."));
 
+const InputComponent = () => <input data-testid="inputComponent" />;
+
 // Mock schema and errors for testing purposes
-const testSchema = { field1: "string", field2: "number", arrayField: "array" };
-const testErrors = [{ path: "field1", message: "Error in field1" }];
+const testSchema2 = {
+  property1: "string",
+  property2: "number",
+  arrayProperty: "array",
+};
+const testErrors = [{ path: "property1", message: "Error in property1" }];
 
 // Mock zero state function for array items
 const generateZeroState = () => ({});
@@ -28,25 +158,26 @@ describe("createFormProviderAndHooks", () => {
     useFormContext,
     useFormDataAtPath,
     useErrorsAtPath,
-    useArrayFieldset,
-  } = createFormProviderAndHooks<typeof testSchema, (typeof testErrors)[0]>(
+    useArrayTemplate,
+    useTemplates,
+  } = createFormProviderAndHooks<typeof testSchema2, (typeof testErrors)[0]>(
     generateInitialData,
     getErrorsAtPath
   );
 
   const TestComponent = ({ initialErrors = null }: { initialErrors?: any }) => {
     const formData = useFormContext(
-      (state: FormState<typeof testSchema, (typeof testErrors)[0]>) =>
+      (state: FormState<typeof testSchema2, (typeof testErrors)[0]>) =>
         state.formData
     );
     const setErrors = useFormContext(
-      (state: FormState<typeof testSchema, (typeof testErrors)[0]>) =>
+      (state: FormState<typeof testSchema2, (typeof testErrors)[0]>) =>
         state.setErrors
     );
-    const [valueAtPath, setValueAtPath] = useFormDataAtPath(["field1"]);
-    const errorsAtPath = useErrorsAtPath(["field1"]);
-    const arrayFieldset = useArrayFieldset(
-      ["arrayField"],
+    const [valueAtPath, setValueAtPath] = useFormDataAtPath(["property1"]);
+    const errorsAtPath = useErrorsAtPath(["property1"]);
+    const arrayTemplate = useArrayTemplate(
+      ["arrayProperty"],
       generateZeroState,
       []
     );
@@ -57,19 +188,23 @@ describe("createFormProviderAndHooks", () => {
       }
     }, [initialErrors, setErrors]);
 
+    const templates = useTemplates();
+    const Input = templates?.["Input"];
+
     return (
       <div>
         <div data-testid="formData">{JSON.stringify(formData)}</div>
         <div data-testid="valueAtPath">{valueAtPath}</div>
         <div data-testid="errorsAtPath">{JSON.stringify(errorsAtPath)}</div>
-        <div data-testid="arrayFieldset">
-          {JSON.stringify(arrayFieldset.valueAtPath)}
+        <div data-testid="arrayTemplate">
+          {JSON.stringify(arrayTemplate.valueAtPath)}
         </div>
+        {Input && <Input />}
         <button onClick={() => setValueAtPath("newValue")}>Set Value</button>
-        <button onClick={() => arrayFieldset.addItem()}>Add Item</button>
-        <button onClick={() => arrayFieldset.removeItem(0)}>Remove Item</button>
-        <button onClick={() => arrayFieldset.moveItem(0, "up")}>Move Up</button>
-        <button onClick={() => arrayFieldset.moveItem(0, "down")}>
+        <button onClick={() => arrayTemplate.addItem()}>Add Item</button>
+        <button onClick={() => arrayTemplate.removeItem(0)}>Remove Item</button>
+        <button onClick={() => arrayTemplate.moveItem(0, "up")}>Move Up</button>
+        <button onClick={() => arrayTemplate.moveItem(0, "down")}>
           Move Down
         </button>
       </div>
@@ -78,19 +213,19 @@ describe("createFormProviderAndHooks", () => {
 
   it("provides form context correctly", () => {
     render(
-      <FormProvider schema={testSchema}>
+      <FormProvider schema={testSchema2}>
         <TestComponent />
       </FormProvider>
     );
 
     expect(screen.getByTestId("formData").textContent).toBe(
-      JSON.stringify(generateInitialData(testSchema))
+      JSON.stringify(generateInitialData(testSchema2))
     );
   });
 
   it("useFormDataAtPath hook works correctly", () => {
     render(
-      <FormProvider schema={testSchema}>
+      <FormProvider schema={testSchema2}>
         <TestComponent />
       </FormProvider>
     );
@@ -106,31 +241,31 @@ describe("createFormProviderAndHooks", () => {
 
   it("useErrorsAtPath hook works correctly", () => {
     render(
-      <FormProvider schema={testSchema}>
+      <FormProvider schema={testSchema2}>
         <TestComponent initialErrors={testErrors} />
       </FormProvider>
     );
 
     // Verify errors
     expect(screen.getByTestId("errorsAtPath").textContent).toBe(
-      JSON.stringify(testErrors.filter((e) => e.path === "field1"))
+      JSON.stringify(testErrors.filter((e) => e.path === "property1"))
     );
   });
 
-  it("useArrayFieldset hook works correctly", () => {
+  it("useArrayTemplate hook works correctly", () => {
     render(
-      <FormProvider schema={testSchema}>
+      <FormProvider schema={testSchema2}>
         <TestComponent />
       </FormProvider>
     );
 
-    expect(screen.getByTestId("arrayFieldset").textContent).toBe("[]");
+    expect(screen.getByTestId("arrayTemplate").textContent).toBe("[]");
 
     act(() => {
       screen.getByText("Add Item").click();
     });
 
-    expect(screen.getByTestId("arrayFieldset").textContent).toBe(
+    expect(screen.getByTestId("arrayTemplate").textContent).toBe(
       JSON.stringify([generateZeroState()])
     );
 
@@ -138,7 +273,7 @@ describe("createFormProviderAndHooks", () => {
       screen.getByText("Add Item").click();
     });
 
-    expect(screen.getByTestId("arrayFieldset").textContent).toBe(
+    expect(screen.getByTestId("arrayTemplate").textContent).toBe(
       JSON.stringify([generateZeroState(), generateZeroState()])
     );
 
@@ -146,7 +281,7 @@ describe("createFormProviderAndHooks", () => {
       screen.getByText("Remove Item").click();
     });
 
-    expect(screen.getByTestId("arrayFieldset").textContent).toBe(
+    expect(screen.getByTestId("arrayTemplate").textContent).toBe(
       JSON.stringify([generateZeroState()])
     );
 
@@ -154,7 +289,7 @@ describe("createFormProviderAndHooks", () => {
       screen.getByText("Add Item").click();
     });
 
-    expect(screen.getByTestId("arrayFieldset").textContent).toBe(
+    expect(screen.getByTestId("arrayTemplate").textContent).toBe(
       JSON.stringify([generateZeroState(), generateZeroState()])
     );
 
@@ -162,7 +297,7 @@ describe("createFormProviderAndHooks", () => {
       screen.getByText("Move Down").click();
     });
 
-    expect(screen.getByTestId("arrayFieldset").textContent).toBe(
+    expect(screen.getByTestId("arrayTemplate").textContent).toBe(
       JSON.stringify([generateZeroState(), generateZeroState()])
     );
 
@@ -170,7 +305,7 @@ describe("createFormProviderAndHooks", () => {
       screen.getByText("Move Up").click();
     });
 
-    expect(screen.getByTestId("arrayFieldset").textContent).toBe(
+    expect(screen.getByTestId("arrayTemplate").textContent).toBe(
       JSON.stringify([generateZeroState(), generateZeroState()])
     );
   });
@@ -178,7 +313,7 @@ describe("createFormProviderAndHooks", () => {
   it("throws an error when useFormContext is used outside of FormProvider", () => {
     const TestComponent = () => {
       const formData = useFormContext(
-        (state: FormState<typeof testSchema, any>) => state.formData
+        (state: FormState<typeof testSchema2, any>) => state.formData
       );
       return <div>{JSON.stringify(formData)}</div>;
     };
@@ -186,5 +321,15 @@ describe("createFormProviderAndHooks", () => {
     expect(() => render(<TestComponent />)).toThrowError(
       "useFormContext must be used within a FormProvider"
     );
+  });
+
+  it("useTemplates hook works correctly", () => {
+    render(
+      <FormProvider schema={testSchema2} templates={{ Input: InputComponent }}>
+        <TestComponent />
+      </FormProvider>
+    );
+
+    expect(screen.getByTestId("inputComponent")).toBeInTheDocument();
   });
 });

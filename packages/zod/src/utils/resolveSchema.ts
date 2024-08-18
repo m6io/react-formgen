@@ -1,24 +1,31 @@
-import { z, ZodFirstPartySchemaTypes } from "zod";
+import { z } from "zod";
 
+// Helper function to resolve lazy schemas
 export const resolveSchema = (
-  schema: z.ZodType<any>
-): ZodFirstPartySchemaTypes => {
-  let resolvedSchema = schema as ZodFirstPartySchemaTypes;
+  schema: z.ZodTypeAny
+): z.ZodFirstPartySchemaTypes => {
+  let resolvedSchema = schema as z.ZodFirstPartySchemaTypes;
+
+  // Recursively resolve lazy schemas
+  while (resolvedSchema._def.typeName === z.ZodFirstPartyTypeKind.ZodLazy) {
+    resolvedSchema = resolvedSchema._def.getter();
+  }
 
   while (
     resolvedSchema._def.typeName === z.ZodFirstPartyTypeKind.ZodOptional ||
     resolvedSchema._def.typeName === z.ZodFirstPartyTypeKind.ZodNullable ||
     resolvedSchema._def.typeName === z.ZodFirstPartyTypeKind.ZodDefault
   ) {
-    resolvedSchema = resolvedSchema._def.innerType as ZodFirstPartySchemaTypes;
+    resolvedSchema = resolvedSchema._def
+      .innerType as z.ZodFirstPartySchemaTypes;
   }
 
   return resolvedSchema;
 };
 
 export const mapToPrimaryType = (
-  schema: ZodFirstPartySchemaTypes
-): ZodFirstPartySchemaTypes => {
+  schema: z.ZodFirstPartySchemaTypes
+): z.ZodFirstPartySchemaTypes => {
   switch (schema._def.typeName) {
     case z.ZodFirstPartyTypeKind.ZodLiteral:
       return resolveSchema(schema);

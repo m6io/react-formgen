@@ -7,48 +7,40 @@ import { JSONSchema7 } from "json-schema";
  * @property {JSONSchema7} schema - The schema for the form.
  * @property {{ [key: string]: unknown }} [initialData] - The initial data for the form.
  * @property {(data: { [key: string]: unknown }) => void} onSubmit - The function to call when the form is submitted.
- * @property {(errors: ErrorObject[]) => void} onError - The function to call when there are errors in the form.
- * @property {FieldTemplates} [fieldTemplates] - The typed field templates to use for the form.
- * @property {React.FC<FormTemplateProps>} [formTemplate] - The custom form component to use for the form.
+ * @property {(errors: ErrorObject[], data?: { [key: string]: unknown }) => void} onError - The function to call when there are errors in the form.
+ * @property {Templates} [templates] - The typed templates to use for the form.
+ * @property {React.FC<FormRootProps>} [formRoot] - The custom form component to use for the form.
+ * @property {React.FC} [displayTemplate] - The custom display component to use for the form.
+ * @property {boolean} [readonly] - Whether the form is read-only.
  *
  */
 export type FormProps = {
   schema: JSONSchema7;
   initialData?: { [key: string]: unknown };
-  onSubmit: (data: { [key: string]: unknown }) => void;
-  onError: (errors: ErrorObject[]) => void;
-  fieldTemplates?: FieldTemplates;
-  formTemplate?: React.FC<FormTemplateProps>;
+  onSubmit?: (data: { [key: string]: unknown }) => void;
+  onError?: (errors: ErrorObject[], data?: { [key: string]: unknown }) => void;
+  templates?: Templates;
+  formRoot?: React.FC<FormRootProps>;
+  displayTemplate?: React.FC;
+  readonly?: boolean;
 };
 
 /**
- * Represents the props for the FormTemplate.
- * @typedef {Object} FormTemplateProps
+ * Represents the props for the FormRoot.
+ * @typedef {Object} FormRootProps
  * @property {(data: { [key: string]: unknown }) => void} onSubmit - The function to call when the form is submitted.
  * @property {(errors: ErrorObject[], data?: { [key: string]: unknown }) => void} onError - The function to call when there are errors in the form.
- * @property {FieldTemplates} [fieldTemplates] - The typed field templates to use for the form.
  *
  */
-export type FormTemplateProps = {
+export type FormRootProps = {
   onSubmit: (data: { [key: string]: unknown }) => void;
   onError: (errors: ErrorObject[], data?: { [key: string]: unknown }) => void;
-  fieldTemplates: FieldTemplates;
 };
 
 /**
- * Represents the props for the Field.
- * @typedef {Object} FieldProps
- * @property {JSONSchema7} schema - The schema for the field.
- * @property {string[]} path - The path to the field.
- * @property {FieldTemplates} fieldTemplates - The typed field templates to use for the form.
- *
- */
-export type SchemaDefinitions = JSONSchema7["definitions"];
-
-/**
- * Represents the UI schema for a field.
+ * Represents the UI schema for a property.
  * @typedef {Object} UISchema
- * @property {string} component - The component to use for the field.
+ * @property {string} component - The component to use for the property.
  * @property {{ [key: string]: unknown }} [props] - The props to pass to the component.
  */
 export interface UISchema {
@@ -60,8 +52,8 @@ export interface UISchema {
  * Utility type to extend JSONSchema7 and include uiSchema at all levels.
  * @typedef {Object} WithUISchema
  * @template T
- * @property {UISchema} [uiSchema] - The UI schema for the field.
- * @property {T} - The type of the field.
+ * @property {UISchema} [uiSchema] - The UI schema for the property.
+ * @property {T} - The type of the property.
  * @returns {T & { uiSchema?: UISchema }} - The extended JSONSchema7 type with uiSchema.
  */
 type WithUISchema<T> = T & { uiSchema?: UISchema };
@@ -86,8 +78,8 @@ type WithUISchema<T> = T & { uiSchema?: UISchema };
  * @property {FormgenJSONSchema7Definition[]} [anyOf] - The anyOf conditions of the schema.
  * @property {FormgenJSONSchema7Definition[]} [oneOf] - The oneOf conditions of the schema.
  * @property {FormgenJSONSchema7Definition} [not] - The not condition of the schema.
- * @property {UISchema} [uiSchema] - The UI schema for the field.
- * @property {FormgenJSONSchema7Definition} - The type of the field.
+ * @property {UISchema} [uiSchema] - The UI schema for the property.
+ * @property {FormgenJSONSchema7Definition} - The property type.
  * @returns {FormgenJSONSchema7 & { uiSchema?: UISchema }} - The extended JSONSchema7 type with uiSchema.
  */
 export interface FormgenJSONSchema7
@@ -143,11 +135,11 @@ export interface FormgenJSONSchema7
 export type FormgenJSONSchema7Definition = FormgenJSONSchema7 | boolean;
 
 /**
- * Custom OneOf type for string fields.
+ * Custom OneOf type for strings.
  * @typedef {Object} StringOneOf
- * @property {string} const - The value of the string field.
- * @property {string} title - The title of the string field.
- * @property {string} [description] - The description of the string field.
+ * @property {string} const - The value of the string property.
+ * @property {string} title - The title of the string property.
+ * @property {string} [description] - The description of the string property.
  *
  */
 export type StringOneOf = {
@@ -172,9 +164,9 @@ export interface BaseStringSchema extends Omit<JSONSchema7, "type"> {
  * @typedef {Object} StringSchema
  * @extends {Omit<JSONSchema7, "type" | "enum" | "oneOf">}
  * @property {"string"} type - The type of the schema.
- * @property {string[]} [enum] - The enum options for the string field. This is evaluated first before the oneOf options.
- * @property {StringOneOf[]} [oneOf] - The oneOf options for the string field.
- * @property {uiSchema} [UISchema] - The UI schema for the string field.
+ * @property {string[]} [enum] - The enum options for the string property. This is evaluated first before the oneOf options.
+ * @property {StringOneOf[]} [oneOf] - The oneOf options for the string property.
+ * @property {uiSchema} [UISchema] - The UI schema for the string property.
  *
  */
 export interface StringSchema
@@ -185,11 +177,11 @@ export interface StringSchema
 }
 
 /**
- * Custom OneOf type for number fields.
+ * Custom OneOf type for numbers.
  * @typedef {Object} NumberOneOf
- * @property {number} const - The value of the number field.
- * @property {string} title - The title of the number field.
- * @property {string} [description] - The description of the number field.
+ * @property {number} const - The value of the number property.
+ * @property {string} title - The title of the number property.
+ * @property {string} [description] - The description of the number property.
  *
  */
 export type NumberOneOf = {
@@ -214,7 +206,7 @@ export interface BaseNumberSchema extends Omit<JSONSchema7, "type"> {
  * @typedef {Object} NumberSchema
  * @extends {Omit<JSONSchema7, "type">}
  * @property {"number" | "integer"} type - The type of the schema.
- * @property {uiSchema} [UISchema] - The UI schema for the number field.
+ * @property {uiSchema} [UISchema] - The UI schema for the number property.
  *
  */
 export interface NumberSchema
@@ -225,10 +217,10 @@ export interface NumberSchema
 }
 
 /**
- * Custom OneOf type for boolean fields.
+ * Custom OneOf type for booleans.
  * @typedef {Object} BooleanOneOf
- * @property {boolean} const - The value of the boolean field.
- * @property {string} title - The title of the boolean field.
+ * @property {boolean} const - The value of the boolean property.
+ * @property {string} title - The title of the boolean property.
  *
  */
 export type BooleanOneOf = {
@@ -250,8 +242,8 @@ export interface BaseBooleanSchema extends Omit<JSONSchema7, "type"> {
  * Represents the recommended boolean schema with additional UI options.
  * @typedef {Object} BooleanSchema
  * @extends { Omit<JSONSchema7, "type" | "oneOf">}
- * @property {BooleanOneOf[]} oneOf - The oneOf options for the boolean field.
- * @property {uiSchema} [UISchema] - The UI schema for the string field.
+ * @property {BooleanOneOf[]} oneOf - The oneOf options for the boolean property.
+ * @property {uiSchema} [UISchema] - The UI schema for the string property.
  *
  */
 export interface BooleanSchema
@@ -303,87 +295,33 @@ export interface ArraySchema extends Omit<FormgenJSONSchema7, "type"> {
 }
 
 /**
- * Represents the custom field templates for the form.
- * @typedef {Object} FieldTemplates
- * @property {React.FC<{ schema: StringSchema; path: string[] }>} StringField - The custom field template for string fields.
- * @property {React.FC<{ schema: NumberSchema; path: string[] }>} NumberField - The custom field template for number fields.
- * @property {React.FC<{ schema: BooleanSchema; path: string[] }>} BooleanField - The custom field template for boolean fields.
- * @property {React.FC<{ schema: BaseObjectSchema; path: string[]; definitions: SchemaDefinitions; fieldTemplates: FieldTemplates }>} ObjectFieldset - The custom field template for object fields.
- * @property {React.FC<{ schema: BaseArraySchema; path: string[]; definitions: SchemaDefinitions; fieldTemplates: FieldTemplates }>} ArrayFieldset - The custom field template for array fields.
- * @property {React.FC<{ schema: StringSchema; path: string[] }>} StringDisplay - The custom display template for string fields.
- * @property {React.FC<{ schema: NumberSchema; path: string[] }>} NumberDisplay - The custom display template for number fields.
- * @property {React.FC<{ schema: BooleanSchema; path: string[] }>} BooleanDisplay - The custom display template for boolean fields.
- * @property {React.FC<{ schema: BaseObjectSchema; path: string[]; definitions: SchemaDefinitions; fieldTemplates: FieldTemplates }>} ObjectDisplay - The custom display template for object fields.
- * @property {React.FC<{ schema: BaseArraySchema; path: string[]; definitions: SchemaDefinitions; fieldTemplates: FieldTemplates }>} ArrayDisplay - The custom display template for array fields.
- * @returns {FieldTemplates} The custom field templates for the form.
+ * Represents the custom templates for the form.
+ * @typedef {Object} Templates
+ * @property {React.FC<{ schema: StringSchema; path: string[] }>} StringTemplate - The custom template for strings.
+ * @property {React.FC<{ schema: NumberSchema; path: string[] }>} NumberTemplate - The custom template for numbers.
+ * @property {React.FC<{ schema: BooleanSchema; path: string[] }>} BooleanTemplate - The custom template for booleans.
+ * @property {React.FC<{ schema: BaseObjectSchema; path: string[] }>} ObjectTemplate - The custom template for objects.
+ * @property {React.FC<{ schema: BaseArraySchema; path: string[] }>} ArrayTemplate - The custom template for arrays.
+ * @returns {Templates} The custom templates for the form.
  */
-export type FieldTemplates = {
-  StringField:
+export type Templates = {
+  StringTemplate:
     | React.FC<{ schema: StringSchema; path: string[] }>
     | React.FC<{ schema: BaseStringSchema; path: string[] }>;
-  NumberField:
+  NumberTemplate:
     | React.FC<{ schema: NumberSchema; path: string[] }>
     | React.FC<{ schema: BaseNumberSchema; path: string[] }>;
-  BooleanField:
+  BooleanTemplate:
     | React.FC<{ schema: BooleanSchema; path: string[] }>
     | React.FC<{ schema: BaseBooleanSchema; path: string[] }>;
-  ObjectFieldset: React.FC<{
+  ObjectTemplate: React.FC<{
     schema: BaseObjectSchema;
     path: string[];
-    definitions: SchemaDefinitions;
-    fieldTemplates: FieldTemplates;
   }>;
-  ArrayFieldset: React.FC<{
+  ArrayTemplate: React.FC<{
     schema: BaseArraySchema;
     path: string[];
-    definitions: SchemaDefinitions;
-    fieldTemplates: FieldTemplates;
   }>;
-  StringDisplay:
-    | React.FC<{ schema: StringSchema; path: string[] }>
-    | React.FC<{ schema: BaseStringSchema; path: string[] }>;
-  NumberDisplay:
-    | React.FC<{ schema: NumberSchema; path: string[] }>
-    | React.FC<{ schema: BaseNumberSchema; path: string[] }>;
-  BooleanDisplay:
-    | React.FC<{ schema: BooleanSchema; path: string[] }>
-    | React.FC<{ schema: BaseBooleanSchema; path: string[] }>;
-  ObjectDisplay: React.FC<{
-    schema: BaseObjectSchema;
-    path: string[];
-    definitions: SchemaDefinitions;
-    fieldTemplates: FieldTemplates;
-  }>;
-  ArrayDisplay: React.FC<{
-    schema: BaseArraySchema;
-    path: string[];
-    definitions: SchemaDefinitions;
-    fieldTemplates: FieldTemplates;
-  }>;
-};
-
-/**
- * Represents the props for the DataDisplay component.
- * @typedef {Object} DataDisplayProps
- * @property {JSONSchema7} schema - The schema for the data display.
- * @property {{ [key: string]: unknown }} [initialData] - The initial data for the data display.
- * @property {FieldTemplates} [fieldTemplates] - The typed field templates to use for the data display.
- * @property {React.FC<DisplayTemplateProps>} [displayTemplate] - The data display template to use for the data display.
- */
-export type DataDisplayProps = {
-  schema: JSONSchema7;
-  initialData?: { [key: string]: unknown };
-  fieldTemplates?: FieldTemplates;
-  displayTemplate?: React.FC<DisplayTemplateProps>;
-};
-
-/**
- * Represents the props for the DisplayTemplate component.
- * @typedef {Object} DisplayTemplateProps
- * @property {FieldTemplates} fieldTemplates - The typed field templates to use for the data display.
- */
-export type DisplayTemplateProps = {
-  fieldTemplates: FieldTemplates;
 };
 
 /**
@@ -391,15 +329,9 @@ export type DisplayTemplateProps = {
  * @interface RenderTemplateProps
  * @property {JSONSchema7 | FormgenJSONSchema7} schema - The schema to render.
  * @property {string[]} path - The path to the schema.
- * @property {SchemaDefinitions} definitions - The schema definitions.
- * @property {FieldTemplates} fieldTemplates - The field templates.
- * @property {boolean} [readOnly] - Whether the template is read-only.
  * @returns {JSX.Element} The template component.
  */
 export interface RenderTemplateProps {
   schema: JSONSchema7 | FormgenJSONSchema7;
   path: string[];
-  definitions: SchemaDefinitions;
-  fieldTemplates: FieldTemplates;
-  readOnly?: boolean;
 }

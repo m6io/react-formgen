@@ -8,6 +8,7 @@ import {
   StringSchema,
 } from "./types";
 import { resolveSchema } from "../utils";
+import { FormState, useFormContext, useTemplates } from "..";
 
 /**
  * Render a template based on the schema type.
@@ -17,84 +18,34 @@ import { resolveSchema } from "../utils";
 export const RenderTemplate: React.FC<RenderTemplateProps> = ({
   schema,
   path,
-  definitions,
-  fieldTemplates,
-  readOnly = false,
 }) => {
+  const definitions = useFormContext(
+    (state: FormState) => state.schema.definitions || {}
+  );
+  const {
+    StringTemplate,
+    NumberTemplate,
+    BooleanTemplate,
+    ObjectTemplate,
+    ArrayTemplate,
+  } = useTemplates();
   schema = resolveSchema(schema, definitions);
 
   switch (schema.type) {
     case "string":
-      return readOnly ? (
-        <fieldTemplates.StringDisplay
-          schema={schema as StringSchema}
-          path={path}
-        />
-      ) : (
-        <fieldTemplates.StringField
-          schema={schema as StringSchema}
-          path={path}
-        />
-      );
+      return <StringTemplate schema={schema as StringSchema} path={path} />;
+
     case "integer":
     case "number":
-      return readOnly ? (
-        <fieldTemplates.NumberDisplay
-          schema={schema as NumberSchema}
-          path={path}
-        />
-      ) : (
-        <fieldTemplates.NumberField
-          schema={schema as NumberSchema}
-          path={path}
-        />
-      );
+      return <NumberTemplate schema={schema as NumberSchema} path={path} />;
     case "boolean":
-      return readOnly ? (
-        <fieldTemplates.BooleanDisplay
-          schema={schema as BooleanSchema}
-          path={path}
-        />
-      ) : (
-        <fieldTemplates.BooleanField
-          schema={schema as BooleanSchema}
-          path={path}
-        />
-      );
+      return <BooleanTemplate schema={schema as BooleanSchema} path={path} />;
     case "null":
       return <input type="text" value="null" disabled />;
     case "object":
-      return readOnly ? (
-        <fieldTemplates.ObjectDisplay
-          schema={schema as BaseObjectSchema}
-          path={path}
-          definitions={definitions}
-          fieldTemplates={fieldTemplates}
-        />
-      ) : (
-        <fieldTemplates.ObjectFieldset
-          schema={schema as BaseObjectSchema}
-          path={path}
-          definitions={definitions}
-          fieldTemplates={fieldTemplates}
-        />
-      );
+      return <ObjectTemplate schema={schema as BaseObjectSchema} path={path} />;
     case "array":
-      return readOnly ? (
-        <fieldTemplates.ArrayDisplay
-          schema={schema as BaseArraySchema}
-          path={path}
-          definitions={definitions}
-          fieldTemplates={fieldTemplates}
-        />
-      ) : (
-        <fieldTemplates.ArrayFieldset
-          schema={schema as BaseArraySchema}
-          path={path}
-          definitions={definitions}
-          fieldTemplates={fieldTemplates}
-        />
-      );
+      return <ArrayTemplate schema={schema as BaseArraySchema} path={path} />;
     default:
       return null;
   }

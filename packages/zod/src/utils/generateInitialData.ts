@@ -1,35 +1,49 @@
-import { z } from "zod";
-import { mapToPrimaryType, resolveSchema } from "./resolveSchema";
+import { z, ZodTypeAny } from "zod";
 
 // Utility function to get initial data based on schema type
-export const generateInitialData = (schema: z.ZodType<any>): any => {
-  const resolvedSchema = mapToPrimaryType(resolveSchema(schema));
-
-  switch (resolvedSchema._def.typeName) {
-    case z.ZodFirstPartyTypeKind.ZodObject: {
-      const obj: any = {};
-      const shape = (resolvedSchema as z.ZodObject<any>).shape;
-      for (const key in shape) {
-        obj[key] = generateInitialData(shape[key]);
-      }
-      return obj;
+export const generateInitialData = (schema: ZodTypeAny): any => {
+  // Unwrap and resolve defaults within a single function
+  while (
+    schema instanceof z.ZodEffects ||
+    schema instanceof z.ZodDefault ||
+    schema instanceof z.ZodOptional ||
+    schema instanceof z.ZodNullable
+  ) {
+    if (schema instanceof z.ZodEffects) {
+      schema = schema._def.schema;
+    } else if (schema instanceof z.ZodDefault) {
+      return schema._def.defaultValue(); // Return the default value
+    } else if (
+      schema instanceof z.ZodOptional ||
+      schema instanceof z.ZodNullable
+    ) {
+      schema = schema._def.innerType;
     }
-    case z.ZodFirstPartyTypeKind.ZodArray:
-      return [];
-    case z.ZodFirstPartyTypeKind.ZodString:
-    case z.ZodFirstPartyTypeKind.ZodNumber:
-    case z.ZodFirstPartyTypeKind.ZodBoolean:
-    case z.ZodFirstPartyTypeKind.ZodNull:
-      return undefined;
-    case z.ZodFirstPartyTypeKind.ZodOptional:
-      return generateInitialData(
-        (resolvedSchema as z.ZodOptional<any>)._def.innerType
-      );
-    case z.ZodFirstPartyTypeKind.ZodNullable:
-      return generateInitialData(
-        (resolvedSchema as z.ZodNullable<any>)._def.innerType
-      );
-    default:
-      return undefined;
+  }
+
+  // Now resolve based on the unwrapped schema type
+  if (schema instanceof z.ZodString) {
+    return undefined;
+  } else if (schema instanceof z.ZodNumber) {
+    return undefined;
+  } else if (schema instanceof z.ZodBoolean) {
+    return undefined;
+  } else if (schema instanceof z.ZodDate) {
+    return undefined;
+  } else if (schema instanceof z.ZodLiteral) {
+    return schema._def.value;
+  } else if (schema instanceof z.ZodEnum) {
+    return undefined; // or schema._def.values[0] if you prefer
+  } else if (schema instanceof z.ZodArray) {
+    return [];
+  } else if (schema instanceof z.ZodObject) {
+    const result: Record<string, any> = {};
+    for (const [key, value] of Object.entries(schema.shape)) {
+      result[key] = generateInitialData(value as ZodTypeAny);
+    }
+    return result;
+  } else {
+    console.error(`Unsupported schema type: ${schema._def.typeName}`);
+    return undefined;
   }
 };

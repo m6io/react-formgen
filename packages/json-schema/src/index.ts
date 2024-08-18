@@ -5,6 +5,7 @@ import {
 } from "@react-formgen/core";
 import { ErrorObject } from "ajv";
 import { generateInitialData } from "./utils";
+import { BaseFormRoot, BaseTemplates } from "./components";
 
 const createInitialData = (schema: JSONSchema7) =>
   generateInitialData(schema, schema.definitions || {});
@@ -36,10 +37,14 @@ const {
   useFormContext,
   useFormDataAtPath,
   useErrorsAtPath,
-  useArrayFieldset,
+  useArrayTemplate,
+  useTemplates,
+  Form,
 } = createFormProviderAndHooks<JSONSchema7, ErrorObject>(
   createInitialData,
-  getErrorsAtPath
+  getErrorsAtPath,
+  BaseFormRoot,
+  BaseTemplates
 );
 
 export type FormState = CoreFormState<JSONSchema7, ErrorObject>;
@@ -49,9 +54,10 @@ export {
   useFormContext,
   useFormDataAtPath,
   useErrorsAtPath,
-  useArrayFieldset,
+  useArrayTemplate,
+  useTemplates,
+  Form,
 };
 
-export * from "./types";
 export * from "./components";
 export * from "./utils";
