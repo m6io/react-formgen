@@ -4,7 +4,11 @@ import {
   FormState as CoreFormState,
 } from "@react-formgen/core";
 import { generateInitialData } from "./utils";
-import { BaseFormRoot, BaseTemplates } from "./components";
+import {
+  BaseFormRoot,
+  BaseTemplates,
+  RenderTemplate as DefaultRenderTemplate,
+} from "./components";
 
 const createInitialData = (schema: Yup.AnySchema) =>
   generateInitialData(schema);
@@ -37,10 +41,12 @@ const {
   useErrorsAtPath,
   useArrayTemplate,
   useTemplates,
+  useRenderTemplate,
   Form,
 } = createFormProviderAndHooks<Yup.AnySchema, Yup.ValidationError>(
   createInitialData,
   getErrorsAtPath,
+  DefaultRenderTemplate,
   BaseFormRoot,
   BaseTemplates
 );
@@ -54,6 +60,7 @@ export {
   useErrorsAtPath,
   useArrayTemplate,
   useTemplates,
+  useRenderTemplate,
   Form,
 };
 

@@ -136,20 +136,20 @@ const generateInitialData = (schema: any) => {
     arrayProperty: [],
   };
 };
+
 const getErrorsAtPath = (errors: any[], path: string[]) =>
   errors.filter((error) => error.path === path.join("."));
 
 const InputComponent = () => <input data-testid="inputComponent" />;
 
-// Mock schema and errors for testing purposes
 const testSchema2 = {
   property1: "string",
   property2: "number",
   arrayProperty: "array",
 };
+
 const testErrors = [{ path: "property1", message: "Error in property1" }];
 
-// Mock zero state function for array items
 const generateZeroState = () => ({});
 
 describe("createFormProviderAndHooks", () => {
@@ -160,9 +160,11 @@ describe("createFormProviderAndHooks", () => {
     useErrorsAtPath,
     useArrayTemplate,
     useTemplates,
+    useRenderTemplate,
   } = createFormProviderAndHooks<typeof testSchema2, (typeof testErrors)[0]>(
     generateInitialData,
-    getErrorsAtPath
+    getErrorsAtPath,
+    InputComponent
   );
 
   const TestComponent = ({ initialErrors = null }: { initialErrors?: any }) => {
@@ -246,7 +248,6 @@ describe("createFormProviderAndHooks", () => {
       </FormProvider>
     );
 
-    // Verify errors
     expect(screen.getByTestId("errorsAtPath").textContent).toBe(
       JSON.stringify(testErrors.filter((e) => e.path === "property1"))
     );
@@ -327,6 +328,21 @@ describe("createFormProviderAndHooks", () => {
     render(
       <FormProvider schema={testSchema2} templates={{ Input: InputComponent }}>
         <TestComponent />
+      </FormProvider>
+    );
+
+    expect(screen.getByTestId("inputComponent")).toBeInTheDocument();
+  });
+
+  it("useRenderTemplate hook works correctly", () => {
+    const RenderTemplateComponent = () => {
+      const RenderTemplate = useRenderTemplate();
+      return <RenderTemplate schema={testSchema2} path={["property1"]} />;
+    };
+
+    render(
+      <FormProvider schema={testSchema2}>
+        <RenderTemplateComponent />
       </FormProvider>
     );
 

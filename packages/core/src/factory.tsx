@@ -6,6 +6,14 @@ import { useStore, createStore } from "zustand";
  *
  * @template S - The schema type used to define the structure of the form.
  * @template E - The type used for form validation errors.
+ * @param {S} schema - Form schema.
+ * @param {any} formData - Form data.
+ * @param {E[] | null} errors - Form validation errors.
+ * @param {boolean} readonly - Whether the form is readonly.
+ * @param {(path: string[], value: any) => void} setFormData - Function to set form data at a specific path.
+ * @param {(errors: E[] | null) => void} setErrors - Function to set form validation errors.
+ * @param {(readonly: boolean) => void} setReadonly - Function to set the readonly state of the form.
+ * @returns {FormState<S, E>} The state of the form.
  */
 export interface FormState<S, E> {
   schema: S;
@@ -21,6 +29,14 @@ export interface FormState<S, E> {
  * Props for the FormProvider component.
  *
  * @template S - The schema type used to define the structure of the form.
+ * @param {any} initialData - Initial form data.
+ * @param {S} schema - Form schema.
+ * @param {(schema: S) => any} createInitialData - Function to create initial data from the schema.
+ * @param {boolean} readonly - Initial readonly state.
+ * @param {React.ReactNode} children - Child components to be rendered within the FormProvider.
+ * @param {{ [key: string]: React.ComponentType<any> }} templates - Templates to be used in the form.
+ * @param {React.ComponentType<RenderTemplateProps<S>>} renderTemplate - Render template component to be used in the form.
+ * @returns {JSX.Element} A React component that provides the form state context and templates context.
  */
 export interface FormProviderProps<S> {
   initialData?: any;
@@ -29,6 +45,20 @@ export interface FormProviderProps<S> {
   createInitialData: (schema: S) => any;
   templates?: { [key: string]: React.ComponentType<any> };
   readonly?: boolean;
+  renderTemplate?: React.ComponentType<RenderTemplateProps<S>>;
+}
+
+/**
+ * Props for the render template component.
+ *
+ * @template S - The schema type used to define the structure of the form.
+ * @param {S} schema - Form schema.
+ * @param {string[]} path - Path to the form data.
+ * @returns {JSX.Element} A React component that renders the form template.
+ */
+export interface RenderTemplateProps<S> {
+  schema: S;
+  path: string[];
 }
 
 /**
@@ -84,26 +114,46 @@ export const createFormStore = <S, E>(
  *
  * @template S - The schema type used to define the structure of the form.
  * @template E - The type used for form validation errors.
+ * @returns {ReturnType<typeof createFormStore<S, E>>} A Zustand store for the form state.
  */
 export type FormStore<S, E> = ReturnType<typeof createFormStore<S, E>>;
 
 /**
  * Context to provide the form store. Used internally to make the form state accessible throughout the component tree.
+ * @returns {React.Context<FormStore<any, any> | null>} A React context that provides the form store.
  */
 export const FormContext = createContext<FormStore<any, any> | null>(null);
 
 /**
  * Context to provide the templates. Used to make templates accessible throughout the component tree.
+ * @returns {React.Context<{ [key: string]: React.ComponentType<any> } | null>} A React context that provides the templates.
  */
 export const TemplatesContext = createContext<{
   [key: string]: React.ComponentType<any>;
 } | null>(null);
 
 /**
+ * Context to provide the render template component. Used to make the render template component accessible throughout the component tree.
+ * @returns {React.Context<React.ComponentType<RenderTemplateProps<any>> | null>} A React context that provides the render template component.
+ */
+export const RenderTemplateContext = createContext<React.ComponentType<
+  RenderTemplateProps<any>
+> | null>(null);
+
+/**
  * Generalized type for form props.
  *
  * @template S - The schema type used to define the structure of the form.
  * @template E - The error type used for form validation errors.
+ * @param {S} schema - Form schema.
+ * @param {any} initialData - Initial form data.
+ * @param {(data: { [key: string]: unknown }) => void} onSubmit - Function to handle form submission.
+ * @param {(errors: E[], data?: { [key: string]: unknown }) => void} onError - Function to handle form errors.
+ * @param {{ [key: string]: React.ComponentType<any> }} templates - Templates to be used in the form.
+ * @param {React.FC<FormRootProps<E>>} formRoot - The root component responsible for rendering the form and handling form submission and errors.
+ * @param {boolean} readonly - Whether the form is readonly.
+ * @param {React.ComponentType<RenderTemplateProps<S>>} renderTemplate - Render template component to be used in the form.
+ * @returns {JSX.Element} A React component that provides the form state context and templates context.
  */
 export type FormProps<S, E> = {
   schema: S;
@@ -113,12 +163,16 @@ export type FormProps<S, E> = {
   templates?: { [key: string]: React.ComponentType<any> };
   formRoot?: React.FC<FormRootProps<E>>;
   readonly?: boolean;
+  renderTemplate?: React.ComponentType<RenderTemplateProps<S>>;
 };
 
 /**
  * Generalized type for form root props.
  *
  * @template E - The error type.
+ * @param {(data: { [key: string]: unknown }) => void} onSubmit - Function to handle form submission.
+ * @param {(errors: E[], data?: { [key: string]: unknown }) => void} onError - Function to handle form errors.
+ * @returns {Object} An object containing schema-specific FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath, useArrayTemplate, useTemplates hooks, and a generalized Form component.
  */
 export type FormRootProps<E> = {
   onSubmit: (data: { [key: string]: unknown }) => void;
@@ -132,31 +186,38 @@ export type FormRootProps<E> = {
  * @template E - The type used for form validation errors.
  * @param {(schema: S) => any} generateInitialData - Function to generate initial data from the schema.
  * @param {(errors: E[], path: string[]) => E[] | undefined} getErrorsAtPath - Function to get errors at a specific path.
+ * @param {React.ComponentType<RenderTemplateProps<S>>} BaseRenderTemplate - The base render template component to be used in the form.
  * @param {React.FC<FormRootProps<E>>} [BaseFormRoot] - The root component responsible for rendering the form and handling form submission and errors. This is optional in case implementations do not want to use the Form component.
  * @param {{ [key: string]: React.ComponentType<any> }} [BaseTemplates] - The base templates to be used in the form. This is optional in case implementations do not want to use the Form component.
  * @returns {Object} An object containing schema-specific FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath, useArrayTemplate, useTemplates hooks, and a generalized Form component.
  * @example
  * ```
- * const { FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath, useArrayTemplate, useTemplates } = createFormProviderAndHooks<MySchema, MyError>(generateInitialData, getErrorsAtPath);
+ * const { FormProvider, useFormContext, useFormDataAtPath, useErrorsAtPath, useArrayTemplate, useTemplates, useRenderTemplate, Form } = createFormProviderAndHooks<SchemaType, ErrorType>(generateInitialData, getErrorsAtPath, DefaultRenderTemplate, BaseFormRoot, BaseTemplates);
  * ```
  */
 export const createFormProviderAndHooks = <S, E>(
   generateInitialData: (schema: S) => any,
   getErrorsAtPath: (errors: E[], path: string[]) => E[] | undefined,
+  BaseRenderTemplate: React.ComponentType<RenderTemplateProps<S>>,
   BaseFormRoot?: React.FC<FormRootProps<E>>,
   BaseTemplates?: { [key: string]: React.ComponentType<any> }
 ) => {
   /**
    * Schema-specific FormProvider component.
    *
-   * @param {Omit<FormProviderProps<S>, "createInitialData">} props - Props for the FormProvider component.
+   * @param {Omit<FormProviderProps<S>, "createInitialData">} props - Props for the FormProvider component, excluding the createInitialData prop.
    * @returns {JSX.Element} A React component that provides the form state context and templates context.
    * @example
    * ```
-   * const { FormProvider } = createFormProviderAndHooks<MySchema, MyError>(generateInitialData, getErrorsAtPath);
-   *
+   * const { FormProvider } = createFormProviderAndHooks<SchemaType, ErrorType>(generateInitialData, getErrorsAtPath, DefaultRenderTemplate, BaseFormRoot, BaseTemplates);
+   * // Using base components and built-in render template
    * <FormProvider schema={mySchema} initialData={myInitialData}>
    *   <MyFormComponent />
+   * </FormProvider>
+   *
+   * // Using custom components and render template
+   * <FormProvider schema={mySchema} initialData={myInitialData} templates={myTemplates} renderTemplate={MyRenderTemplate}>
+   *  <MyFormComponent />
    * </FormProvider>
    * ```
    */
@@ -168,6 +229,7 @@ export const createFormProviderAndHooks = <S, E>(
     children,
     templates = {},
     readonly = false,
+    renderTemplate = BaseRenderTemplate,
   }) => {
     const storeRef = React.useRef<FormStore<S, E>>();
     if (!storeRef.current) {
@@ -182,7 +244,9 @@ export const createFormProviderAndHooks = <S, E>(
     return (
       <FormContext.Provider value={storeRef.current}>
         <TemplatesContext.Provider value={templates}>
-          {children}
+          <RenderTemplateContext.Provider value={renderTemplate}>
+            {children}
+          </RenderTemplateContext.Provider>
         </TemplatesContext.Provider>
       </FormContext.Provider>
     );
@@ -319,6 +383,25 @@ export const createFormProviderAndHooks = <S, E>(
   };
 
   /**
+   * Custom hook to access the render template component from the context.
+   *
+   * @returns {React.ComponentType<RenderTemplateProps<S>>} The render template component available in the form context.
+   * @example
+   * ```
+   * const RenderTemplate = useRenderTemplate();
+   * ```
+   */
+  const useRenderTemplate = (): React.ComponentType<RenderTemplateProps<S>> => {
+    const renderTemplate = useContext(RenderTemplateContext);
+    if (!renderTemplate) {
+      throw new Error(
+        "useRenderTemplate must be used within a FormProvider with renderTemplate provided"
+      );
+    }
+    return renderTemplate;
+  };
+
+  /**
    * Generalized Form component to render a form using the provided schema.
    *
    * @template S - The schema type used to define the structure of the form.
@@ -327,9 +410,13 @@ export const createFormProviderAndHooks = <S, E>(
    * @returns {JSX.Element} A React component that renders a form using the provided schema.
    * @example
    * ```
-   * const { Form } = createFormProviderAndHooks<MySchema, MyError>(generateInitialData, getErrorsAtPath, BaseFormRoot, BaseTemplates);
+   * const { Form } = createFormProviderAndHooks<SchemaType, ErrorType>(generateInitialData, getErrorsAtPath, DefaultRenderTemplate, BaseFormRoot, BaseTemplates);
    *
-   * <Form schema={mySchema} initialData={myInitialData} onSubmit={handleSubmit} onError={handleError} templates={myTemplates} formRoot={MyFormRoot} readonly={true} />
+   * // Using base components and built-in render template
+   * <Form schema={mySchema} initialData={myInitialData} onSubmit={handleSubmit} onError={handleSubmit} />
+   *
+   * // Using custom components and render template
+   * <Form schema={mySchema} initialData={myInitialData} onSubmit={handleSubmit} onError={handleSubmit} templates={myTemplates} formRoot={MyFormRoot} renderTemplate={MyRenderTemplate} />
    * ```
    */
   const Form: React.FC<FormProps<S, E>> = ({
@@ -349,12 +436,16 @@ export const createFormProviderAndHooks = <S, E>(
     templates = BaseTemplates,
     formRoot: FormRoot = BaseFormRoot,
     readonly = false,
+    renderTemplate = BaseRenderTemplate,
   }) => {
     if (!FormRoot) {
       throw new Error("A base FormRoot component must be provided.");
     }
     if (!templates) {
       throw new Error("A base Templates object must be provided.");
+    }
+    if (!renderTemplate) {
+      throw new Error("A base RenderTemplate component must be provided.");
     }
 
     return (
@@ -363,11 +454,13 @@ export const createFormProviderAndHooks = <S, E>(
         initialData={initialData}
         templates={templates}
         readonly={readonly}
+        renderTemplate={renderTemplate}
       >
         <FormRoot onSubmit={onSubmit} onError={onError} />
       </FormProvider>
     );
   };
+
   return {
     FormProvider,
     useFormContext,
@@ -375,6 +468,7 @@ export const createFormProviderAndHooks = <S, E>(
     useErrorsAtPath,
     useArrayTemplate,
     useTemplates,
+    useRenderTemplate,
     Form,
   };
 };

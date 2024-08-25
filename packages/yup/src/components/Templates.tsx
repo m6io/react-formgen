@@ -6,8 +6,8 @@ import {
   useFormContext,
   useArrayTemplate,
   FormState,
+  useRenderTemplate,
 } from "..";
-import { RenderTemplate } from "./RenderTemplate";
 import { generateInitialData } from "../utils";
 import { resolveSchema } from "../utils/resolveSchema";
 import { FormRootProps, Templates } from "./types";
@@ -199,6 +199,7 @@ export const ObjectTemplate: React.FC<{
 }> = ({ schema, path }) => {
   const errorsAtPath = useErrorsAtPath(path);
   const readonly = useFormContext((state: FormState) => state.readonly);
+  const RenderTemplate = useRenderTemplate();
 
   if (readonly) {
     return (
@@ -265,6 +266,7 @@ export const ArrayTemplate: React.FC<{
 }> = ({ schema, path }) => {
   const innerSchema = getInnerSchema(schema);
   const readonly = useFormContext((state: FormState) => state.readonly);
+  const RenderTemplate = useRenderTemplate();
   const { valueAtPath, errorsAtPath, moveItem, removeItem, addItem } =
     useArrayTemplate(path, () => generateInitialData(innerSchema));
 
@@ -383,6 +385,7 @@ export const BaseFormRoot: React.FC<FormRootProps> = ({
   const schema = useFormContext((state: FormState) => state.schema);
   const formData = useFormContext((state: FormState) => state.formData);
   const setErrors = useFormContext((state: FormState) => state.setErrors);
+  const RenderTemplate = useRenderTemplate();
 
   const resolvedSchema = resolveSchema(schema);
 

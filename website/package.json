@@ -10,15 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-formgen/json-schema": "0.0.0-alpha.12",
-    "@react-formgen/yup": "0.0.0-alpha.12",
-    "@react-formgen/zod": "0.0.0-alpha.12",
+    "@react-formgen/json-schema": "0.0.0-alpha.13",
+    "@react-formgen/yup": "0.0.0-alpha.13",
+    "@react-formgen/zod": "0.0.0-alpha.13",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "json-schema": "^0.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "yup": "^1.4.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/json-schema": "^7.0.15",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",

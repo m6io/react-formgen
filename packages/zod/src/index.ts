@@ -4,7 +4,11 @@ import {
   FormState as CoreFormState,
 } from "@react-formgen/core";
 import { generateInitialData } from "./utils";
-import { BaseFormRoot, BaseTemplates } from "./components";
+import {
+  BaseFormRoot,
+  BaseTemplates,
+  RenderTemplate as DefaultRenderTemplate,
+} from "./components";
 
 const createInitialData = (schema: z.ZodTypeAny) => generateInitialData(schema);
 
@@ -36,10 +40,12 @@ const {
   useErrorsAtPath,
   useArrayTemplate,
   useTemplates,
+  useRenderTemplate,
   Form,
 } = createFormProviderAndHooks<z.ZodTypeAny, z.ZodIssue>(
   createInitialData,
   getErrorsAtPath,
+  DefaultRenderTemplate,
   BaseFormRoot,
   BaseTemplates
 );
@@ -53,6 +59,7 @@ export {
   useErrorsAtPath,
   useArrayTemplate,
   useTemplates,
+  useRenderTemplate,
   Form,
 };
 

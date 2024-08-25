@@ -15,7 +15,7 @@ A foundational library designed to facilitate the creation of schema-based form 
 
 ## Installation
 
-Install the package via npm or yarn:
+Install the package
 
 ```bash
 npm install @react-formgen/core
@@ -50,7 +50,10 @@ const {
   useFormContext,
   useFormDataAtPath,
   useErrorsAtPath,
-  useArrayFieldset,
+  useArrayTemplate,
+  useTemplates,
+  useRenderTemplate,
+  Form,
 } = createFormProviderAndHooks(generateInitialData, getErrorsAtPath);
 ```
 
@@ -90,8 +93,8 @@ import {
 
 const MyField = () => {
   const formData = useFormContext((state) => state.formData);
-  const [value, setValue] = useFormDataAtPath(["path", "to", "field"]); // the implementation of this hook is up to you
-  const errors = useErrorsAtPath(["path", "to", "field"]); // the implementation of this hook is up to you
+  const [value, setValue] = useFormDataAtPath(["path", "to", "field"]);
+  const errors = useErrorsAtPath(["path", "to", "field"]);
 
   return (
     <div>
@@ -124,7 +127,10 @@ Returns an object containing:
 - `useFormContext`: Hook to access the form context.
 - `useFormDataAtPath`: Hook to get and set form data at a specific path.
 - `useErrorsAtPath`: Hook to get errors at a specific path.
-- `useArrayFieldset`: Hook for array manipulation (add, remove, move items).
+- `useArrayTemplate`: Hook for array manipulation (add, remove, move items).
+- `useTemplates`: Hook to access the templates.
+- `useRenderTemplate`: Hook to access the render template component.
+- `Form`: A generalized Form component for rendering forms.
 
 ### `FormState<S, E>`
 
@@ -133,8 +139,10 @@ Represents the state of the form.
 - `schema`: The schema of the form.
 - `formData`: The current form data.
 - `errors`: The current form errors.
+- `readonly`: Whether the form is in read-only mode.
 - `setFormData(path: string[], value: any)`: Function to set form data at a specific path.
 - `setErrors(errors: E[] | null)`: Function to set form errors.
+- `setReadonly(readonly: boolean)`: Function to set the read-only state.
 
 ### `FormProviderProps<S>`
 
@@ -144,6 +152,16 @@ Props for the `FormProvider` component.
 - `schema`: The schema of the form.
 - `children`: The child components.
 - `createInitialData(schema: S)`: Function to create initial data from the schema.
+- `templates?`: An object mapping template names to React components.
+- `readonly?`: Whether the form should be initially read-only.
+- `renderTemplate?`: A React component for rendering form fields.
+
+### `RenderTemplateProps<S>`
+
+Props for the render template component.
+
+- `schema`: The schema of the form.
+- `path`: The path to the current form data.
 
 ## Contributing
 

@@ -31,6 +31,7 @@ import {
 import { jsonSchema } from "./schemas/jsonSchema.ts";
 import { yupSchema } from "./schemas/yupSchema.ts";
 import { zodSchema } from "./schemas/zodSchema.ts";
+import { RenderTemplate as JsonSchemaRenderTemplate } from "./components/templates/json-schema/RenderTemplate.tsx";
 
 export const jsonSchemaBasic: FormgenJSONSchema7 = {
   title: "User Form",
@@ -278,6 +279,28 @@ const App = () => {
               onError={(errors) => console.error("Zod:", errors)}
             />
           </ZodFormProvider>
+        </div>
+      </div>
+
+      <h3>Custom `RenderTemplate` component</h3>
+      <div style={{ display: "flex", gap: "2rem" }}>
+        <div style={formWrapperStyle}>
+          <h2>JSON Schema Form</h2>
+          <JsonSchemaForm
+            schema={jsonSchema}
+            initialData={initialFormData}
+            renderTemplate={JsonSchemaRenderTemplate}
+            onSubmit={(data) => console.log("JSON Schema:", data)}
+            onError={(errors) => console.error("JSON Schema:", errors)}
+          ></JsonSchemaForm>
+
+          <h2>JSON Schema Form (Readonly)</h2>
+          <JsonSchemaForm
+            schema={jsonSchema}
+            initialData={initialFormData}
+            renderTemplate={JsonSchemaRenderTemplate}
+            readonly
+          ></JsonSchemaForm>
         </div>
       </div>
     </div>
