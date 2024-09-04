@@ -7,7 +7,9 @@
     "build:core": "pnpm run --filter \"@react-formgen/core\" build",
     "build:js": "pnpm run --filter \"@react-formgen/json-schema\" build",
     "build:yup": "pnpm run --filter \"@react-formgen/yup\" build",
-    "build:zod": "pnpm run --filter \"@react-formgen/zod\" build"
+    "build:zod": "pnpm run --filter \"@react-formgen/zod\" build",
+    "docs:start": "pnpm --filter react-formgen-site start",
+    "docs:build": "pnpm --filter react-formgen-site build"
   },
   "devDependencies": {
     "prettier": "^3.2.5"
