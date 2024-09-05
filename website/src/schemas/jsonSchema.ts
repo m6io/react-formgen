@@ -106,6 +106,8 @@ export const jsonSchema: FormgenJSONSchema7 = {
         name: {
           title: "Name",
           description: "The friend's name.",
+          minLength: 1,
+          maxLength: 100,
           type: "string",
         },
         age: {
@@ -338,4 +340,97 @@ export const jsonSchema: FormgenJSONSchema7 = {
     },
   },
   required: ["firstName", "lastName", "email"],
+};
+
+export const jsonSchemaBasic: FormgenJSONSchema7 = {
+  title: "User Form",
+  description: "A simple user form",
+  type: "object",
+  properties: {
+    firstName: {
+      type: "string",
+      title: "First Name",
+      minLength: 1,
+      maxLength: 100,
+      pattern: "^[A-Za-z]+$",
+      description: "The person's first name.",
+    },
+    lastName: {
+      type: "string",
+      title: "Last Name",
+      minLength: 1,
+      maxLength: 100,
+      pattern: "^[A-Za-z]+$",
+      description: "The person's last name.",
+    },
+    age: {
+      type: "integer",
+      title: "Age",
+      minimum: 0,
+      maximum: 150,
+      description: "The person's age.",
+    },
+    email: {
+      type: "string",
+      format: "email",
+      title: "Email Address",
+      description: "The person's email address.",
+    },
+  },
+  required: ["firstName", "lastName", "email"],
+};
+
+export const jsonSchemaWithRecursiveRefs: FormgenJSONSchema7 = {
+  $schema: "http://json-schema.org/draft-07/schema#",
+  title: "Person Schema",
+  type: "object",
+  properties: {
+    name: {
+      title: "Person's Name",
+      $ref: "#/definitions/name",
+    },
+    age: {
+      title: "Person's Age",
+      $ref: "#/$defs/age",
+    },
+    child: {
+      title: "Child Information",
+      type: "object",
+      properties: {
+        childName: {
+          title: "Child's Name",
+          $ref: "#/definitions/childName",
+        },
+        childAge: {
+          title: "Child's Age",
+          $ref: "#/$defs/age",
+        },
+        childOfChild: {
+          title: "Child of Child (Grandchild)",
+          $ref: "#",
+        },
+      },
+      definitions: {
+        childName: {
+          title: "Child Name Definition",
+          type: "string",
+          default: "Child Name",
+        },
+      },
+    },
+  },
+  definitions: {
+    name: {
+      title: "Name Definition",
+      type: "string",
+      default: "John Doe",
+    },
+  },
+  $defs: {
+    age: {
+      title: "Age Definition",
+      type: "integer",
+      default: 30,
+    },
+  },
 };

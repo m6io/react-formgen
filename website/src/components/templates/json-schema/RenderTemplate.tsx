@@ -34,8 +34,11 @@ export const RenderTemplate: React.FC<RenderTemplateProps> = ({
     );
   }
 
-  if (schema.$ref) {
+  try {
     schema = resolveSchema(schema, definitions);
+  } catch (error) {
+    console.error("Error resolving schema:", error);
+    return <div>Failed to resolve schema at path: {path.join("/")}</div>;
   }
 
   switch (schema.type) {
@@ -53,6 +56,23 @@ export const RenderTemplate: React.FC<RenderTemplateProps> = ({
     case "array":
       return <ArrayTemplate schema={schema as BaseArraySchema} path={path} />;
     default:
-      return null;
+      console.error(`Unsupported schema type "${schema.type}" at path:`, path);
+      return (
+        <div
+          style={{
+            color: "red",
+            display: "flex",
+            flexDirection: "column",
+            border: "1px dashed red",
+            padding: "1rem",
+          }}
+        >
+          <strong>ERROR:</strong>
+          <small>
+            Unsupported schema type `{schema.type || "UNKNOWN"}` at path: `
+            {path.join("/")}`
+          </small>
+        </div>
+      );
   }
 };

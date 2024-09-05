@@ -64,6 +64,7 @@ export const zodSchema = z
       })
       .default(true)
       .optional(),
+
     loves_tacos: z
       .boolean()
       .describe("Whether the person loves tacos.")
@@ -76,6 +77,7 @@ export const zodSchema = z
         }
       })
       .optional(),
+
     address: z
       .object({
         street_address: z.string().describe("The street address."),
@@ -454,3 +456,26 @@ export const zodSchema = z
       .optional(),
   })
   .describe("A schema representing a complex object with various features.");
+
+export const zodSchemaBasic = z.object({
+  firstName: z
+    .string()
+    .regex(new RegExp("^[A-Za-z]+$"))
+    .min(1)
+    .max(100)
+    .describe("The person's first name."),
+  lastName: z
+    .string()
+    .regex(new RegExp("^[A-Za-z]+$"))
+    .min(1)
+    .max(100)
+    .describe("The person's last name."),
+  age: z
+    .number()
+    .int()
+    .gte(0)
+    .lte(150)
+    .describe("The person's age.")
+    .optional(),
+  email: z.string().email().describe("The person's email address."),
+});
