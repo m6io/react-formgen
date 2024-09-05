@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { render, screen, act } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { render, screen, act, fireEvent } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
 import "@testing-library/jest-dom";
 
 import {
@@ -77,6 +77,10 @@ describe("createFormStore", () => {
       store as StoreApi<FormState<typeof testSchema, any>>,
       (state) => state.readonly
     );
+    const setReadonly = useStore(
+      store as StoreApi<FormState<typeof testSchema, any>>,
+      (state) => state.setReadonly
+    );
 
     return (
       <div>
@@ -91,6 +95,9 @@ describe("createFormStore", () => {
           }
         >
           Set Deeply Nested Value
+        </button>
+        <button onClick={() => setReadonly(!readonly)}>
+          Toggle Readonly State
         </button>
       </div>
     );
@@ -126,8 +133,35 @@ describe("createFormStore", () => {
       })
     );
   });
+
+  // Test setReadonly functionality (Line 62)
+  it("toggles readonly state using setReadonly", () => {
+    render(
+      <FormProvider schema={testSchema} readonly={true}>
+        <TestComponent />
+      </FormProvider>
+    );
+
+    // Initial readonly state should be true
+    expect(screen.getByTestId("readonlyState").textContent).toBe("true");
+
+    act(() => {
+      screen.getByText("Toggle Readonly State").click();
+    });
+
+    // Readonly state should now be false
+    expect(screen.getByTestId("readonlyState").textContent).toBe("false");
+
+    act(() => {
+      screen.getByText("Toggle Readonly State").click();
+    });
+
+    // Readonly state should toggle back to true
+    expect(screen.getByTestId("readonlyState").textContent).toBe("true");
+  });
 });
 
+// Mock schema and errors for testing purposes
 const generateInitialData = (schema: any) => {
   void schema;
   return {
@@ -142,6 +176,7 @@ const getErrorsAtPath = (errors: any[], path: string[]) =>
 
 const InputComponent = () => <input data-testid="inputComponent" />;
 
+// Mock schema and errors for testing purposes
 const testSchema2 = {
   property1: "string",
   property2: "number",
@@ -150,11 +185,13 @@ const testSchema2 = {
 
 const testErrors = [{ path: "property1", message: "Error in property1" }];
 
+// Mock zero state function for array items
 const generateZeroState = () => ({});
 
 describe("createFormProviderAndHooks", () => {
   const {
     FormProvider,
+    Form,
     useFormContext,
     useFormDataAtPath,
     useErrorsAtPath,
@@ -248,6 +285,7 @@ describe("createFormProviderAndHooks", () => {
       </FormProvider>
     );
 
+    // Verify errors
     expect(screen.getByTestId("errorsAtPath").textContent).toBe(
       JSON.stringify(testErrors.filter((e) => e.path === "property1"))
     );
@@ -324,6 +362,28 @@ describe("createFormProviderAndHooks", () => {
     );
   });
 
+  it("throws an error when useTemplates is used outside of FormProvider", () => {
+    const TestComponent = () => {
+      const templates = useTemplates();
+      return <div>{JSON.stringify(templates)}</div>;
+    };
+
+    expect(() => render(<TestComponent />)).toThrowError(
+      "useTemplates must be used within a FormProvider with templates provided"
+    );
+  });
+
+  it("throws an error when useRenderTemplate is used outside of FormProvider", () => {
+    const TestComponent = () => {
+      const RenderTemplate = useRenderTemplate();
+      return <RenderTemplate schema={testSchema2} path={["property1"]} />;
+    };
+
+    expect(() => render(<TestComponent />)).toThrowError(
+      "useRenderTemplate must be used within a FormProvider with renderTemplate provided"
+    );
+  });
+
   it("useTemplates hook works correctly", () => {
     render(
       <FormProvider schema={testSchema2} templates={{ Input: InputComponent }}>
@@ -347,5 +407,90 @@ describe("createFormProviderAndHooks", () => {
     );
 
     expect(screen.getByTestId("inputComponent")).toBeInTheDocument();
+  });
+
+  it("renders Form component and tests default onSubmit and onError behavior", () => {
+    // Mock console.warn and console.error to test their invocation
+    const consoleWarnMock = vi
+      .spyOn(console, "warn")
+      .mockImplementation(() => {});
+    const consoleErrorMock = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    render(
+      <Form
+        schema={testSchema2}
+        initialData={{}}
+        templates={{ Input: InputComponent }}
+        formRoot={({ onSubmit, onError }) => (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              // Simulate errors with correct structure (including 'path' and 'message')
+              const errors = [
+                { path: "property1", message: "Test error on property1" },
+              ];
+              onError(errors, {}); // Call onError with simulated errors
+              onSubmit({});
+            }}
+          >
+            <button type="submit">Submit</button>
+          </form>
+        )}
+      />
+    );
+
+    // Trigger form submission to invoke the default onSubmit and onError functions
+    fireEvent.submit(screen.getByRole("button"));
+
+    // Test default onSubmit
+    expect(consoleWarnMock).toHaveBeenCalledWith(
+      "This is a default `onSubmit` function. You should override this if you want to do something with the form data.",
+      {}
+    );
+
+    // Test default onError
+    expect(consoleErrorMock).toHaveBeenCalledWith(
+      "This is a default `onError` function. You should override this if you want to do something with the form errors.",
+      [{ path: "property1", message: "Test error on property1" }],
+      {}
+    );
+
+    // Restore the original console functions
+    consoleWarnMock.mockRestore();
+    consoleErrorMock.mockRestore();
+  });
+
+  it("renders fallback UI when FormRoot, templates, or renderTemplate are missing", () => {
+    // Test for missing FormRoot
+    render(<Form schema={testSchema2} templates={{}} />);
+
+    expect(
+      screen.getByText(
+        "FormRoot is missing. Please provide a base FormRoot component."
+      )
+    ).toBeInTheDocument();
+
+    // Test for missing templates
+    render(
+      <Form
+        schema={testSchema2}
+        formRoot={({ onSubmit }) => (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit({});
+            }}
+          >
+            <button type="submit">Submit</button>
+          </form>
+        )}
+      />
+    );
+
+    expect(
+      screen.getByText("Templates are missing. Please provide base Templates.")
+    ).toBeInTheDocument();
   });
 });

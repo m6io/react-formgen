@@ -266,6 +266,9 @@ export const createFormProviderAndHooks = <S, E>(
   const useFormContext = <T,>(selector: (state: FormState<S, E>) => T): T => {
     const store = useContext(FormContext);
     if (!store) {
+      console.error(
+        "FormContext is missing. Ensure you are within a FormProvider."
+      );
       throw new Error("useFormContext must be used within a FormProvider");
     }
     return useStore(store, selector);
@@ -375,6 +378,9 @@ export const createFormProviderAndHooks = <S, E>(
   const useTemplates = () => {
     const templates = useContext(TemplatesContext);
     if (!templates) {
+      console.error(
+        "TemplatesContext is missing. Ensure you are within a FormProvider with templates provided."
+      );
       throw new Error(
         "useTemplates must be used within a FormProvider with templates provided"
       );
@@ -394,6 +400,9 @@ export const createFormProviderAndHooks = <S, E>(
   const useRenderTemplate = (): React.ComponentType<RenderTemplateProps<S>> => {
     const renderTemplate = useContext(RenderTemplateContext);
     if (!renderTemplate) {
+      console.error(
+        "RenderTemplateContext is missing. Ensure you are within a FormProvider with renderTemplate provided."
+      );
       throw new Error(
         "useRenderTemplate must be used within a FormProvider with renderTemplate provided"
       );
@@ -439,13 +448,31 @@ export const createFormProviderAndHooks = <S, E>(
     renderTemplate = BaseRenderTemplate,
   }) => {
     if (!FormRoot) {
-      throw new Error("A base FormRoot component must be provided.");
+      console.error(
+        "FormRoot is missing. Please provide a base FormRoot component."
+      );
+      return (
+        <div>
+          FormRoot is missing. Please provide a base FormRoot component.
+        </div>
+      );
     }
+
     if (!templates) {
-      throw new Error("A base Templates object must be provided.");
+      console.error("Templates are missing. Please provide base Templates.");
+      return <div>Templates are missing. Please provide base Templates.</div>;
     }
+
     if (!renderTemplate) {
-      throw new Error("A base RenderTemplate component must be provided.");
+      console.error(
+        "RenderTemplate component is missing. Please provide a base RenderTemplate."
+      );
+      return (
+        <div>
+          RenderTemplate component is missing. Please provide a base
+          RenderTemplate.
+        </div>
+      );
     }
 
     return (
