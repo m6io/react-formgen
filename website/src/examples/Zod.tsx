@@ -2,7 +2,6 @@ import {
   Form,
   FormProvider,
   BaseFormRoot,
-  BaseTemplates,
   useFormContext,
 } from "@react-formgen/zod";
 import { zodSchema, zodSchemaBasic } from "../schemas/zodSchema";
@@ -22,8 +21,6 @@ const ZodSchemaExample = () => {
       <Form
         schema={zodSchemaBasic}
         initialData={initialFormData}
-        templates={BaseTemplates}
-        formRoot={BaseFormRoot}
         onSubmit={(data) => console.log("Zod:", data)}
         onError={(errors) => console.error("Zod:", errors)}
       />
@@ -38,11 +35,7 @@ const ZodSchemaComplexExample = () => {
   return (
     <div>
       <h2>Complex Zod Schema Form</h2>
-      <FormProvider
-        schema={zodSchema}
-        initialData={initialFormData}
-        templates={BaseTemplates}
-      >
+      <FormProvider schema={zodSchema} initialData={initialFormData}>
         <SwitchToReadonly contextHook={useFormContext} />
         <BaseFormRoot
           onSubmit={(data) => console.log("Zod:", data)}

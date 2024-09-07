@@ -227,7 +227,7 @@ export const createFormProviderAndHooks = <S, E>(
     initialData = {},
     schema,
     children,
-    templates = {},
+    templates = BaseTemplates,
     readonly = false,
     renderTemplate = BaseRenderTemplate,
   }) => {
@@ -239,6 +239,11 @@ export const createFormProviderAndHooks = <S, E>(
         generateInitialData,
         readonly
       );
+    }
+
+    if (!templates) {
+      console.error("Templates are missing. Please provide base Templates.");
+      return <div>Templates are missing. Please provide base Templates.</div>;
     }
 
     return (

@@ -2,7 +2,7 @@
   "name": "@react-formgen/zod",
   "description": "A headless, type-safe, customizable, and super simple React form generator.",
   "private": false,
-  "version": "0.0.0-alpha.14",
+  "version": "0.0.0-alpha.15",
   "license": "MIT",
   "author": "m6io",
   "repository": {
@@ -33,7 +33,7 @@
     "analyze": "vite build --mode analyze"
   },
   "dependencies": {
-    "@react-formgen/core": "0.0.0-alpha.14"
+    "@react-formgen/core": "0.0.0-alpha.15"
   },
   "peerDependencies": {
     "react": "^18.3.1",

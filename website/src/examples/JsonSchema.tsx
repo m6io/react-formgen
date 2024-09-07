@@ -2,7 +2,6 @@ import {
   Form,
   FormProvider,
   BaseFormRoot,
-  BaseTemplates,
   useFormContext,
 } from "@react-formgen/json-schema";
 import {
@@ -49,11 +48,7 @@ const JsonSchemaComplexExample = () => {
   return (
     <div>
       <h2>Complex JSON Schema Form</h2>
-      <FormProvider
-        schema={jsonSchema}
-        initialData={initialFormData}
-        templates={BaseTemplates}
-      >
+      <FormProvider schema={jsonSchema} initialData={initialFormData}>
         <SwitchToReadonly contextHook={useFormContext} />
         <BaseFormRoot
           onSubmit={(data) => console.log("JSON Schema:", data)}

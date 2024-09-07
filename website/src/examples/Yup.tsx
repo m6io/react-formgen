@@ -2,7 +2,6 @@ import {
   Form,
   FormProvider,
   BaseFormRoot,
-  BaseTemplates,
   useFormContext,
 } from "@react-formgen/yup";
 import { yupSchema, yupSchemaBasic } from "../schemas/yupSchema";
@@ -22,8 +21,6 @@ const YupSchemaExample = () => {
       <Form
         schema={yupSchemaBasic}
         initialData={initialFormData}
-        templates={BaseTemplates}
-        formRoot={BaseFormRoot}
         onSubmit={(data) => console.log("Yup:", data)}
         onError={(errors) => console.error("Yup:", errors)}
       />
@@ -38,11 +35,7 @@ const YupSchemaComplexExample = () => {
   return (
     <div>
       <h2>Complex Yup Schema Form</h2>
-      <FormProvider
-        schema={yupSchema}
-        initialData={initialFormData}
-        templates={BaseTemplates}
-      >
+      <FormProvider schema={yupSchema} initialData={initialFormData}>
         <SwitchToReadonly contextHook={useFormContext} />
         <BaseFormRoot
           onSubmit={(data) => console.log("Yup:", data)}

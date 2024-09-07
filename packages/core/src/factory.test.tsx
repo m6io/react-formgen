@@ -105,7 +105,11 @@ describe("createFormStore", () => {
 
   it("initializes nested object correctly, sets deeply nested value, and respects readonly state", () => {
     render(
-      <FormProvider schema={testSchema} readonly={true}>
+      <FormProvider
+        schema={testSchema}
+        templates={{ Input: InputComponent }}
+        readonly={true}
+      >
         <TestComponent />
       </FormProvider>
     );
@@ -137,7 +141,11 @@ describe("createFormStore", () => {
   // Test setReadonly functionality (Line 62)
   it("toggles readonly state using setReadonly", () => {
     render(
-      <FormProvider schema={testSchema} readonly={true}>
+      <FormProvider
+        schema={testSchema}
+        templates={{ Input: InputComponent }}
+        readonly={true}
+      >
         <TestComponent />
       </FormProvider>
     );
@@ -252,7 +260,7 @@ describe("createFormProviderAndHooks", () => {
 
   it("provides form context correctly", () => {
     render(
-      <FormProvider schema={testSchema2}>
+      <FormProvider schema={testSchema2} templates={{ Input: InputComponent }}>
         <TestComponent />
       </FormProvider>
     );
@@ -264,7 +272,7 @@ describe("createFormProviderAndHooks", () => {
 
   it("useFormDataAtPath hook works correctly", () => {
     render(
-      <FormProvider schema={testSchema2}>
+      <FormProvider schema={testSchema2} templates={{ Input: InputComponent }}>
         <TestComponent />
       </FormProvider>
     );
@@ -280,7 +288,7 @@ describe("createFormProviderAndHooks", () => {
 
   it("useErrorsAtPath hook works correctly", () => {
     render(
-      <FormProvider schema={testSchema2}>
+      <FormProvider schema={testSchema2} templates={{ Input: InputComponent }}>
         <TestComponent initialErrors={testErrors} />
       </FormProvider>
     );
@@ -293,7 +301,7 @@ describe("createFormProviderAndHooks", () => {
 
   it("useArrayTemplate hook works correctly", () => {
     render(
-      <FormProvider schema={testSchema2}>
+      <FormProvider schema={testSchema2} templates={{ Input: InputComponent }}>
         <TestComponent />
       </FormProvider>
     );
@@ -401,12 +409,25 @@ describe("createFormProviderAndHooks", () => {
     };
 
     render(
-      <FormProvider schema={testSchema2}>
+      <FormProvider schema={testSchema2} templates={{ Input: InputComponent }}>
         <RenderTemplateComponent />
       </FormProvider>
     );
 
     expect(screen.getByTestId("inputComponent")).toBeInTheDocument();
+  });
+
+  it("renders fallback UI when base templates missing", () => {
+    // Test for missing templates
+    render(
+      <FormProvider schema={testSchema2}>
+        <TestComponent />
+      </FormProvider>
+    );
+
+    expect(
+      screen.getByText("Templates are missing. Please provide base Templates.")
+    ).toBeInTheDocument();
   });
 
   it("renders Form component and tests default onSubmit and onError behavior", () => {
