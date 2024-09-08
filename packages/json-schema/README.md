@@ -5,23 +5,24 @@ A headless, type-safe, customizable, and super simple React form and data view g
 [![npm version](https://badge.fury.io/js/@react-formgen%2Fjson-schema.svg)](https://badge.fury.io/js/@react-formgen%2Fjson-schema)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[Docs are boring, take me to the examples!](https://github.com/m6io/react-formgen/tree/main/examples)
+`@react-formgen/json-schema` transforms a JSON Schema into dynamic forms and data views with built-in validation and error handling. It leverages [Ajv](https://ajv.js.org/) for validation and Zustand for efficient state management.
 
-Takes a JSON Schema, some initial data (if you have any), and a few callbacks (onSubmit and onError), and returns a form with input validation and error handling.
-
-Internally, this package uses [Ajv](https://ajv.js.org/) for JSON Schema validation and Zustand for state management.
-
-Can be used with (almost) any UI component library, including your own.
-
-Use cases:
+### Use cases
 
 1. You don't want (or don't have time) to write a bunch of forms from scratch.
 2. You want to share JSON Schema with your backend to have a consistent end-to-end validation experience (one schema to rule them all! 🧙‍♂️).
 3. You want to generate forms dynamically (e.g., for a CMS, a form builder, a configuration tool, etc.).
 
+### Features
+
+- **Type-safe**: Ensures your forms adhere to the defined schema.
+- **Customizable**: Allows custom templates, layouts, and rendering logic.
+- **Headless**: Integrates with any UI component library.
+- **Validation**: Built-in validation and error handling.
+
 ## Installation
 
-Install with npm
+Install with npm:
 
 ```bash
 npm install @react-formgen/json-schema ajv ajv-formats json-schema
@@ -41,13 +42,9 @@ pnpm install @react-formgen/json-schema ajv ajv-formats json-schema
 
 ## Usage
 
-You'll need a JSON Schema that follows the [JSON Schema Draft 7](https://json-schema.org/specification-links.html#draft-7) specification. You can use the [JSON Schema Generator](https://jsonschema.net/) to create a schema from a JSON object. Or look through [JSON Schema Store](https://json.schemastore.org/) for examples.
+Here’s how you can quickly create a form using a JSON Schema:
 
-### A simple example:
-
-Create a new React app:
-
-with NPM
+### 1. Setup a new React project
 
 ```bash
 npm create vite@latest react-formgen-example --template react-ts
@@ -59,65 +56,45 @@ or with Yarn
 yarn create vite react-formgen-example --template react-ts
 ```
 
-Open your new React app and paste this JSON Schema in a new file called `src/schema.json`:
+or with pnpm
+
+```bash
+pnpm create vite react-formgen-example --template react-ts
+```
+
+### 2. Define a JSON Schema
+
+Create a `src/schema.json` file:
 
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "A registration form",
-  "description": "A simple form example.",
+  "title": "User Registration",
   "type": "object",
   "required": ["firstName", "lastName"],
   "properties": {
-    "firstName": {
-      "type": "string",
-      "title": "First name",
-      "default": "Chuck"
-    },
-    "lastName": {
-      "type": "string",
-      "title": "Last name"
-    },
-    "age": {
-      "type": "integer",
-      "title": "Age"
-    },
-    "bio": {
-      "type": "string",
-      "title": "Bio"
-    },
-    "password": {
-      "type": "string",
-      "title": "Password",
-      "minLength": 3
-    },
-    "telephone": {
-      "type": "string",
-      "title": "Telephone",
-      "minLength": 10
-    }
+    "firstName": { "type": "string", "title": "First Name" },
+    "lastName": { "type": "string", "title": "Last Name" },
+    "age": { "type": "integer", "title": "Age" }
   }
 }
 ```
 
-Then replace the contents of `src/App.tsx` with the following:
+### 3. Create the form in `src/App.tsx`
 
 ```tsx
-import { Form, JSONSchema7 } from "@react-formgen/json-schema";
+import React from "react";
+import { Form } from "@react-formgen/json-schema";
 import schema from "./schema.json";
 
 const App = () => {
-  const formSchema: JSONSchema7 = schema as JSONSchema7;
-
   return (
     <div>
-      <h1>{formSchema.title || "Untitled Form"}</h1>
-      <p>{formSchema.description || null}</p>
-      <hr />
+      <h1>{schema.title}</h1>
       <Form
-        schema={formSchema}
-        onSubmit={(data) => console.log(data)}
-        onError={(errors) => console.error(errors)}
+        schema={schema}
+        onSubmit={(data) => console.log("Form submitted:", data)}
+        onError={(errors) => console.error("Validation errors:", errors)}
       />
     </div>
   );
@@ -126,10 +103,10 @@ const App = () => {
 export default App;
 ```
 
-Run it with NPM
+### 4. Run the application
 
 ```bash
-npm run dev
+npm dev
 ```
 
 or with Yarn
@@ -138,233 +115,71 @@ or with Yarn
 yarn dev
 ```
 
-You should see a form with the fields defined in the JSON Schema. The form will validate the data according to the schema and display any errors under the corresponding fields.
+or with pnpm
 
-### A more complicated example:
-
-This example should give you an idea of how to customize your form's components and access the FormProvider's store to display form data and form errors.
-
-```tsx
-import formSchema from "./schema.json";
-import formSchemaAlt from "./schema-alt.json";
-import {
-  useFormContext,
-  useFormDataAtPath,
-  useErrorsAtPath,
-  StringSchema,
-  Form,
-  BaseFormTemplate,
-  JSONSchema7,
-  FormProvider,
-  BaseFieldTemplates,
-} from "@react-formgen/json-schema";
-
-// Example of a component that can be wrapped in FormProvider to display data from the form store
-const FormDataDisplay: React.FC = () => {
-  const formData = useFormContext((state) => state.formData);
-
-  return (
-    <pre>
-      <code>{JSON.stringify(formData, null, 2)}</code>
-    </pre>
-  );
-};
-
-// Example of a Custom String Field Component
-const MyStringField: React.FC<{
-  schema: StringSchema;
-  path: string[];
-}> = ({ schema, path }) => {
-  const [valueAtPath, setValueAtPath] = useFormDataAtPath(path);
-  const errorsAtPath = useErrorsAtPath(path);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValueAtPath(event.target.value);
-  };
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      {schema.title && <label>{schema.title}</label>}
-      <input
-        type="text"
-        value={valueAtPath ?? ""}
-        onChange={handleChange}
-        placeholder={schema.title || ""}
-        list={
-          Array.isArray(schema.examples)
-            ? `${path.join("-")}-datalist`
-            : undefined
-        }
-        style={{
-          width: "200px",
-          border: "1px solid mediumslateblue",
-          padding: "5px",
-          borderRadius: "5px",
-          marginBottom: "5px",
-        }}
-      />
-      {schema.description && <small>{schema.description}</small>}
-      {Array.isArray(schema.examples) && (
-        <datalist id={`${path.join("-")}-datalist`}>
-          {schema.examples.map((example, index) => (
-            <option key={index} value={example as string} />
-          ))}
-        </datalist>
-      )}
-      {errorsAtPath && (
-        <div style={{ color: "red" }}>
-          {errorsAtPath.map((error, index) => (
-            <div key={index}>{error.message}</div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Example of a component that can be used to display the title and description of the schema
-const FormHeader: React.FC = () => {
-  const schema = useFormContext((state) => state.schema);
-
-  // Render the title and description of the schema, if available.
-  return (
-    <div>
-      <h1>{schema.title}</h1>
-      <p>{schema.description}</p>
-    </div>
-  );
-};
-
-// Example of a component that can be used to display a scrollable, fixed max-height list of errors, if any.
-const FormErrors: React.FC = () => {
-  const errors = useFormContext((state) => state.errors);
-
-  if (!errors) return null;
-
-  // Errors that occur due to missing required fields will have an empty instancePath, so we need to parse the error params and add the missing property to the instancePath.
-  const renderedErrors = errors.map((error) => {
-    if (error.keyword === "required" && error.params.missingProperty) {
-      return {
-        ...error,
-        instancePath: `${error.instancePath}/${error.params.missingProperty}`,
-      };
-    }
-    return error;
-  });
-
-  return (
-    <div
-      style={{
-        maxHeight: "100px",
-        overflowY: "auto",
-        border: "1px solid red",
-        padding: "10px",
-        margin: "10px 0",
-      }}
-    >
-      <h3>Form Errors</h3>
-      {renderedErrors.map((error, index) => (
-        <div key={index} style={{ color: "red" }}>
-          {/* Parse the instancePath of the errors as a breadcrumb of the keys to the error, as well as the error message */}
-          {error.instancePath.split("/").filter(Boolean).join(" > ")}:{" "}
-          {error.message}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-// Example App Component
-const App: React.FC = () => {
-  const schema: JSONSchema7 = formSchema as JSONSchema7;
-  const schemaAlt: JSONSchema7 = formSchemaAlt as JSONSchema7;
-
-  const initialData = {
-    name: "John Doe",
-    age: 30,
-    email: "john.doe@example.com",
-    homepage: "https://example.com",
-    birthday: "1990-01-01",
-    is_active: true,
-    address: {
-      street_address: "123 Main St",
-      city: "Somewhere",
-      state: "CA",
-    },
-  };
-  const initialDataAlt = {};
-
-  return (
-    <>
-      {/* Example of a form using Form component with custom text field component. */}
-      <Form
-        schema={schema}
-        initialData={initialData}
-        onSubmit={(data) => console.log("Form submitted:", data)}
-        onError={(errors) => console.error("Form errors:", errors)}
-        fieldTemplates={{ ...BaseFieldTemplates, StringField: MyStringField }}
-      />
-      {/* Example of a form using FormProvider to wrap the form, display form data, and display a list of form errors. */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "20px",
-          width: "calc(100vw - 60px)",
-          gap: "20px",
-        }}
-      >
-        <FormProvider schema={schema} initialData={initialData}>
-          <div style={{ width: "50%" }}>
-            <h1>JSON Schema Form</h1>
-            <FormErrors />
-            <BaseFormTemplate
-              onSubmit={(data) => console.log("Form submitted:", data)}
-              onError={(errors) => console.error("Form errors:", errors)}
-            />
-          </div>
-          <div style={{ width: "25%" }}>
-            <h1>Form Data</h1>
-            <FormDataDisplay />
-          </div>
-        </FormProvider>
-      </div>
-      {/* Example of a form with a different schema, a custom form header, and a custom form error display. */}
-      <FormProvider schema={schemaAlt} initialData={initialDataAlt}>
-        <FormHeader />
-        <FormErrors />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            padding: "20px",
-            width: "calc(100vw - 60px)",
-            gap: "20px",
-          }}
-        >
-          <div style={{ width: "50%" }}>
-            <h3>JSON Schema Form Alt</h3>
-            <BaseFormTemplate
-              onSubmit={(data) => console.log("Form Alt submitted:", data)}
-              onError={(errors) => console.error("Form Alt errors:", errors)}
-            />
-          </div>
-          <div style={{ width: "25%" }}>
-            <h3>Form Data Alt</h3>
-            <FormDataDisplay />
-          </div>
-        </div>
-      </FormProvider>
-    </>
-  );
-};
-
-export default App;
+```bash
+pnpm dev
 ```
 
-## Known Issues and Limitations
+You will now see a form generated based on the JSON Schema, with built-in validation and error handling.
 
-This library is still in development and may have some issues. Here are some known issues and limitations:
+## Customization
+
+You can easily customize field rendering by passing your own field components:
+
+```tsx
+import React from "react";
+import { Form, BaseTemplates } from "@react-formgen/json-schema";
+
+// Example: Custom field for string inputs
+const CustomStringTemplate = ({ schema, path, value, setValue }) => (
+  <div>
+    <label>{schema.title}</label>
+    <input value={value} onChange={(e) => setValue(e.target.value)} />
+  </div>
+);
+
+const App = () => {
+  const schema = {
+    $schema: "http://json-schema.org/draft-07/schema#",
+    title: "User Registration",
+    type: "object",
+    required: ["firstName", "lastName"],
+    properties: {
+      firstName: { type: "string", title: "First Name" },
+      lastName: { type: "string", title: "Last Name" },
+      age: { type: "integer", title: "Age" },
+    },
+  };
+
+  const handleSubmit = (data) => {
+    console.log("Form submitted with data:", data);
+  };
+
+  const handleErrors = (errors) => {
+    console.error("Form submission errors:", errors);
+  };
+
+  return (
+    <Form
+      schema={schema}
+      templates={{ ...BaseTemplates, StringTemplate: CustomStringTemplate }}
+      onSubmit={handleSubmit}
+      onError={handleErrors}
+    />
+
+    // a read-only data view
+
+    <Form schema={schema} readonly />
+  );
+};
+```
+
+## Known Issues
 
 1. The library does not support all JSON Schema Draft 7 features. Some features may not work as expected or may not work at all.
-2. Error messages are direct outputs from the [Ajv](https://ajv.js.org/) library. As such, they may not be the most user-friendly or localized.
+2. Error messages are direct outputs from the [Ajv](https://ajv.js.org/) library. As such, they may not be the most user-friendly or localized. You can (and should) customize your `ajv` instance to provide better error messages in your custom `FormRoot` component.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for more information.

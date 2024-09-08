@@ -10,9 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-formgen/json-schema": "0.0.0-alpha.16",
-    "@react-formgen/yup": "0.0.0-alpha.16",
-    "@react-formgen/zod": "0.0.0-alpha.16",
+    "@react-formgen/json-schema": "0.0.0-alpha.17",
+    "@react-formgen/yup": "0.0.0-alpha.17",
+    "@react-formgen/zod": "0.0.0-alpha.17",
     "ajv": "^8.16.0",
     "ajv-formats": "^3.0.1",
     "json-schema": "^0.4.0",

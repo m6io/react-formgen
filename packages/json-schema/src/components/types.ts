@@ -48,7 +48,15 @@ export interface UISchema {
   props?: Record<string, unknown>;
 }
 
-// Create a recursive type that extends JSONSchema7 with `uiSchema`
+/**
+ * Represents an extended JSONSchema7 with additional properties for customizing forms.
+ * @typedef {Object} FormgenJSONSchema7
+ * @extends {Omit<JSONSchema7, "properties" | "definitions">}
+ * @property {UISchema} [uiSchema] - The UI schema for the property.
+ * @property {Record<string, FormgenJSONSchema7>} [properties] - The properties of the object.
+ * @property {Record<string, FormgenJSONSchema7>} [definitions] - The definitions of the object.
+ * @returns {FormgenJSONSchema7} The extended JSONSchema7.
+ */
 export interface FormgenJSONSchema7
   extends Omit<JSONSchema7, "properties" | "definitions"> {
   uiSchema?: UISchema;
@@ -245,14 +253,12 @@ export type Templates = {
   BooleanTemplate:
     | React.FC<{ schema: BooleanSchema; path: string[] }>
     | React.FC<{ schema: BaseBooleanSchema; path: string[] }>;
-  ObjectTemplate: React.FC<{
-    schema: BaseObjectSchema;
-    path: string[];
-  }>;
-  ArrayTemplate: React.FC<{
-    schema: BaseArraySchema;
-    path: string[];
-  }>;
+  ObjectTemplate:
+    | React.FC<{ schema: BaseObjectSchema; path: string[] }>
+    | React.FC<{ schema: ObjectSchema; path: string[] }>;
+  ArrayTemplate:
+    | React.FC<{ schema: BaseArraySchema; path: string[] }>
+    | React.FC<{ schema: ArraySchema; path: string[] }>;
 };
 
 /**
