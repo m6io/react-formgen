@@ -4,7 +4,7 @@ import { JSONSchema7 } from "json-schema";
 /**
  * Represents the props for the Form.
  * @typedef {Object} FormProps
- * @property {JSONSchema7} schema - The schema for the form.
+ * @property {JSONSchema7 | FormgenJSONSchema7} schema - The schema for the form.
  * @property {{ [key: string]: unknown }} [initialData] - The initial data for the form.
  * @property {(data: { [key: string]: unknown }) => void} onSubmit - The function to call when the form is submitted.
  * @property {(errors: ErrorObject[], data?: { [key: string]: unknown }) => void} onError - The function to call when there are errors in the form.
@@ -15,7 +15,7 @@ import { JSONSchema7 } from "json-schema";
  *
  */
 export type FormProps = {
-  schema: JSONSchema7;
+  schema: JSONSchema7 | FormgenJSONSchema7;
   initialData?: { [key: string]: unknown };
   onSubmit?: (data: { [key: string]: unknown }) => void;
   onError?: (errors: ErrorObject[], data?: { [key: string]: unknown }) => void;
@@ -41,98 +41,20 @@ export type FormRootProps = {
  * Represents the UI schema for a property.
  * @typedef {Object} UISchema
  * @property {string} component - The component to use for the property.
- * @property {{ [key: string]: unknown }} [props] - The props to pass to the component.
+ * @property {Record<string, unknown>} [props] - The props to pass to the component.
  */
 export interface UISchema {
   component: string;
-  props?: { [key: string]: unknown };
+  props?: Record<string, unknown>;
 }
 
-/**
- * Utility type to extend JSONSchema7 and include uiSchema at all levels.
- * @typedef {Object} WithUISchema
- * @template T
- * @property {UISchema} [uiSchema] - The UI schema for the property.
- * @property {T} - The type of the property.
- * @returns {T & { uiSchema?: UISchema }} - The extended JSONSchema7 type with uiSchema.
- */
-type WithUISchema<T> = T & { uiSchema?: UISchema };
-
-// Extend JSONSchema7 to include uiSchema using the utility type
-/**
- * Represents the extended JSONSchema7 type with uiSchema.
- * @typedef {Object} FormgenJSONSchema7
- * @extends {WithUISchema<Omit<JSONSchema7, "properties" | "items" | "additionalItems" | "patternProperties" | "additionalProperties" | "dependencies" | "propertyNames" | "if" | "then" | "else" | "allOf" | "anyOf" | "oneOf" | "not">>}
- * @property {{ [key: string]: FormgenJSONSchema7Definition }} [properties] - The properties of the schema.
- * @property {{ [key: string]: FormgenJSONSchema7Definition }} [definitions] - The definitions of the schema.
- * @property {FormgenJSONSchema7Definition | FormgenJSONSchema7Definition[]} [items] - The items of the schema.
- * @property {FormgenJSONSchema7Definition} [additionalItems] - The additional items of the schema.
- * @property {{ [key: string]: FormgenJSONSchema7Definition }} [patternProperties] - The pattern properties of the schema.
- * @property {FormgenJSONSchema7Definition} [additionalProperties] - The additional properties of the schema.
- * @property {{ [key: string]: FormgenJSONSchema7Definition | string[] }} [dependencies] - The dependencies of the schema.
- * @property {FormgenJSONSchema7Definition} [propertyNames] - The property names of the schema.
- * @property {FormgenJSONSchema7Definition} [if] - The if condition of the schema.
- * @property {FormgenJSONSchema7Definition} [then] - The then condition of the schema.
- * @property {FormgenJSONSchema7Definition} [else] - The else condition of the schema.
- * @property {FormgenJSONSchema7Definition[]} [allOf] - The allOf conditions of the schema.
- * @property {FormgenJSONSchema7Definition[]} [anyOf] - The anyOf conditions of the schema.
- * @property {FormgenJSONSchema7Definition[]} [oneOf] - The oneOf conditions of the schema.
- * @property {FormgenJSONSchema7Definition} [not] - The not condition of the schema.
- * @property {UISchema} [uiSchema] - The UI schema for the property.
- * @property {FormgenJSONSchema7Definition} - The property type.
- * @returns {FormgenJSONSchema7 & { uiSchema?: UISchema }} - The extended JSONSchema7 type with uiSchema.
- */
+// Create a recursive type that extends JSONSchema7 with `uiSchema`
 export interface FormgenJSONSchema7
-  extends WithUISchema<
-    Omit<
-      JSONSchema7,
-      | "properties"
-      | "items"
-      | "additionalItems"
-      | "patternProperties"
-      | "additionalProperties"
-      | "dependencies"
-      | "propertyNames"
-      | "if"
-      | "then"
-      | "else"
-      | "allOf"
-      | "anyOf"
-      | "oneOf"
-      | "not"
-    >
-  > {
-  properties?: {
-    [key: string]: FormgenJSONSchema7Definition;
-  };
-  definitions?: {
-    [key: string]: FormgenJSONSchema7Definition;
-  };
-  items?: FormgenJSONSchema7Definition | FormgenJSONSchema7Definition[];
-  additionalItems?: FormgenJSONSchema7Definition;
-  patternProperties?: {
-    [key: string]: FormgenJSONSchema7Definition;
-  };
-  additionalProperties?: FormgenJSONSchema7Definition;
-  dependencies?: {
-    [key: string]: FormgenJSONSchema7Definition | string[];
-  };
-  propertyNames?: FormgenJSONSchema7Definition;
-  if?: FormgenJSONSchema7Definition;
-  then?: FormgenJSONSchema7Definition;
-  else?: FormgenJSONSchema7Definition;
-  allOf?: FormgenJSONSchema7Definition[];
-  anyOf?: FormgenJSONSchema7Definition[];
-  oneOf?: FormgenJSONSchema7Definition[];
-  not?: FormgenJSONSchema7Definition;
+  extends Omit<JSONSchema7, "properties" | "definitions"> {
+  uiSchema?: UISchema;
+  properties?: Record<string, FormgenJSONSchema7>;
+  definitions?: Record<string, FormgenJSONSchema7>;
 }
-
-// Define the extended JSONSchema7Definition type
-/**
- * Represents the extended JSONSchema7Definition type with uiSchema.
- * @typedef {FormgenJSONSchema7 | boolean} FormgenJSONSchema7Definition
- */
-export type FormgenJSONSchema7Definition = FormgenJSONSchema7 | boolean;
 
 /**
  * Custom OneOf type for strings.
@@ -162,7 +84,7 @@ export interface BaseStringSchema extends Omit<JSONSchema7, "type"> {
 /**
  * Represents the recommended string schema with additional UI options.
  * @typedef {Object} StringSchema
- * @extends {Omit<JSONSchema7, "type" | "enum" | "oneOf">}
+ * @extends {Omit<FormgenJSONSchema7, "type" | "enum" | "oneOf">}
  * @property {"string"} type - The type of the schema.
  * @property {string[]} [enum] - The enum options for the string property. This is evaluated first before the oneOf options.
  * @property {StringOneOf[]} [oneOf] - The oneOf options for the string property.
@@ -174,6 +96,7 @@ export interface StringSchema
   type: "string";
   enum?: string[];
   oneOf?: StringOneOf[];
+  uiSchema?: UISchema;
 }
 
 /**
@@ -204,8 +127,10 @@ export interface BaseNumberSchema extends Omit<JSONSchema7, "type"> {
 /**
  * Represents the recommended number schema with additional UI options.
  * @typedef {Object} NumberSchema
- * @extends {Omit<JSONSchema7, "type">}
+ * @extends {Omit<FormgenJSONSchema7, "type">}
  * @property {"number" | "integer"} type - The type of the schema.
+ * @property {number[]} [enum] - The enum options for the number property. This is evaluated first before the oneOf options.
+ * @property {NumberOneOf[]} [oneOf] - The oneOf options for the number property.
  * @property {uiSchema} [UISchema] - The UI schema for the number property.
  *
  */
@@ -214,6 +139,7 @@ export interface NumberSchema
   type: "number" | "integer";
   enum?: number[];
   oneOf?: NumberOneOf[];
+  uiSchema?: UISchema;
 }
 
 /**
@@ -241,7 +167,7 @@ export interface BaseBooleanSchema extends Omit<JSONSchema7, "type"> {
 /**
  * Represents the recommended boolean schema with additional UI options.
  * @typedef {Object} BooleanSchema
- * @extends { Omit<JSONSchema7, "type" | "oneOf">}
+ * @extends { Omit<FormgenJSONSchema7, "type" | "oneOf">}
  * @property {BooleanOneOf[]} oneOf - The oneOf options for the boolean property.
  * @property {uiSchema} [UISchema] - The UI schema for the string property.
  *
@@ -250,6 +176,7 @@ export interface BooleanSchema
   extends Omit<FormgenJSONSchema7, "type" | "oneOf"> {
   type: "boolean";
   oneOf?: BooleanOneOf[];
+  uiSchema?: UISchema;
 }
 
 /**
@@ -268,10 +195,12 @@ export interface BaseObjectSchema extends Omit<JSONSchema7, "type"> {
  * @typedef {Object} ObjectSchema
  * @extends {Omit<FormgenJSONSchema7, "type">}
  * @property {"object"} type - The type of the schema.
+ * @property {uiSchema} [UISchema] - The UI schema for the object property.
  *
  */
 export interface ObjectSchema extends Omit<FormgenJSONSchema7, "type"> {
   type: "object";
+  uiSchema?: UISchema;
 }
 
 /**
@@ -289,9 +218,11 @@ export interface BaseArraySchema extends Omit<JSONSchema7, "type"> {
  * @typedef {Object} ArraySchema
  * @extends {Omit<FormgenJSONSchema7, "type">}
  * @property {"array"} type - The type of the schema.
+ * @property {uiSchema} [UISchema] - The UI schema for the array property.
  */
 export interface ArraySchema extends Omit<FormgenJSONSchema7, "type"> {
   type: "array";
+  uiSchema?: UISchema;
 }
 
 /**

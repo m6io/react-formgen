@@ -9,9 +9,10 @@ import {
   BaseFormRoot,
   BaseTemplates,
   RenderTemplate as DefaultRenderTemplate,
+  FormgenJSONSchema7,
 } from "./components";
 
-const createInitialData = (schema: JSONSchema7) =>
+const createInitialData = (schema: JSONSchema7 | FormgenJSONSchema7) =>
   generateInitialData(schema, schema.definitions || {});
 
 const getErrorsAtPath = (
@@ -45,7 +46,7 @@ const {
   useTemplates,
   useRenderTemplate,
   Form,
-} = createFormProviderAndHooks<JSONSchema7, ErrorObject>(
+} = createFormProviderAndHooks<JSONSchema7 | FormgenJSONSchema7, ErrorObject>(
   createInitialData,
   getErrorsAtPath,
   DefaultRenderTemplate,
@@ -53,7 +54,10 @@ const {
   BaseTemplates
 );
 
-export type FormState = CoreFormState<JSONSchema7, ErrorObject>;
+export type FormState = CoreFormState<
+  JSONSchema7 | FormgenJSONSchema7,
+  ErrorObject
+>;
 
 export {
   FormProvider,

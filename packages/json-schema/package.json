@@ -2,7 +2,7 @@
   "name": "@react-formgen/json-schema",
   "description": "A headless, type-safe, customizable, and super simple React form generator.",
   "private": false,
-  "version": "0.0.0-alpha.15",
+  "version": "0.0.0-alpha.16",
   "license": "MIT",
   "author": "m6io",
   "repository": {
@@ -35,7 +35,7 @@
     "analyze": "vite build --mode analyze"
   },
   "dependencies": {
-    "@react-formgen/core": "0.0.0-alpha.15"
+    "@react-formgen/core": "0.0.0-alpha.16"
   },
   "peerDependencies": {
     "ajv": "^8.16.0",
