@@ -1,5 +1,7 @@
 import React, { useContext, createContext } from "react";
-import { useStore, createStore } from "zustand";
+import { useStore, createStore, StateCreator } from "zustand";
+import { devtools } from "zustand/middleware";
+import { nanoid } from "nanoid";
 
 /**
  * Represents the state of the form.
@@ -36,6 +38,7 @@ export interface FormState<S, E> {
  * @param {React.ReactNode} children - Child components to be rendered within the FormProvider.
  * @param {{ [key: string]: React.ComponentType<any> }} templates - Templates to be used in the form.
  * @param {React.ComponentType<RenderTemplateProps<S>>} renderTemplate - Render template component to be used in the form.
+ * @param {boolean} enableDevtools - Flag to enable or disable Zustand DevTools middleware.
  * @returns {JSX.Element} A React component that provides the form state context and templates context.
  */
 export interface FormProviderProps<S> {
@@ -46,6 +49,7 @@ export interface FormProviderProps<S> {
   templates?: { [key: string]: React.ComponentType<any> };
   readonly?: boolean;
   renderTemplate?: React.ComponentType<RenderTemplateProps<S>>;
+  enableDevtools?: boolean;
 }
 
 /**
@@ -70,20 +74,22 @@ export interface RenderTemplateProps<S> {
  * @param {S} schema - Form schema.
  * @param {(schema: S) => any} createInitialData - Function to create initial data from the schema.
  * @param {boolean} readonly - Initial readonly state.
+ * @param {boolean} enableDevtools - Flag to enable or disable Zustand DevTools middleware.
  * @returns {ReturnType<typeof createStore<FormState<S, E>>>} A Zustand store for the form state.
  */
 export const createFormStore = <S, E>(
   initialData: any,
   schema: S,
   createInitialData: (schema: S) => any,
-  readonly?: boolean
+  readonly?: boolean,
+  enableDevtools: boolean = false
 ) => {
   const formData = {
     ...createInitialData(schema),
     ...initialData,
   };
 
-  return createStore<FormState<S, E>>((set) => ({
+  const stateCreator: StateCreator<FormState<S, E>> = (set) => ({
     schema: schema,
     formData: formData,
     errors: null,
@@ -106,7 +112,25 @@ export const createFormStore = <S, E>(
       }),
     setErrors: (errors) => set({ errors }),
     setReadonly: (readonly) => set({ readonly }),
-  }));
+  });
+
+  // Conditionally apply devtools based on the flag
+  if (enableDevtools) {
+    // Generate a unique name for the store
+    const FormStoreName = `FormStore_${nanoid()}`;
+
+    console.warn(
+      `WARNING: Zustand Devtools is enabled for FormStore: ${FormStoreName}. This should be disabled in production.`
+    );
+
+    // Wrap the state creator with devtools and assign the unique store name.
+    return createStore(
+      devtools(stateCreator, { name: FormStoreName, enabled: enableDevtools })
+    );
+  }
+
+  // Return the store without devtools if the flag is false
+  return createStore(stateCreator);
 };
 
 /**
@@ -153,6 +177,7 @@ export const RenderTemplateContext = createContext<React.ComponentType<
  * @param {React.FC<FormRootProps<E>>} formRoot - The root component responsible for rendering the form and handling form submission and errors.
  * @param {boolean} readonly - Whether the form is readonly.
  * @param {React.ComponentType<RenderTemplateProps<S>>} renderTemplate - Render template component to be used in the form.
+ * @param {boolean} enableDevtools - Flag to enable or disable Zustand DevTools middleware.
  * @returns {JSX.Element} A React component that provides the form state context and templates context.
  */
 export type FormProps<S, E> = {
@@ -164,6 +189,7 @@ export type FormProps<S, E> = {
   formRoot?: React.FC<FormRootProps<E>>;
   readonly?: boolean;
   renderTemplate?: React.ComponentType<RenderTemplateProps<S>>;
+  enableDevtools?: boolean;
 };
 
 /**
@@ -230,6 +256,7 @@ export const createFormProviderAndHooks = <S, E>(
     templates = BaseTemplates,
     readonly = false,
     renderTemplate = BaseRenderTemplate,
+    enableDevtools = false,
   }) => {
     const storeRef = React.useRef<FormStore<S, E>>();
     if (!storeRef.current) {
@@ -237,7 +264,8 @@ export const createFormProviderAndHooks = <S, E>(
         initialData,
         schema,
         generateInitialData,
-        readonly
+        readonly,
+        enableDevtools
       );
     }
 
@@ -451,6 +479,7 @@ export const createFormProviderAndHooks = <S, E>(
     formRoot: FormRoot = BaseFormRoot,
     readonly = false,
     renderTemplate = BaseRenderTemplate,
+    enableDevtools = false,
   }) => {
     if (!FormRoot) {
       console.error(
@@ -487,6 +516,7 @@ export const createFormProviderAndHooks = <S, E>(
         templates={templates}
         readonly={readonly}
         renderTemplate={renderTemplate}
+        enableDevtools={enableDevtools}
       >
         <FormRoot onSubmit={onSubmit} onError={onError} />
       </FormProvider>

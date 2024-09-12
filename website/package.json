@@ -10,9 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@react-formgen/json-schema": "0.0.0-alpha.17",
-    "@react-formgen/yup": "0.0.0-alpha.17",
-    "@react-formgen/zod": "0.0.0-alpha.17",
+    "@react-formgen/json-schema": "0.0.0-alpha.18",
+    "@react-formgen/yup": "0.0.0-alpha.18",
+    "@react-formgen/zod": "0.0.0-alpha.18",
     "ajv": "^8.16.0",
     "ajv-formats": "^3.0.1",
     "json-schema": "^0.4.0",
@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.15",
+    "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/uuid": "^10.0.0",

@@ -38,6 +38,7 @@ describe("createFormStore", () => {
     children,
     readonly = false,
     templates = {},
+    enableDevtools = false,
   }) => {
     const storeRef = React.useRef<FormStore<typeof testSchema, any> | null>(
       null
@@ -47,7 +48,8 @@ describe("createFormStore", () => {
         initialData,
         schema,
         createInitialData,
-        readonly
+        readonly,
+        enableDevtools
       );
     }
 
@@ -166,6 +168,29 @@ describe("createFormStore", () => {
 
     // Readonly state should toggle back to true
     expect(screen.getByTestId("readonlyState").textContent).toBe("true");
+  });
+
+  it("warns when devtools is enabled in non-production", () => {
+    const consoleWarnMock = vi
+      .spyOn(console, "warn")
+      .mockImplementation(() => {});
+
+    render(
+      <FormProvider
+        schema={testSchema}
+        templates={{ Input: InputComponent }}
+        readonly={false}
+        enableDevtools={true} // Test for enableDevtools functionality
+      >
+        <TestComponent />
+      </FormProvider>
+    );
+
+    expect(consoleWarnMock).toHaveBeenCalledWith(
+      expect.stringContaining("Zustand Devtools is enabled")
+    );
+
+    consoleWarnMock.mockRestore();
   });
 });
 

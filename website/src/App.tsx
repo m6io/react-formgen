@@ -10,6 +10,7 @@ import {
   JsonSchemaComplexExample,
   JsonSchemaCustomRenderTemplateExample,
   JsonSchemaWithRecursiveRefsExample,
+  JsonSchemaWithDevToolsExample,
 } from "./examples/JsonSchema";
 import { YupSchemaExample, YupSchemaComplexExample } from "./examples/Yup";
 import { ZodSchemaExample, ZodSchemaComplexExample } from "./examples/Zod";
@@ -22,6 +23,7 @@ const links = [
       { title: "Complex", path: "/json-schema/complex" },
       { title: "Custom Render Template", path: "/json-schema/render-template" },
       { title: "Recursive Refs", path: "/json-schema/recursive-refs" },
+      { title: "Devtools", path: "/json-schema/devtools" },
     ],
   },
   {
@@ -115,6 +117,10 @@ const App = () => {
         <Route
           path="/json-schema/recursive-refs"
           element={<JsonSchemaWithRecursiveRefsExample />}
+        />
+        <Route
+          path="/json-schema/devtools"
+          element={<JsonSchemaWithDevToolsExample />}
         />
         <Route path="/yup-schema" element={<YupSchemaExample />} />
         <Route
