@@ -23,7 +23,16 @@ const initialFormData = {
 // to render a form based on a JSON schema. The `Form` component
 const JsonSchemaExample = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        maxWidth: "calc(640px + 0.125rem)",
+        alignSelf: "center",
+        padding: "1rem",
+      }}
+    >
       <h2>JSON Schema Form</h2>
 
       <p>
@@ -35,7 +44,7 @@ const JsonSchemaExample = () => {
         schema={jsonSchemaBasic}
         initialData={initialFormData}
         onSubmit={(data) => console.log("JSON Schema:", data)}
-        onError={(errors) => console.error("JSON Schema:", errors)}
+        onError={(errors, data) => console.error("JSON Schema:", errors, data)}
       />
 
       <h2>JSON Schema Form (Readonly)</h2>
@@ -52,9 +61,17 @@ const JsonSchemaExample = () => {
 // the form between editable and readonly states.
 const JsonSchemaComplexExample = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        maxWidth: "calc(640px + 0.125rem)",
+        alignSelf: "center",
+        padding: "1rem",
+      }}
+    >
       <h2>Complex JSON Schema Form</h2>
-
       <p>
         This form demonstrates a more complex JSON schema form with a custom
         form provider and initial data. The form will validate the data based on
@@ -64,7 +81,9 @@ const JsonSchemaComplexExample = () => {
         <SwitchToReadonly contextHook={useFormContext} />
         <BaseFormRoot
           onSubmit={(data) => console.log("JSON Schema:", data)}
-          onError={(errors) => console.error("JSON Schema:", errors)}
+          onError={(errors, data) =>
+            console.error("JSON Schema:", errors, data)
+          }
         />
       </FormProvider>
     </div>
@@ -77,9 +96,17 @@ const JsonSchemaComplexExample = () => {
 // rendering rules of the form.
 const JsonSchemaCustomRenderTemplateExample = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        maxWidth: "calc(640px + 0.125rem)",
+        alignSelf: "center",
+        padding: "1rem",
+      }}
+    >
       <h2>Custom Render Template JSON Schema Form</h2>
-
       <p>
         This form demonstrates a custom template renderer that works differently
         than the default template renderer. In this case, the custom renderer
@@ -91,9 +118,8 @@ const JsonSchemaCustomRenderTemplateExample = () => {
         initialData={initialFormData}
         renderTemplate={RenderTemplate}
         onSubmit={(data) => console.log("JSON Schema:", data)}
-        onError={(errors) => console.error("JSON Schema:", errors)}
+        onError={(errors, data) => console.error("JSON Schema:", errors, data)}
       ></Form>
-
       <h2>JSON Schema Form (Readonly)</h2>
       <Form
         schema={jsonSchema}
@@ -111,9 +137,17 @@ const JsonSchemaCustomRenderTemplateExample = () => {
 // render with unresolvable fields.
 const JsonSchemaWithRecursiveRefsExample = () => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        maxWidth: "calc(640px + 0.125rem)",
+        alignSelf: "center",
+        padding: "1rem",
+      }}
+    >
       <h2>JSON Schema Unresolvable Form</h2>
-
       <p>
         This form demonstrates a JSON schema with recursive references, which
         are not currently supported by the form generator. The form will render
@@ -122,7 +156,7 @@ const JsonSchemaWithRecursiveRefsExample = () => {
       <Form
         schema={jsonSchemaWithRecursiveRefs}
         onSubmit={(data) => console.log("JSON Schema:", data)}
-        onError={(errors) => console.error("JSON Schema:", errors)}
+        onError={(errors, data) => console.error("JSON Schema:", errors, data)}
       />
     </div>
   );
@@ -148,9 +182,17 @@ const JsonSchemaWithDevToolsExample = () => {
   const enableDevtools = true;
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        maxWidth: "calc(640px + 0.125rem)",
+        alignSelf: "center",
+        padding: "1rem",
+      }}
+    >
       <h2>JSON Schema Form with DevTools</h2>
-
       <p>
         The Zustand DevTools are enabled for this form. Open the browser's
         developer tools and navigate to the Redux DevTools tab to inspect and

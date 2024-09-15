@@ -8,95 +8,44 @@ export const jsonSchema: FormgenJSONSchema7 = {
   definitions: {
     address: {
       title: "Address",
-      description: "An object representing an address.",
-      type: "object",
-      properties: {
-        street_address: {
+      description: "An tuple containing the street address, city, and state.",
+      type: "array",
+      items: [
+        {
           title: "Street Address",
           description: "The street address.",
           type: "string",
         },
-        city: {
+        {
           title: "City",
           description: "The city.",
           type: "string",
         },
-        state: {
+        {
           title: "State",
           description:
             "The state. This field has an enum, so it will render as a select input.",
           type: "string",
+          // prettier-ignore
           enum: [
-            "AL",
-            "AK",
-            "AS",
-            "AZ",
-            "AR",
-            "CA",
-            "CO",
-            "CT",
-            "DE",
-            "DC",
-            "FM",
-            "FL",
-            "GA",
-            "GU",
-            "HI",
-            "ID",
-            "IL",
-            "IN",
-            "IA",
-            "KS",
-            "KY",
-            "LA",
-            "ME",
-            "MH",
-            "MD",
-            "MA",
-            "MI",
-            "MN",
-            "MS",
-            "MO",
-            "MT",
-            "NE",
-            "NV",
-            "NH",
-            "NJ",
-            "NM",
-            "NY",
-            "NC",
-            "ND",
-            "MP",
-            "OH",
-            "OK",
-            "OR",
-            "PW",
-            "PA",
-            "PR",
-            "RI",
-            "SC",
-            "SD",
-            "TN",
-            "TX",
-            "UT",
-            "VT",
-            "VI",
-            "VA",
-            "WA",
-            "WV",
-            "WI",
-            "WY",
+            "AL", "AK", "AS", "AZ", "AR",
+            "CA", "CO", "CT", "DE", "DC",
+            "FM", "FL", "GA", "GU", "HI",
+            "ID", "IL", "IN", "IA", "KS",
+            "KY", "LA", "ME", "MH", "MD",
+            "MA", "MI", "MN", "MS", "MO",
+            "MT", "NE", "NV", "NH", "NJ",
+            "NM", "NY", "NC", "ND", "MP",
+            "OH", "OK", "OR", "PW", "PA",
+            "PR", "RI", "SC", "SD", "TN",
+            "TX", "UT", "VT", "VI", "VA",
+            "WA", "WV", "WI", "WY",
           ],
         },
-        notes: {
-          title: "Notes",
-          description:
-            "Additional notes about the address. This field has a uiSchema of 'textarea', so it will render as a textarea input.",
-          type: "string",
-          uiSchema: { component: "textarea" },
-        },
-      },
-      required: ["street_address", "city", "state"],
+      ],
+      additionalItems: false,
+      minItems: 3,
+      maxItems: 3,
     },
     friend: {
       title: "Friend",
@@ -123,7 +72,7 @@ export const jsonSchema: FormgenJSONSchema7 = {
           $ref: "#/definitions/address",
         },
       },
-      required: ["name"],
+      required: ["name", "address"],
     },
   },
   properties: {
@@ -182,9 +131,8 @@ export const jsonSchema: FormgenJSONSchema7 = {
     is_active: {
       title: "Is Active",
       description:
-        "Whether the person is active. This field has a uiSchema of 'radio' and oneOf options, so it will render as a radio input.",
+        "Indicates whether the person is active. Defined using schema composition via `oneOf`, each boolean value (`true` or `false`) is paired with a `title` for clarity. Renders as a radio input.",
       type: "boolean",
-      uiSchema: { component: "radio" },
       oneOf: [
         {
           title: "Yes",
@@ -199,22 +147,20 @@ export const jsonSchema: FormgenJSONSchema7 = {
     loves_cats: {
       title: "Loves Cats",
       description:
-        "Whether the person loves cats. This field has no complex definition, so it will default to a checkbox input.",
+        "Indicates whether the person loves cats. This field has no complex definition, so it will render as a checkbox input.",
       type: "boolean",
     },
     loves_dogs: {
       title: "Loves Dogs",
       description:
-        "Whether the person loves dogs. This field has a uiSchema of 'switch' but no oneOf options, so it will default to a checkbox input.",
+        "Indicates whether the person loves dogs. This field has no complex definition, so it will render as a checkbox input.",
       type: "boolean",
-      uiSchema: { component: "switch" },
     },
     loves_pizza: {
       title: "Loves Pizza",
       description:
-        "Whether the person loves pizza. This field has a uiSchema of 'switch' and oneOf options, so it will render as a switch input.",
+        "Indicates whether the person loves pizza. Defined using schema composition via `oneOf`, each boolean value (`true` or `false`) is paired with a `title` for clarity. Renders as a radio input.",
       type: "boolean",
-      uiSchema: { component: "switch" },
       default: true,
       oneOf: [
         {
@@ -230,7 +176,7 @@ export const jsonSchema: FormgenJSONSchema7 = {
     loves_tacos: {
       title: "Loves Tacos",
       description:
-        "Whether the person loves tacos. This field has oneOf options but no uiSchema defined, so it will default to the checkbox input.",
+        "Indicates whether the person loves tacos. Defined using schema composition via `oneOf`, each boolean value (`true` or `false`) is paired with a `title` for clarity. Renders as a radio input.",
       type: "boolean",
       oneOf: [
         {
@@ -242,6 +188,22 @@ export const jsonSchema: FormgenJSONSchema7 = {
           const: false,
         },
       ],
+    },
+    favorite_foods: {
+      title: "Favorite Foods",
+      description:
+        "A list of favorite foods, unique and selected from predefined options.",
+      type: "array",
+      items: {
+        oneOf: [
+          { const: "Pizza", title: "🍕 Pizza" },
+          { const: "Burger", title: "🍔 Burgers" },
+          { const: "Tacos", title: "🌮 Tacos" },
+          { const: "Sushi", title: "🍣 Sushi" },
+        ],
+      },
+      uniqueItems: true,
+      minItems: 1,
     },
     address: {
       title: "Address",
@@ -339,7 +301,7 @@ export const jsonSchema: FormgenJSONSchema7 = {
       uniqueItems: true,
     },
   },
-  required: ["firstName", "lastName", "email"],
+  required: ["firstName", "lastName", "email", "address"],
 };
 
 export const jsonSchemaBasic: FormgenJSONSchema7 = {

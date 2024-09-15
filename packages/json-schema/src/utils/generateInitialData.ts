@@ -4,7 +4,9 @@ import { resolveSchema } from "./resolveSchema";
 // Utility function to resolve $ref in JSON Schema
 export const generateInitialData = (
   schema: JSONSchema7,
-  definitions?: any
+  definitions?: any,
+  parentSchema?: JSONSchema7,
+  propertyKey?: string
 ): any => {
   // Resolve any potential $ref schemas first
   schema = resolveSchema(schema, definitions);
@@ -15,7 +17,9 @@ export const generateInitialData = (
       for (const key in schema.properties) {
         obj[key] = generateInitialData(
           schema.properties[key] as JSONSchema7,
-          definitions
+          definitions,
+          schema,
+          key
         );
       }
       return obj;
@@ -24,10 +28,10 @@ export const generateInitialData = (
       if (Array.isArray(schema.items)) {
         // Tuple case: schema.items is an array, so we treat each index individually
         const itemsSchemas = schema.items as JSONSchema7[];
-        const resultArray = [];
 
         // If a default array exists, ensure it's valid
         if (Array.isArray(schema.default)) {
+          const resultArray = [];
           for (let i = 0; i < itemsSchemas.length; i++) {
             const itemSchema = itemsSchemas[i];
             if (
@@ -35,16 +39,51 @@ export const generateInitialData = (
             ) {
               resultArray.push(schema.default[i]);
             } else {
-              resultArray.push(generateInitialData(itemSchema, definitions));
+              resultArray.push(
+                generateInitialData(
+                  itemSchema,
+                  definitions,
+                  schema,
+                  propertyKey
+                )
+              );
             }
           }
+          return resultArray;
         } else {
-          // No default, just generate initial data for each item schema
-          for (const itemSchema of itemsSchemas) {
-            resultArray.push(generateInitialData(itemSchema, definitions));
+          // Check if the array property is required by its parent
+          let isRequired = false;
+          if (
+            parentSchema &&
+            propertyKey &&
+            Array.isArray(parentSchema.required)
+          ) {
+            isRequired = parentSchema.required.includes(propertyKey);
+          }
+
+          if (isRequired) {
+            // Generate initial data for each item schema
+            const resultArray = [];
+            // If any of the items have a default value, then
+            // iterate over each item schema and generate initial data
+            if (itemsSchemas.some((itemSchema) => itemSchema.default)) {
+              for (const itemSchema of itemsSchemas) {
+                resultArray.push(
+                  generateInitialData(
+                    itemSchema,
+                    definitions,
+                    schema,
+                    propertyKey
+                  )
+                );
+              }
+            }
+            return resultArray;
+          } else {
+            // Property is not required, so return undefined
+            return undefined;
           }
         }
-        return resultArray;
       } else {
         // Standard array case where all items have the same schema
         if (Array.isArray(schema.default)) {
