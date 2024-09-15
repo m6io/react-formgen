@@ -12,10 +12,12 @@ A foundational library designed to facilitate the creation of schema-based form 
 - **State Management**: Utilizes Zustand internally for efficient and scalable state management.
 - **Custom Hooks**: Includes essential hooks for form data and error management.
 - **Factory Functions**: Allows creation of schema-specific form providers and hooks, simplifying the extension for different schema types.
+- **Array Manipulation**: Simplifies the management of array-based fields in your forms.
+- **Templating Support**: Supports custom templates and render templates to create flexible forms.
 
 ## Installation
 
-Install the package
+Install the package:
 
 ```bash
 npm install @react-formgen/core
@@ -54,24 +56,49 @@ const {
   useTemplates,
   useRenderTemplate,
   Form,
-} = createFormProviderAndHooks(generateInitialData, getErrorsAtPath);
+} = createFormProviderAndHooks<SomeSchemaType, SomeErrorType>(
+  createInitialData,
+  getErrorsAtPath,
+  DefaultRenderTemplate,
+  BaseFormRoot,
+  BaseTemplates
+);
 ```
 
-### Using the Form Provider
+### Using the Form or FormProvider Components
 
-Wrap your form components with the `FormProvider` to provide the form state context.
+Wrap your form components with the `Form` or `FormProvider` to provide the form state context.
 
 ```tsx
 import React from "react";
-import { FormProvider } from "./your-custom-form-provider";
+import { Form, FormProvider } from "./your-custom-formgen-library";
+import MyFormRoot from "./MyFormRoot";
 
 const MyForm = () => {
   const schema = {}; // Define your schema
   const initialData = {}; // Define initial data if any
+  const handleSubmit = (data) => {
+    console.log("Form submitted with data:", data);
+  };
+  const handleErrors = (errors) => {
+    console.error("Form submission errors:", errors);
+  };
 
   return (
+    <Form
+      schema={schema}
+      initialData={initialData}
+      onSubmit={handleSubmit}
+      onError={handleErrors}
+    />
+
+    // or
+
     <FormProvider schema={schema} initialData={initialData}>
-      {/* Your form components here */}
+      <MyFormRoot
+        onSubmit={handleSubmit}
+        onError={handleErrors}
+      />
     </FormProvider>
   );
 };
@@ -114,12 +141,15 @@ export default MyField;
 
 ## API Reference
 
-### `createFormProviderAndHooks(generateInitialData, getErrorsAtPath)`
+### `createFormProviderAndHooks(generateInitialData, getErrorsAtPath, BaseRenderTemplate, BaseFormRoot?, BaseTemplates?)`
 
 Creates schema-specific form provider and hooks.
 
 - `generateInitialData(schema)`: Function to generate initial form data from the schema.
 - `getErrorsAtPath(errors, path)`: Function to get errors at a specific path.
+- `BaseRenderTemplate`: Component for rendering form fields.
+- `BaseFormRoot`: (Optional) Root form component for managing submission.
+- `BaseTemplates`: (Optional) Object mapping template names to React components.
 
 Returns an object containing:
 
@@ -162,6 +192,29 @@ Props for the render template component.
 
 - `schema`: The schema of the form.
 - `path`: The path to the current form data.
+
+### `useFormDataAtPath(path: string[], defaultOnNull: unknown)`
+
+Hook to get and set form data at a specific path.
+
+- `path`: Path to the form data.
+- `defaultOnNull`: Value to return if the form data at the path is null.
+
+### `useErrorsAtPath(path: string[])`
+
+Hook to retrieve validation errors at a specific path.
+
+### `useArrayTemplate(path: string[], zeroState: () => any, defaultOnNull: any)`
+
+Hook to manage array properties within the form state.
+
+### `useTemplates()`
+
+Hook to access the templates from the context.
+
+### `useRenderTemplate()`
+
+Hook to access the render template component from the context.
 
 ## Contributing
 

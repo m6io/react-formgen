@@ -263,3 +263,26 @@ export const yupSchema = Yup.object()
     description:
       "A schema representing a complex object with various features.",
   });
+
+export const yupSchemaBasic = Yup.object({
+  firstName: Yup.string()
+    .min(1)
+    .max(100)
+    .matches(/^[A-Za-z]+$/, "Invalid name")
+    .required("Required")
+    .meta({ title: "First Name", description: "The person's first name." }),
+  lastName: Yup.string()
+    .min(1)
+    .max(100)
+    .matches(/^[A-Za-z]+$/, "Invalid last name")
+    .required("Required")
+    .meta({ title: "Last Name", description: "The person's last name." }),
+  age: Yup.number().integer().min(0).max(150).meta({
+    title: "Age",
+    description: "The person's age.",
+  }),
+  email: Yup.string().email().required("Required").meta({
+    title: "Email",
+    description: "The person's email address.",
+  }),
+});

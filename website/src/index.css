@@ -24,10 +24,13 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  max-width: 100vw;
+}
+
+nav {
+  background-color: #1a1a1a;
 }
 
 h1 {
@@ -59,10 +62,14 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+  nav {
+    background-color: #dcdcdc;
+  }
   a:hover {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #dcdcdc;
+    color: #213547;
   }
 }
