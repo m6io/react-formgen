@@ -2,3 +2,4 @@ packages:
   - "website"
   - "packages/*"
   - "examples/*"
+  - "docs/react-formgen-site"
