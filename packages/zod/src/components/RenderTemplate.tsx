@@ -1,4 +1,5 @@
 import React from "react";
+import type * as z from "zod/v4/core";
 import { RenderTemplateProps } from "./types";
 import { useTemplates } from "..";
 import { unwrapSchema } from "../utils";
@@ -24,6 +25,7 @@ export const RenderTemplate: React.FC<RenderTemplateProps> = ({
     UnionTemplate,
     TupleTemplate,
     EnumTemplate,
+    LiteralTemplate,
   } = useTemplates();
 
   // Let's first unwrap the schema to get to the core type
@@ -61,6 +63,17 @@ export const RenderTemplate: React.FC<RenderTemplateProps> = ({
 
     case "tuple":
       return <TupleTemplate schema={schema} path={path} />;
+
+    case "literal":
+      return <LiteralTemplate schema={schema} path={path} />;
+
+    case "lazy": {
+      // Lazy schemas contain a getter function that returns the actual schema
+      const lazySchema = coreSchema as z.$ZodLazy;
+      const actualSchema = lazySchema._zod.def.getter();
+      // Recursively render the actual schema
+      return <RenderTemplate schema={actualSchema} path={path} />;
+    }
 
     default:
       // Unknown or unsupported schema type

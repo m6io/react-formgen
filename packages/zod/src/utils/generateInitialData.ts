@@ -104,6 +104,19 @@ export function generateInitialData(schema: z.$ZodType): ZeroState {
       return enumDef.entries[firstKey];
     }
 
+    case "literal": {
+      const literalSchema = coreSchema as z.$ZodLiteral;
+      return Array.from(literalSchema._zod.def.values)[0];
+    }
+
+    case "lazy": {
+      // Lazy schemas contain a getter function that returns the actual schema
+      const lazySchema = coreSchema as z.$ZodLazy;
+      const actualSchema = lazySchema._zod.def.getter();
+      // Recursively generate initial data for the actual schema
+      return generateInitialData(actualSchema);
+    }
+
     default:
       console.error(`Unsupported schema type: ${def.type}`);
       return undefined;

@@ -2,3 +2,10 @@ packages:
   - "website"
   - "packages/*"
   - "examples/*"
+
+# This repo is consumed as a git dependency, so installing it runs `prepare`,
+# which in turn runs a workspace install here. pnpm >=10 blocks dependency build
+# scripts by default, and that nested install has no way to be approved
+# interactively — it just fails with ERR_PNPM_IGNORED_BUILDS, breaking any cold
+# install of a consumer. Allow the builds so `prepare` can complete.
+dangerouslyAllowAllBuilds: true

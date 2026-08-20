@@ -29,15 +29,18 @@
   ],
   "scripts": {
     "build": "vite build && tsc",
+    "prepare": "pnpm -C ../.. build:core && pnpm run build",
     "prepublishOnly": "npm run build",
     "analyze": "vite build --mode analyze"
   },
   "dependencies": {
-    "@react-formgen/core": "0.0.0-alpha.27"
+    "@react-formgen/core": "0.0.0-alpha.27",
+    "@types/react": "^18.0.0 || ^19.0.0"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
+    "@types/react": "^18.0.0 || ^19.0.0",
     "zod": "^3.25.61"
   },
   "devDependencies": {

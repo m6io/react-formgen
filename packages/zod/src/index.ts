@@ -2,6 +2,12 @@ import {
   createFormProviderAndHooks,
   FormState as CoreFormState,
 } from "@react-formgen/core";
+import type {
+  FormProviderProps as CoreFormProviderProps,
+  FormProps as CoreFormProps,
+  RenderTemplateProps,
+} from "@react-formgen/core";
+import type { FC, ComponentType } from "react";
 
 import type * as z from "zod/v4/core";
 import { generateInitialData } from "./utils";
@@ -37,20 +43,20 @@ const getIssuesAtPath = (
 /**
  * Create the form provider and hooks using the core factory
  */
-const {
-  FormProvider: CoreFormProvider,
-  useFormContext,
-  useFormDataAtPath,
-  useErrorsAtPath,
-  useArrayTemplate,
-  useTemplates,
-  useRenderTemplate,
-  Form: CoreForm,
-} = createFormProviderAndHooks<z.$ZodType, z.$ZodIssue>(
+const _tools = createFormProviderAndHooks<z.$ZodType, z.$ZodIssue>(
   createInitialData,
   getIssuesAtPath,
   DefaultRenderTemplate
 );
+
+const CoreFormProvider: FC<Omit<CoreFormProviderProps<z.$ZodType>, "createInitialData">> = _tools.FormProvider;
+const useFormContext = _tools.useFormContext;
+const useFormDataAtPath = _tools.useFormDataAtPath;
+const useErrorsAtPath = _tools.useErrorsAtPath;
+const useArrayTemplate = _tools.useArrayTemplate;
+const useTemplates: () => { [key: string]: ComponentType<any> } = _tools.useTemplates;
+const useRenderTemplate: () => ComponentType<RenderTemplateProps<z.$ZodType>> = _tools.useRenderTemplate;
+const CoreForm: FC<CoreFormProps<z.$ZodType, z.$ZodIssue>> = _tools.Form;
 
 export type FormState = CoreFormState<z.$ZodType, z.$ZodIssue>;
 

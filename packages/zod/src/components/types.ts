@@ -74,6 +74,7 @@ export type Templates = {
   UnionTemplate: React.FC<{ schema: z.$ZodType; path: string[] }>;
   TupleTemplate: React.FC<{ schema: z.$ZodType; path: string[] }>;
   EnumTemplate: React.FC<{ schema: z.$ZodType; path: string[] }>;
+  LiteralTemplate: React.FC<{ schema: z.$ZodType; path: string[] }>;
 };
 
 /**

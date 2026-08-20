@@ -40,6 +40,12 @@ export function unwrapSchema(schema: z.$ZodType): z.$ZodTypes {
       return unwrapSchema(nonOptionalSchema._zod.def.innerType);
     }
 
+    case "lazy": {
+      const lazySchema = typedSchema as z.$ZodLazy;
+      const actualSchema = lazySchema._zod.def.getter();
+      return unwrapSchema(actualSchema);
+    }
+
     default:
       return typedSchema;
   }
